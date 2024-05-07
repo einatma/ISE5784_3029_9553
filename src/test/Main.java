@@ -1,7 +1,8 @@
 package test;
 
 import static java.lang.System.out;
-
+import geometries.*;
+import primitives.*;
 import static primitives.Util.isZero;
 
 /**
