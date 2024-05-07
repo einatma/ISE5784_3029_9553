@@ -12,6 +12,7 @@ import primitives.Vector;
  * system
  * @author Dan
  */
+//לשאול את אליעזר
 public class Polygon implements Geometry {
    /** List of polygon's vertices */
    protected final List<Point> vertices;
