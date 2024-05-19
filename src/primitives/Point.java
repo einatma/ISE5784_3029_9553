@@ -1,7 +1,7 @@
 package primitives;
 /**
  * Represents a point in 3D space using Cartesian coordinates (x, y, z).
- * @author Hadar Cohen and Einat Mazuz
+ * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Point {
     /**The coordinates of the point's location */
@@ -14,6 +14,8 @@ public class Point {
    Point(Double3 xyz) {
         this.xyz = xyz;
     }
+    public static final Point ZERO = new Point(Double3.ZERO);
+
     /**
      * Constructs a new Point object with the specified Cartesian coordinates.
      *
@@ -22,13 +24,11 @@ public class Point {
      * @param z The z-coordinate of the point.
      */
     public Point(double x, double y, double z) {
-        this.xyz = new Double3(x,y,z);
+        this( new Double3(x,y,z));
     }
     /**
      * Zero triad (0,0,0).
      */
-    public static final Point ZERO = new Point(Double3.ZERO);
-
     @Override
     public String toString() {
         return "Point {" +xyz + '}';

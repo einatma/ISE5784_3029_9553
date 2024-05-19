@@ -1,9 +1,8 @@
 package geometries;
 import primitives.*;
-//Hey Einat
 /**
  * Represents a vector in 3D space, defined by its components (x, y, z).
- * @author Hadar Cohen and Einat Mazuz
+ * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Cylinder extends  Tube{
     /** The height of the cylinder. */

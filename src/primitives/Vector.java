@@ -1,7 +1,10 @@
 package primitives;
+
+import static primitives.Util.isZero;
+
 /**
  * Represents a vector in 3D space, defined by its components (x, y, z).
- * @author Hadar Cohen and Einat Mazuz.
+ * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Vector extends Point {
     /**
@@ -13,10 +16,7 @@ public class Vector extends Point {
      * @throws IllegalArgumentException If the vector has zero length.
      */
     public Vector(double x, double y, double z) {
-        //לשאול את לאיעזר לגבי זריקת חריגה בבנאי זה
-        super(x, y, z);
-        if(xyz.equals(Double3.ZERO))
-            throw new IllegalArgumentException("A vector 0 was received");
+       this(new Double3(x,y,z));
     }
     /**
      * Constructs a new Vector object with the specified components.
@@ -52,11 +52,10 @@ public class Vector extends Point {
      */
     public Vector scale(double num)
     {
-        //לשאול את אליעזר אם אפשר לפצל את הבניה של העצם שמוחזר (כדי לבדוק אם הוא שווה ל0)
-        Double3 v = xyz.scale(num);
-        if (v.equals(Double3.ZERO))
-            throw new IllegalArgumentException("A vector 0 was received");
-        return new Vector(v);
+        if (isZero(num))
+            throw new IllegalArgumentException("A vector cannot be scaled by 0");
+
+        return new Vector( xyz.scale(num));
     }
     /**
      * Calculates the dot product of this vector with another vector.
@@ -110,7 +109,7 @@ public class Vector extends Point {
      */
     public Vector normalize()
     {
-        if(Util.isZero(length()))
+        if(isZero(length()))
             throw new IllegalArgumentException("A vector 0 was received");
         return  this.scale(1/length());
     }

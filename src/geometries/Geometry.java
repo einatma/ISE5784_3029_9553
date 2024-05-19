@@ -2,7 +2,7 @@ package geometries;
 import primitives.*;
 /**
  * An interface representing a geometric shape in 3D space.
- * @author Hadar Cohen and Einat Mazuz
+ * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
 */
 public interface Geometry {
     /**

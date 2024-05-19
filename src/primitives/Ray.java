@@ -1,7 +1,7 @@
 package primitives;
 /**
  * Represents a ray in 3D space, defined by its starting point (head) and direction.
- * @author Hadar Cohen and Einat Mazuz */
+ * @author Hadar Cohen-213953029 and Einat Mazuz -324019553 */
 public class Ray {
     /** The starting point (head) of the ray.*/
     private final Point head;
