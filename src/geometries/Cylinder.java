@@ -1,6 +1,5 @@
 package geometries;
 import primitives.*;
-//Hey Einat
 /**
  * Represents a vector in 3D space, defined by its components (x, y, z).
  * @author Hadar Cohen and Einat Mazuz
