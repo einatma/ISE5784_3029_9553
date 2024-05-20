@@ -6,6 +6,7 @@ package geometries;
 public abstract class RadialGeometry implements Geometry {
     /** The radius of the radial geometry. */
     final double radius;
+    final double radiusSquered;
     /**
      * Constructs a new RadialGeometry object with the specified radius.
      *
@@ -14,5 +15,7 @@ public abstract class RadialGeometry implements Geometry {
     public RadialGeometry(double r)
     {
         radius=r;
+        radiusSquered=r*r;
+
     }
 }
