@@ -9,16 +9,6 @@ import static primitives.Util.isZero;
 class VectorTests {
 
     private static final double DELTA = 0.0000001;
-    Point  p1         = new Point(1, 2, 3);
-    Point  p2         = new Point(2, 4, 6);
-    Point  p3         = new Point(2, 4, 5);
-
-    Vector v1         = new Vector(1, 2, 3);
-    Vector v1Opposite = new Vector(-1, -2, -3);
-    Vector v2         = new Vector(-2, -4, -6);
-    Vector v3         = new Vector(0, 3, -2);
-    Vector v4         = new Vector(1, 2, 2);
-
     /**
      * Test method for
      * {@link primitives.Vector#crossProduct(primitives.Vector)}.
@@ -42,12 +32,12 @@ class VectorTests {
                 "crossProduct() for parallel vectors does not throw an exception");
     }
     @Test
-    void testAdd() {
+    void testAdd() { //~Ask Eliezer if adding and subtracting vectors in opposite directions is considered a separate equivalence class
         Vector v1         = new Vector(1, 2, 3);
         Vector v1Opposite = new Vector(-1, -2, -3);
         Vector v2         = new Vector(-2, -4, -6);
         // ============ Equivalence Partitions Tests ==============
-        //TC01: Test that adding a vector to a point throws an exception???
+        //        //TC01: Test that adding a vectors
         assertEquals(v1Opposite, v1.add(v2), "ERROR: Vector + Vector does not work correctly");
 
         // =============== Boundary Values Tests ==================
