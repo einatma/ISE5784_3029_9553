@@ -53,8 +53,8 @@ class PointTests {
         Point  p3         = new Point(2, 4, 5);
         // ============ Equivalence Partitions Tests ==============
         //TC01: Test that the distance calculation between 2 points is correct
-        assertEquals(9, p1.distance(p3),"ERROR: distance between points is wrong");
-        assertEquals(9, p3.distance(p1),"ERROR: distance between points is wrong");
+        assertEquals(3, p1.distance(p3),"ERROR: distance between points is wrong");
+        assertEquals(3, p3.distance(p1),"ERROR: distance between points is wrong");
         // =============== Boundary Values Tests ==================
         // TC11: Test that the distance between a point and itself is 0
         assertEquals(0, p1.distance(p1), "ERROR: point distance to itself is not zero");
