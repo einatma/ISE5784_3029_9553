@@ -8,16 +8,6 @@ import static primitives.Util.isZero;
 
 class PointTests {
     private static final double DELTA = 0.0000001;
-
-    Point  p1         = new Point(1, 2, 3);
-    Point  p3         = new Point(2, 4, 5);
-
-    Vector v1         = new Vector(1, 2, 3);
-    Vector v1Opposite = new Vector(-1, -2, -3);
-    Vector v2         = new Vector(-2, -4, -6);
-    Vector v3         = new Vector(0, 3, -2);
-    Vector v4         = new Vector(1, 2, 2);
-
     @Test
     void testAdd() {
         Point  p1         = new Point(1, 2, 3);
