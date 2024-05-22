@@ -2,18 +2,17 @@ package geometries;
 
 import org.junit.jupiter.api.Test;
 import primitives.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class SphereTests {
+class TriangleTests {
 
     @Test
     void testGetNormal() {
-
+        Triangle t = new Triangle(new Point(0, 0, 0), new Point(1, 0, 0), new Point(0, 1, 0));
         // ============ Equivalence Partitions Tests ==============
-        Sphere s = new Sphere(Point.ZERO, 1);
-        Point pt= new Point(0,0,10);
         // TC01: Test that getNormal() returns proper value
-        assertEquals(new Vector(0,0,1), s.getNormal(pt));
+        assertEquals(new Vector(0, 0, 1), t.getNormal(new Point(0, 0, 0)), "ERROR: normal to triangle isn't correct");
     }
 
 }
