@@ -48,23 +48,24 @@ class VectorTests {
 
 
     }
-    void testSubtract() {
-        Vector v1         = new Vector(1, 2, 3);
-        Vector v1Opposite = new Vector(-1, -2, -3);
-        Vector v2         = new Vector(-2, -4, -6);
-        //============ Equivalence Partitions Tests ==============
-        //TC01: Test that subtracting a vector from a point throws an exception
-        assertEquals(v2, v1Opposite.subtract(v1), "ERROR: Vector - Vector does not work correctly");
+@Test
+void testSubtract() {
+    Vector v1         = new Vector(1, 2, 3);
+    Vector v1Opposite = new Vector(-1, -2, -3);
+    Vector v2         = new Vector(-2, -4, -6);
+    //============ Equivalence Partitions Tests ==============
+    //TC01: Test that subtracting a vector from a point throws an exception
+    assertEquals(v2, v1Opposite.subtract(v1), "ERROR: Vector - Vector does not work correctly");
 
-        // =============== Boundary Values Tests ==================
-        //TC11: Test that subtracting a vector from itself throws an exception
-        assertThrows(IllegalArgumentException.class, () ->
-            v1.subtract(v1),
-         "Vector - itself does not throw an exception");
+    // =============== Boundary Values Tests ==================
+    //TC11: Test that subtracting a vector from itself throws an exception
+    assertThrows(IllegalArgumentException.class, () ->
+        v1.subtract(v1),
+     "Vector - itself does not throw an exception");
 
 
 
-    }
+}
 @Test
 void testLength() {
 
@@ -129,6 +130,32 @@ void testNormalize()
     //TC01: test vector normalization for a unit vector
     Vector v1 = new Vector(1, 0, 0);
     assertEquals(v1,v1.normalize(),"ERROR: the normalized vector is not a unit vector");
+}
+@Test
+void testConstructor() {
+    // ============ Equivalence Partitions Tests ==============
+    // TC01: Correct 3 points
+    assertDoesNotThrow(() -> new Vector(1, 0, 0),
+            "Failed constructing a correct vector");
+    // ================== Boundary Values Tests ==================
+    // TC11: 3 points that are the same
+    assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0),
+            "Constructed a vector with 3 identical points");
+    // TC12: 3 points on the same line
+    assertThrows(IllegalArgumentException.class, () -> new Vector(1, 1, 1),
+            "Constructed a vector with 3 points on the same line");
+
+
+}
+@Test
+void testScale() {
+    Vector v = new Vector(1, 2, 3);
+    // ============ Equivalence Partitions Tests ==============
+    // TC01: Test that scaling a vector
+    assertEquals(new Vector(3, 6, 9), v.scale(3), "ERROR: Vector * scalar does not work correctly");
+    // =============== Boundary Values Tests ==================
+    // TC11: Test that scaling a vector by 0 throws an exception
+    assertThrows(IllegalArgumentException.class, () -> v.scale(0), "ERROR: Vector * 0 does not throw an exception");
 }
 
 
