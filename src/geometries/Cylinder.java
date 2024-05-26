@@ -4,7 +4,7 @@ import primitives.*;
  * Represents a vector in 3D space, defined by its components (x, y, z).
  * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
-public class Cylinder extends  Tube{
+public class Cylinder extends  Tube  {
     /** The height of the cylinder. */
     private double height;
     /**

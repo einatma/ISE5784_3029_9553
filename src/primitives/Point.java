@@ -59,6 +59,7 @@ public class Point {
         if (Util.isZero(p.distanceSquared(this)))
              throw new IllegalArgumentException("A vector 0 was received");
         return new Vector(this.xyz.subtract(p.xyz));
+
     }
     /**
      * Calculates the square of the Euclidean distance between this point and another point.

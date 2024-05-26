@@ -38,10 +38,7 @@ public class Vector extends Point {
      */
     public Vector add(Vector vec)
     {
-        Double3 v =xyz.add(vec.xyz);
-        if (v.equals(Double3.ZERO))
-            throw new IllegalArgumentException("A vector 0 was received");
-        return new Vector(v);
+        return new Vector( xyz.add(vec.xyz));
     }
     /**
      * Scales this vector by a scalar value, returning a new vector.
@@ -52,10 +49,7 @@ public class Vector extends Point {
      */
     public Vector scale(double num)
     {
-        if (isZero(num))
-            throw new IllegalArgumentException("A vector cannot be scaled by 0");
-
-        return new Vector( xyz.scale(num));
+       return new Vector(xyz.scale(num));
     }
     /**
      * Calculates the dot product of this vector with another vector.
