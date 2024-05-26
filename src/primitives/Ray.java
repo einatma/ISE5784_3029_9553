@@ -18,5 +18,22 @@ public class Ray {
          head=p;
          direction=vec.normalize();
      }
+    /**
+     * Returns the starting point (head) of the ray.
+     *
+     * @return The starting point (head) of the ray.
+     */
+    public Point getHead() {
+        return head;
+    }
+    /**
+     * Returns the direction vector of the ray.
+     *
+     * @return The direction vector of the ray.
+     */
+    public Vector getDirection() {
+        return direction;
+    }
+
 
 }

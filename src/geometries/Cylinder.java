@@ -20,8 +20,39 @@ public class Cylinder extends  Tube{
         height = h;
     }
 
+//    @Override
+//    public Vector getNormal(Point p) {
+//        return super.getNormal(p);
+//    }
+//    * Calculates the normal vector to the surface of the cylinder at a given point.
+//            *
+//            * @param p The point on the surface of the cylinder.
+//     * @return The normal vector to the surface at point p.
+//     */
     @Override
     public Vector getNormal(Point p) {
-        return super.getNormal(p);
+        // The direction vector of the cylinder's central axis
+        Vector cylinderCenterVector = axis.getDirection();
+        // The center point of the bottom base of the cylinder
+        Point centerOfOneSide = axis.getHead();
+        // The center point of the top base of the cylinder
+        Point centerOfSecondSide = axis.getHead().add(axis.getDirection().scale(height));
+        // Check if the point is at the center of the bottom base
+        if (p.equals(centerOfOneSide)) {
+            return cylinderCenterVector.scale(-1);
+        }
+        // Check if the point is at the center of the top base
+        else if (p.equals(centerOfSecondSide)){
+            return cylinderCenterVector;
+        }
+        // Calculate the projection of point p on the cylinder's axis
+        double projection = cylinderCenterVector.dotProduct(p.subtract(centerOfOneSide));
+        // If the projection is 0, the point is on the bottom base but not at the center
+        if (projection == 0)
+            return p.subtract(centerOfOneSide).normalize();
+        // Calculate the center of the circle that intersects with point p on the cylinder's side
+        Point center = centerOfOneSide.add(cylinderCenterVector.scale(projection));
+        // Return the normalized vector from the center of the intersection circle to point p
+        return p.subtract(center).normalize();
     }
 }
