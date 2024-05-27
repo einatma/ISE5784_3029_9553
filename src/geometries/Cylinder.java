@@ -1,5 +1,8 @@
 package geometries;
 import primitives.*;
+
+import static primitives.Util.isZero;
+
 /**
  * Represents a vector in 3D space, defined by its components (x, y, z).
  * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
@@ -45,13 +48,13 @@ public class Cylinder extends  Tube  {
         else if (p.equals(centerOfSecondSide)){
             return cylinderCenterVector;
         }
-        // Calculate the projection of point p on the cylinder's axis
-        double projection = cylinderCenterVector.dotProduct(p.subtract(centerOfOneSide));
-        // If the projection is 0, the point is on the bottom base but not at the center
-        if (projection == 0)
+        // Calculate the t of point p on the cylinder's axis
+        double t = cylinderCenterVector.dotProduct(p.subtract(centerOfOneSide));
+        // If the t is 0, the point is on the bottom base but not at the center
+        if (isZero(t))
             return p.subtract(centerOfOneSide).normalize();
         // Calculate the center of the circle that intersects with point p on the cylinder's side
-        Point center = centerOfOneSide.add(cylinderCenterVector.scale(projection));
+        Point center = centerOfOneSide.add(cylinderCenterVector.scale(t));
         // Return the normalized vector from the center of the intersection circle to point p
         return p.subtract(center).normalize();
     }
