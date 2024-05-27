@@ -16,6 +16,7 @@ class PlaneTests {
         Plane p = new Plane(new Point(0, 0, 0), new Point(1, 0, 0), new Point(0, 1, 0));
         assertEquals(normal, p.getNormal(new Point(0, 0, 0)), "ERROR: normal to plane isn't correct");
     }
+
     @Test
     public void testConstructor() {
         // ============ Equivalence Partitions Tests ==============

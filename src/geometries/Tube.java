@@ -43,8 +43,7 @@ public class Tube extends RadialGeometry {
         // t is the distance of p from head along the direction of the axis
         double t = tubeCenterVector.dotProduct(p.subtract(head));
         if(isZero(t)){
-            return p.subtract(head).normalize();
-        }
+            throw new IllegalArgumentException("ERROR: can't be zero vector");        }
 
         // Calculate the center of the circle that intersects with point p on the tube's side
         Point tubeCenterPoint = head.add(tubeCenterVector.scale(t));

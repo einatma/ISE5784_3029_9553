@@ -9,7 +9,7 @@ class CylinderTests {
 
     @Test
     void getNormal() {
-        Cylinder cylinder = new Cylinder( 10,new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 1);
+        Cylinder cylinder = new Cylinder(10, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 1);
 
         // ============ Equivalence Partitions Tests ==============//
         // TC01: check the first base

@@ -14,6 +14,7 @@ class TriangleTests {
         // TC01: Test that getNormal() returns proper value
         assertEquals(new Vector(0, 0, 1), t.getNormal(new Point(0, 0, 0)), "ERROR: normal to triangle isn't correct");
     }
+
     @Test
     void testConstructor() {
         // ============ Equivalence Partitions Tests ==============

@@ -1,15 +1,20 @@
 package geometries;
+
 import primitives.*;
 
 import static primitives.Util.isZero;
 
 /**
  * Represents a vector in 3D space, defined by its components (x, y, z).
+ *
  * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
-public class Cylinder extends  Tube  {
-    /** The height of the cylinder. */
+public class Cylinder extends Tube {
+    /**
+     * The height of the cylinder.
+     */
     private double height;
+
     /**
      * Constructs a new Cylinder object with the specified height, axis, and radius.
      *
@@ -17,13 +22,12 @@ public class Cylinder extends  Tube  {
      * @param a The axis (ray) of the cylinder.
      * @param r The radius of the cylinder.
      */
-    public Cylinder (double h, Ray a, double r)
-    {
-        super(a,r);
+    public Cylinder(double h, Ray a, double r) {
+        super(a, r);
         height = h;
     }
 
-//    @Override
+    //    @Override
 //    public Vector getNormal(Point p) {
 //        return super.getNormal(p);
 //    }
@@ -45,7 +49,7 @@ public class Cylinder extends  Tube  {
             return cylinderCenterVector.scale(-1);
         }
         // Check if the point is at the center of the top base
-        else if (p.equals(centerOfSecondSide)){
+        else if (p.equals(centerOfSecondSide)) {
             return cylinderCenterVector;
         }
         // Calculate the t of point p on the cylinder's axis
