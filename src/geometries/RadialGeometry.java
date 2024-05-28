@@ -9,7 +9,7 @@ public abstract class RadialGeometry implements Geometry {
      * The radius of the radial geometry.
      */
     final double radius;
-    final double radiusSquered;
+    final double RadiusSquared;
 
     /**
      * Constructs a new RadialGeometry object with the specified radius.
@@ -18,7 +18,13 @@ public abstract class RadialGeometry implements Geometry {
      */
     public RadialGeometry(double r) {
         radius = r;
-        radiusSquered = r * r;
+        RadiusSquared = r * r;
 
+    }
+    public double getRadius() {
+        return radius;
+    }
+    public double getRadiusSquared() {
+        return RadiusSquared;
     }
 }

@@ -45,4 +45,7 @@ public class Ray {
     }
 
 
+    public Point getPoint(double t) {
+        return head.add(direction.scale(t));
+    }
 }
