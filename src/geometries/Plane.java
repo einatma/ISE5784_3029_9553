@@ -4,6 +4,8 @@ import primitives.*;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+
 /**
  * Represents a plane in 3D space.
  *
@@ -68,6 +70,14 @@ public class Plane implements Geometry {
      */
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return List.of();
+        // Calculate the parameter t using the intersection formula t= (N * (Q - P0)) / (N * V)
+        double t = alignZero(normal.dotProduct(q.subtract(ray.getHead()))
+                / normal.dotProduct(ray.getDirection()));
+        // If t is less than or equal to zero, there is no intersection
+        if (t <= 0) {
+            return null;
+        }
+        // Calculate and return the intersection point as a list
+        return List.of(ray.getHead().add(ray.getDirection().scale(t)));
     }
 }
