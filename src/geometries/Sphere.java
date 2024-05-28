@@ -2,6 +2,8 @@ package geometries;
 
 import primitives.*;
 
+import java.util.List;
+
 /**
  * Sphere class represents a three-dimensional sphere in 3D Cartesian coordinate system.
  * Extends RadialGeometry.
@@ -31,4 +33,14 @@ public class Sphere extends RadialGeometry {
         return p.subtract(center).normalize();
     }
 
+    /**
+     * Finds all the intersection points between a given ray and the geometric object.
+     *
+     * @param ray the ray to intersect with the geometric object
+     * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
+     */
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return List.of();
+    }
 }

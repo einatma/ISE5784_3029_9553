@@ -2,6 +2,8 @@ package geometries;
 
 import primitives.*;
 
+import java.util.List;
+
 /**
  * Represents a plane in 3D space.
  *
@@ -58,4 +60,14 @@ public class Plane implements Geometry {
     }
 
 
+    /**
+     * Finds all the intersection points between a given ray and the geometric object.
+     *
+     * @param ray the ray to intersect with the geometric object
+     * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
+     */
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return List.of();
+    }
 }
