@@ -70,14 +70,32 @@ public class Plane implements Geometry {
      */
     @Override
     public List<Point> findIntersections(Ray ray) {
-        // Calculate the parameter t using the intersection formula t= (N * (Q - P0)) / (N * V)
-        double t = alignZero(normal.dotProduct(q.subtract(ray.getHead()))
-                / normal.dotProduct(ray.getDirection()));
-        // If t is less than or equal to zero, there is no intersection
+        Vector direction = ray.getDirection();
+        Point head = ray.getHead();
+
+        // Calculate the denominator N * V
+        double denominator = alignZero(normal.dotProduct(direction));
+
+        // If denominator is zero, the ray is parallel to the plane and there's no intersection
+        if (denominator == 0) {
+            return null;
+        }
+
+        // Calculate the numerator N * (Q - P0)
+        if(q.equals(head))
+            return null;
+
+        double numerator = alignZero(normal.dotProduct(q.subtract(head)));
+
+        // Calculate the parameter t
+        double t = alignZero(numerator / denominator);
+
+        // If t is less than or equal to zero, there is no intersection (the intersection is behind the ray's origin)
         if (t <= 0) {
             return null;
         }
+
         // Calculate and return the intersection point as a list
-        return List.of(ray.getHead().add(ray.getDirection().scale(t)));
+        return List.of(ray.getPoint(t));
     }
 }

@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 
@@ -32,23 +33,26 @@ public class Triangle extends Polygon {
         }
 
         // the three vectors from the same starting point
-        var v1 = vertices.get(0).subtract(ray.getHead());
-        var v2 = vertices.get(1).subtract(ray.getHead());
-        var v3 = vertices.get(2).subtract(ray.getHead());
+        Vector v1 = vertices.get(0).subtract(ray.getHead());
+        Vector v2 = vertices.get(1).subtract(ray.getHead());
+        Vector v3 = vertices.get(2).subtract(ray.getHead());
 
         // we want to get a normal for each pyramid's face so we do the crossProduct
-        var n1 = v1.crossProduct(v2).normalize();
-        var n2 = v2.crossProduct(v3).normalize();
-        var n3 = v3.crossProduct(v1).normalize();
+        Vector n1 = v1.crossProduct(v2).normalize();
+        Vector n2 = v2.crossProduct(v3).normalize();
+        Vector n3 = v3.crossProduct(v1).normalize();
 
         // the ray's vector  - it has the same starting point as the three vectors from above
-        var v = ray.getDirection();
+        Vector v = ray.getDirection();
 
         // check if the vector's direction (from Subtraction between the ray's vector to each vector from above) are equal
         // if not - there is no intersection point between the ray and the triangle
-        if ((alignZero(v.dotProduct(n1)) > 0 && alignZero(v.dotProduct(n2)) > 0 && alignZero(v.dotProduct(n3)) > 0) ||
-                (alignZero(v.dotProduct(n1)) < 0 && alignZero(v.dotProduct(n2)) < 0 && alignZero(v.dotProduct(n3)) < 0)){
+        // Check if the intersection point is inside the triangle
+        double dot1 = alignZero(v.dotProduct(n1));
+        double dot2 = alignZero(v.dotProduct(n2));
+        double dot3 = alignZero(v.dotProduct(n3));
 
+        if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0)) {
             return plane.findIntersections(ray);
         }
 

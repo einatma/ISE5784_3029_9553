@@ -51,7 +51,7 @@ public class Sphere extends RadialGeometry {
         // if p0 on center, calculate with line parametric representation
         // the direction vector normalized.
         if (center.equals(P0)) {
-            Point newPoint = P0.add(ray.getDirection().scale(getRadius()));
+            Point newPoint = ray.getPoint(getRadius());
             return List.of(newPoint);
         }
 

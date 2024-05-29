@@ -39,16 +39,17 @@ public class Tube extends RadialGeometry {
         Point head = axis.getHead();
         // Check if the point is at the base center
         if (p.equals(head)) {
-            throw new IllegalArgumentException("ERROR: the point cant be at the base center");
+            throw new IllegalArgumentException("ERROR: the point can't be at the base center");
         }
         // Calculate the t of point p on the tube's axis
         // t is the distance of p from head along the direction of the axis
         double t = tubeCenterVector.dotProduct(p.subtract(head));
-        if(isZero(t)){
-            throw new IllegalArgumentException("ERROR: can't be zero vector");        }
+        if (isZero(t)) {
+            throw new IllegalArgumentException("ERROR: can't be zero vector");
+        }
 
         // Calculate the center of the circle that intersects with point p on the tube's side
-        Point tubeCenterPoint = head.add(tubeCenterVector.scale(t));
+        Point tubeCenterPoint = axis.getPoint(t);
         // Return the normalized vector from the center of the intersection circle to point p
         return p.subtract(tubeCenterPoint).normalize();
     }
