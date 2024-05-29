@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static primitives.Util.isZero;
@@ -62,6 +63,61 @@ public class Tube extends RadialGeometry {
      */
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return List.of();
+        // Extract direction and head of the ray
+        Vector rayDirection = ray.getDirection();
+        Point rayHead = ray.getHead();
+
+        // Extract direction and head of the tube's axis
+        Vector tubeAxisDirection = axis.getDirection();
+        Point tubeHead = axis.getHead();
+
+        // Calculate the vector from the tube's head to the ray's head
+        Vector deltaP = rayHead.subtract(tubeHead);
+
+        // Calculate the projections of rayDirection and deltaP on tubeAxisDirection
+        Vector vProjection = tubeAxisDirection.scale(rayDirection.dotProduct(tubeAxisDirection));
+        Vector deltaPProjection = tubeAxisDirection.scale(deltaP.dotProduct(tubeAxisDirection));
+
+        // Calculate the components perpendicular to the tube axis
+        Vector vMinusVa = rayDirection.subtract(vProjection);
+        Vector deltaPMinusVa = deltaP.subtract(deltaPProjection);
+
+        // Ensure that vMinusVa and deltaPMinusVa are not zero vectors
+        if (vMinusVa.length() == 0) {
+            throw new IllegalArgumentException("ERROR: Ray direction projection results in a zero vector");
+        }
+        if (deltaPMinusVa.length() == 0 && deltaP.length() != 0) {
+            throw new IllegalArgumentException("ERROR: Delta P projection results in a zero vector");
+        }
+
+        // Calculate the coefficients for the quadratic equation
+        double a = vMinusVa.dotProduct(vMinusVa);
+        double b = 2 * vMinusVa.dotProduct(deltaPMinusVa);
+        double c = deltaPMinusVa.dotProduct(deltaPMinusVa) - radius * radius;
+
+        // Calculate the discriminant
+        double discriminant = b * b - 4 * a * c;
+
+        // If the discriminant is negative, there are no real intersections
+        if (discriminant < 0) {
+            return null;
+        }
+
+        // Calculate the two solutions of the quadratic equation
+        double sqrtDiscriminant = Math.sqrt(discriminant);
+        double t1 = (-b + sqrtDiscriminant) / (2 * a);
+        double t2 = (-b - sqrtDiscriminant) / (2 * a);
+
+        List<Point> intersections = new ArrayList<>();
+
+        // Check if the solutions are valid (t > 0) and add them to the intersections list
+        if (t1 > 0) {
+            intersections.add(ray.getPoint(t1));
+        }
+        if (t2 > 0) {
+            intersections.add(ray.getPoint(t2));
+        }
+
+        return intersections.isEmpty() ? null : intersections;
     }
 }
