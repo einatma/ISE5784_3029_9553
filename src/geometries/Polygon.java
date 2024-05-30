@@ -101,6 +101,72 @@ public class Polygon implements Geometry {
      */
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return List.of();
+        // Step 1: Find intersection with the plane
+        Vector normal = plane.getNormal();
+        double nv = normal.dotProduct(ray.getDirection());
+        if (isZero(nv)) {
+            // The ray is parallel to the plane, so there is no intersection
+            return null;
+        }
+
+        double t = alignZero(normal.dotProduct(vertices.getFirst().subtract(ray.getHead())) / nv);
+        if (t <= 0) {
+            return null;
+        }
+
+        Point intersectionPoint = ray.getHead().add(ray.getDirection().scale(t));
+
+        // Check if the intersection point is inside the polygon
+        int numVertices = vertices.size();
+        int count = 0;
+
+        for (int i = 0; i < numVertices; i++) {
+            Point v1 = vertices.get(i);
+            Point v2 = vertices.get((i + 1) % numVertices);
+
+            // Check if point is on an edge of the polygon
+            if (intersectionPoint.subtract(v1).crossProduct(v2.subtract(v1)).lengthSquared() == 0 &&
+                    intersectionPoint.subtract(v1).dotProduct(v2.subtract(v1)) >= 0 &&
+                    intersectionPoint.subtract(v2).dotProduct(v1.subtract(v2)) >= 0) {
+                return List.of(intersectionPoint);
+            }
+
+            // Check if the ray from point intersects the edge
+            Vector rayDir = new Vector(1, 0, 0);
+            Ray tempRay = new Ray(intersectionPoint, rayDir);
+
+            double minX = Math.min(v1.getX(), v2.getX());
+            double maxX = Math.max(v1.getX(), v2.getX());
+            double minY = Math.min(v1.getY(), v2.getY());
+            double maxY = Math.max(v1.getY(), v2.getY());
+
+            if (intersectionPoint.getY() < minY || intersectionPoint.getY() > maxY || intersectionPoint.getX() > maxX) {
+                continue;
+            }
+
+            double m = (v2.getY() - v1.getY()) / (v2.getX() - v1.getX());
+            double c = v1.getY() - m * v1.getX();
+            double y = m * intersectionPoint.getX() + c;
+
+            if (y >= intersectionPoint.getY()) {
+                count++;
+            }
+        }
+
+        if (count % 2 == 1) {
+            return List.of(intersectionPoint);
+        }
+
+        return null;
     }
+
+    private boolean isZero(double number) {
+        final double EPSILON = 1e-10;
+        return Math.abs(number) < EPSILON;
+    }
+
+    private double alignZero(double number) {
+        return isZero(number) ? 0.0 : number;
+    }
+
 }
