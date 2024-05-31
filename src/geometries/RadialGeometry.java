@@ -1,5 +1,4 @@
 package geometries;
-//לשאול את אליעזר אם היא מחלקה אבסטרקטית
 
 /**
  * Represents a radial geometry in 3D space, defined by a radius.

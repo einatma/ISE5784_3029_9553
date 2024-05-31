@@ -95,72 +95,34 @@ public class PolygonTests {
     @Test
     public void testFindIntersections() {
         // Create a triangle polygon in the XY plane
-        Polygon triangle = new Polygon(
-                (Point) List.of(
-                        new Point(0, 0, 0),
-                        new Point(1, 0, 0),
-                        new Point(0, 1, 0)
-                )
-        );
+        Polygon triangle = new Polygon(new Point(0, 0, 0), new Point(0, 0, 1),
+                        new Point(0, 1, 1),   new Point(0, 1, 0));
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: The intersection point is in the triangle
+        assertEquals(List.of(new Point(0, 0.5, 0.5)),
+                triangle.findIntersections(new Ray(new Point(-1, 0.5, 0.5), new Vector(3, 0, 0))),
+                "The point supposed to be in the triangle");
 
-        // =============== Equivalence Partitions Tests ================//
+        // TC02: The intersection point is outside the triangle, against edge
+        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(0, 1, 3))),
+                "The point supposed to be outside the triangle, against edge");
 
-        // TC01: Ray intersects the polygon (1 point)
-        Ray ray1 = new Ray(new Point(0.5, 0.5, 1), new Vector(0, 0, -1));
-        List<Point> result = triangle.findIntersections(ray1);
-        assertNotNull(result, "Ray should intersect the polygon");
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(new Point(0.5, 0.5, 0), result.get(0), "Intersection point is incorrect");
+        // TC03: The intersection point is outside the triangle, against vertex
+        assertNull(triangle.findIntersections(new Ray(new Point(4, 0, 2), new Vector(0, 1, -1))),
+                "The point supposed to be outside the triangle, against vertex");
 
-        // TC02: Ray misses the polygon (0 points)
-        Ray ray2 = new Ray(new Point(2, 2, 1), new Vector(0, 0, -1));
-        assertNull(triangle.findIntersections(ray2), "Ray should not intersect the polygon");
+        // =============== Boundary Values Tests ==================
+        // TC10: The point is on edge
+        assertNull(triangle.findIntersections(new Ray(new Point(1, 1, 2), new Vector(1, 0, -1))),
+                "The point supposed to be on edge");
 
-        // TC03: Ray is parallel to the polygon plane (0 points)
-        Ray ray3 = new Ray(new Point(0.5, 0.5, 0), new Vector(1, 1, 0));
-        assertNull(triangle.findIntersections(ray3), "Ray should be parallel to the plane and not intersect the polygon");
+        // TC11: The point is in vertex
+        assertNull(triangle.findIntersections(new Ray(new Point(3, 1, 2), new Vector(0, 0, -1))),
+                "The point supposed to be in vertex");
 
-        // TC04: Ray starts inside the polygon (0 points)
-        Ray ray4 = new Ray(new Point(0.25, 0.25, 0), new Vector(0, 0, 1));
-        assertNull(triangle.findIntersections(ray4), "Ray starts inside the polygon and should not have a valid intersection");
-
-        // TC05: Ray intersects exactly on an edge of the polygon (1 point)
-        Ray ray5 = new Ray(new Point(0.5, -0.5, 1), new Vector(0, 0, -1));
-        result = triangle.findIntersections(ray5);
-        assertNotNull(result, "Ray should intersect the polygon");
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(new Point(0.5, -0.5, 0), result.get(0), "Intersection point is incorrect");
-
-        // ================= Boundary Values Tests ====================//
-
-        // TC11: Ray starts at polygon and goes inside (1 point)
-        Ray ray6 = new Ray(new Point(0, 0, 0), new Vector(0.5, 0.5, -1));
-        result = triangle.findIntersections(ray6);
-        assertNotNull(result, "Ray should intersect the polygon");
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(new Point(0.5, 0.5, -1), result.get(0), "Intersection point is incorrect");
-
-        // TC12: Ray starts at polygon and goes outside (0 points)
-        Ray ray7 = new Ray(new Point(1, 0, 0), new Vector(1, 0, 0));
-        assertNull(triangle.findIntersections(ray7), "Ray starts at polygon and goes outside");
-
-        // TC13: Ray starts before the polygon and goes through an edge (1 point)
-        Ray ray8 = new Ray(new Point(0.5, -1, 0), new Vector(0, 1, 0));
-        result = triangle.findIntersections(ray8);
-        assertNotNull(result, "Ray should intersect the polygon");
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(new Point(0.5, 0, 0), result.get(0), "Intersection point is incorrect");
-
-        // TC14: Ray starts before the polygon and goes through a vertex (1 point)
-        Ray ray9 = new Ray(new Point(-1, -1, 0), new Vector(1, 1, 0));
-        result = triangle.findIntersections(ray9);
-        assertNotNull(result, "Ray should intersect the polygon");
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(new Point(0, 0, 0), result.get(0), "Intersection point is incorrect");
-
-        // TC15: Ray is tangent to the polygon (0 points)
-        Ray ray10 = new Ray(new Point(0.5, 1, 0), new Vector(0, -1, 0));
-        assertNull(triangle.findIntersections(ray10), "Ray is tangent to the polygon");
+        // TC12: The point is on edge's continuation
+        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(3, 0, -1))),
+                "The point supposed to be on edge's continuation");
     }
 }
 

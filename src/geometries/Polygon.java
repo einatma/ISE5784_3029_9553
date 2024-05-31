@@ -2,7 +2,7 @@ package geometries;
 
 import java.util.List;
 
-import static primitives.Util.isZero;
+import static primitives.Util.*;
 
 import primitives.Point;
 import primitives.Ray;
@@ -101,72 +101,30 @@ public class Polygon implements Geometry {
      */
     @Override
     public List<Point> findIntersections(Ray ray) {
-        // Step 1: Find intersection with the plane
-        Vector normal = plane.getNormal();
-        double nv = normal.dotProduct(ray.getDirection());
-        if (isZero(nv)) {
-            // The ray is parallel to the plane, so there is no intersection
+        if (plane.findIntersections(ray) == null) {
             return null;
         }
+        // Iterate through the vertices of the polygon to check if the intersection point is inside the polygon
+        for (int i = 1; i < size - 1; i++) {
+            for (int j = i + 1; j < size - 1; j++) {
+                Vector v1 = vertices.get(0).subtract(ray.getHead());
+                Vector v2 = vertices.get(i).subtract(ray.getHead());
+                Vector v3 = vertices.get(j).subtract(ray.getHead());
+                Vector direction = ray.getDirection();
 
-        double t = alignZero(normal.dotProduct(vertices.getFirst().subtract(ray.getHead())) / nv);
-        if (t <= 0) {
-            return null;
-        }
+                // Calculate the dot products for the cross products of the vectors formed by the vertices and the ray direction
+                double dot1 = alignZero(direction.dotProduct(v1.crossProduct(v2).normalize()));
+                double dot2 = alignZero(direction.dotProduct(v2.crossProduct(v3).normalize()));
+                double dot3 = alignZero(direction.dotProduct(v3.crossProduct(v1).normalize()));
 
-        Point intersectionPoint = ray.getHead().add(ray.getDirection().scale(t));
-
-        // Check if the intersection point is inside the polygon
-        int numVertices = vertices.size();
-        int count = 0;
-
-        for (int i = 0; i < numVertices; i++) {
-            Point v1 = vertices.get(i);
-            Point v2 = vertices.get((i + 1) % numVertices);
-
-            // Check if point is on an edge of the polygon
-            if (intersectionPoint.subtract(v1).crossProduct(v2.subtract(v1)).lengthSquared() == 0 &&
-                    intersectionPoint.subtract(v1).dotProduct(v2.subtract(v1)) >= 0 &&
-                    intersectionPoint.subtract(v2).dotProduct(v1.subtract(v2)) >= 0) {
-                return List.of(intersectionPoint);
-            }
-
-            // Check if the ray from point intersects the edge
-            Vector rayDir = new Vector(1, 0, 0);
-            Ray tempRay = new Ray(intersectionPoint, rayDir);
-
-            double minX = Math.min(v1.getX(), v2.getX());
-            double maxX = Math.max(v1.getX(), v2.getX());
-            double minY = Math.min(v1.getY(), v2.getY());
-            double maxY = Math.max(v1.getY(), v2.getY());
-
-            if (intersectionPoint.getY() < minY || intersectionPoint.getY() > maxY || intersectionPoint.getX() > maxX) {
-                continue;
-            }
-
-            double m = (v2.getY() - v1.getY()) / (v2.getX() - v1.getX());
-            double c = v1.getY() - m * v1.getX();
-            double y = m * intersectionPoint.getX() + c;
-
-            if (y >= intersectionPoint.getY()) {
-                count++;
+                // If all the dot products have the same sign, the intersection point is inside the polygon
+                if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0)) {
+                    return plane.findIntersections(ray);
+                }
             }
         }
 
-        if (count % 2 == 1) {
-            return List.of(intersectionPoint);
-        }
-
+        // If no intersection point is found inside the polygon, return null
         return null;
     }
-
-    private boolean isZero(double number) {
-        final double EPSILON = 1e-10;
-        return Math.abs(number) < EPSILON;
-    }
-
-    private double alignZero(double number) {
-        return isZero(number) ? 0.0 : number;
-    }
-
 }
