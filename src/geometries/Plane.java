@@ -5,6 +5,7 @@ import primitives.*;
 import java.util.List;
 
 import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * Represents a plane in 3D space.
@@ -77,7 +78,7 @@ public class Plane implements Geometry {
         double denominator = alignZero(normal.dotProduct(direction));
 
         // If denominator is zero, the ray is parallel to the plane and there's no intersection
-        if (denominator == 0) {
+        if (isZero(denominator)) {
             return null;
         }
 

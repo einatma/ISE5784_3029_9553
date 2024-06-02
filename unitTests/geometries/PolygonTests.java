@@ -92,37 +92,48 @@ public class PolygonTests {
                     "Polygon's normal is not orthogonal to one of the edges");
     }
 
+    /**
+     * Test method for
+     * {@link geometries.Polygon#findIntersections(primitives.Ray)}.
+     */
     @Test
-    public void testFindIntersections() {
-        // Create a triangle polygon in the XY plane
-        Polygon triangle = new Polygon(new Point(0, 0, 0), new Point(0, 0, 1),
-                        new Point(0, 1, 1),   new Point(0, 1, 0));
+    public void testfindIntersectionsRay() {
+        Polygon pol        = new Polygon(new Point(0, 0, 1), new Point(2, 0, 1), new Point(2, 2, 1), new Point(0, 2, 1));
+        Plane   pl         = new Plane(new Point(0, 0, 1), new Point(1, 0, 1), new Point(0, 1, 1));
+        Ray     ray;
+        String  errorPlane = "Wrong intersection with plane";
+        String  errorBad   = "Bad intersection";
+
         // ============ Equivalence Partitions Tests ==============
-        // TC01: The intersection point is in the triangle
-        assertEquals(List.of(new Point(0, 0.5, 0.5)),
-                triangle.findIntersections(new Ray(new Point(-1, 0.5, 0.5), new Vector(3, 0, 0))),
-                "The point supposed to be in the triangle");
+        // TC01: Inside polygon
+        ray = new Ray(new Point(1, 1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(1, 1, 1)), pol.findIntersections(ray), errorBad);
 
-        // TC02: The intersection point is outside the triangle, against edge
-        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(0, 1, 3))),
-                "The point supposed to be outside the triangle, against edge");
+        // TC02: Against edge
+        ray = new Ray(new Point(-1, 1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(-1, 1, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
 
-        // TC03: The intersection point is outside the triangle, against vertex
-        assertNull(triangle.findIntersections(new Ray(new Point(4, 0, 2), new Vector(0, 1, -1))),
-                "The point supposed to be outside the triangle, against vertex");
+        // TC03: Against vertex
+        ray = new Ray(new Point(-1, -1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(-1, -1, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
 
         // =============== Boundary Values Tests ==================
-        // TC10: The point is on edge
-        assertNull(triangle.findIntersections(new Ray(new Point(1, 1, 2), new Vector(1, 0, -1))),
-                "The point supposed to be on edge");
+        // TC11: In vertex
+        ray = new Ray(new Point(0, 2, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(0, 2, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
 
-        // TC11: The point is in vertex
-        assertNull(triangle.findIntersections(new Ray(new Point(3, 1, 2), new Vector(0, 0, -1))),
-                "The point supposed to be in vertex");
+        // TC12: On edge
+        ray = new Ray(new Point(0, 1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(0, 1, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
 
-        // TC12: The point is on edge's continuation
-        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(3, 0, -1))),
-                "The point supposed to be on edge's continuation");
+        // TC13: On edge continuation
+        ray = new Ray(new Point(0, 3, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(0, 3, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
     }
 }
 

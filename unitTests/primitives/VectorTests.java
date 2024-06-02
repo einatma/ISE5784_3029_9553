@@ -122,14 +122,17 @@ class VectorTests {
     void testNormalize() {
         Vector v = new Vector(1, 2, 3);
         Vector u = v.normalize();
+        Vector vv = v.scale(-1);
         // ============ Equivalence Partitions Tests ==============
         // TC01: test vector normalization vs vector length and cross-product
         assertEquals(1, u.length(), "ERROR: the normalized vector is not a unit vector");
         assertThrows(IllegalArgumentException.class, () ->
                         v.crossProduct(u),
                 "ERROR: the normalized vector is not parallel to the original one");
-        assert v.dotProduct(u) < 0 : "ERROR: the normalized vector is opposite to the original one";
-
+        assert vv.dotProduct(u) < 0 : "ERROR: the normalized vector is opposite to the original one";
+        assertThrows(IllegalArgumentException.class, () ->
+                        vv.crossProduct(u),
+                "ERROR: the normalized vector is not parallel to the original one");
         // =============== Boundary Values Tests ==================
         //TC01: test vector normalization for a unit vector
         Vector v1 = new Vector(1, 0, 0);
@@ -147,8 +150,9 @@ class VectorTests {
         assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0),
                 "Constructed a vector with 3 identical points");
         // TC12: 3 points on the same line
-        assertThrows(IllegalArgumentException.class, () -> new Vector(1, 1, 1),
-                "Constructed a vector with 3 points on the same line");
+           assertDoesNotThrow(() -> new Vector(1, 1, 1),
+                    "Constructed a vector with 3 points on the same line");
+
 
 
     }

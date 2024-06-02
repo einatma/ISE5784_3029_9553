@@ -71,6 +71,10 @@ public class Tube extends RadialGeometry {
         Vector tubeAxisDirection = axis.getDirection();
         Point tubeHead = axis.getHead();
 
+        if(rayHead.equals(tubeHead)){
+            return null;
+        }
+
         // Calculate the vector from the tube's head to the ray's head
         Vector deltaP = rayHead.subtract(tubeHead);
 

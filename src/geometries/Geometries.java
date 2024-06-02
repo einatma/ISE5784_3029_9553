@@ -2,9 +2,7 @@ package geometries;
 
 import primitives.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Composite class for aggregating multiple Intersectable objects.
@@ -18,6 +16,7 @@ public class Geometries implements Intersectable {
      * Initializes an empty collection of geometries.
      */
     public Geometries() {
+
     }
 
     /**
@@ -36,10 +35,9 @@ public class Geometries implements Intersectable {
      * @param geometries the geometries to be added.
      */
     public void add(Intersectable... geometries) {
-        for (Intersectable geometry : geometries) {
-            this.geometries.add(geometry);
+        Collections.addAll(this.geometries, geometries);
         }
-    }
+
 
     /**
      * Finds all intersection points between the given ray and the geometries in the collection.
@@ -59,6 +57,9 @@ public class Geometries implements Intersectable {
                 result.addAll(intersections);
             }
         }
-        return result;
+        return result
+                .stream()
+                .sorted(Comparator.comparingDouble(p -> ray.getHead().distance(p)))
+                .toList();
     }
 }
