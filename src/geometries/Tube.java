@@ -50,7 +50,7 @@ public class Tube extends RadialGeometry {
         }
 
         // Calculate the center of the circle that intersects with point p on the tube's side
-        Point tubeCenterPoint = axis.getPoint(t);
+        Point tubeCenterPoint = axis.addToHead(t);
         // Return the normalized vector from the center of the intersection circle to point p
         return p.subtract(tubeCenterPoint).normalize();
     }
@@ -112,10 +112,10 @@ public class Tube extends RadialGeometry {
 
         // Check if the solutions are valid (t > 0) and add them to the intersections list
         if (t1 > 0) {
-            intersections.add(ray.getPoint(t1));
+            intersections.add(ray.addToHead(t1));
         }
         if (t2 > 0) {
-            intersections.add(ray.getPoint(t2));
+            intersections.add(ray.addToHead(t2));
         }
 
         return intersections.isEmpty() ? null : intersections;
