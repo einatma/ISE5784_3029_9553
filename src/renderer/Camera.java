@@ -56,7 +56,20 @@ public class Camera implements Cloneable {
     }
 
     public Ray constructRay(int nX, int nY, int j, int i) {
-        return null;
+        Point pC = location.add(vTo.scale(distance));
+        double rY = height / nY;
+        double rX = width / nX;
+        double yI = -(i - (nY - 1) / 2d) * rY;
+        double xJ = (j - (nX - 1) / 2d) * rX;
+        Point pIJ = pC;
+        if (!Util.isZero(xJ)) {
+            pIJ = pIJ.add(vRight.scale(xJ));
+        }
+        if (!Util.isZero(yI)) {
+            pIJ = pIJ.add(vUp.scale(yI));
+        }
+        Vector vIJ = pIJ.subtract(location).normalize();
+        return new Ray(location, vIJ);
     }
 
     public static class Builder {
@@ -110,6 +123,8 @@ public class Camera implements Cloneable {
             // Clone and return the camera
             return camera.clone();
         }
+
+
     }
 
     // Clone method
