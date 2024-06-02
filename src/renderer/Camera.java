@@ -64,74 +64,61 @@ public class Camera implements Cloneable {
         public Builder() {
             this.camera = new Camera();
         }
-        //???
-        public Builder(Camera cam) {
-            camera.location = cam.location;
-            camera.vUp = cam.vUp;
-            camera.vTo = cam.vTo;
-            camera.vRight = cam.vRight;
-            camera.width = cam.width;
-            camera.height = cam.height;
-            camera.distance = cam.distance;
-        }
-
+        // Methods to set camera attributes
         public Builder setLocation(Point location) {
-            camera.location = location;
+            if (location == null) {
+                throw new IllegalArgumentException("Location cannot be null");
+            }
+            this.camera.location = location;
             return this;
         }
 
         public Builder setDirection(Vector vTo, Vector vUp) {
-            if (vTo.dotProduct(vUp) != 0) {
-                throw new IllegalArgumentException("vTo and vUp are not orthogonal");
+            if (vTo == null || vUp == null) {
+                throw new IllegalArgumentException("Direction vectors cannot be null");
             }
-            camera.vTo = vTo.normalize();
-            camera.vUp = vUp.normalize();
+            // Normalize and set direction vectors
+            this.camera.vTo = vTo.normalize();
+            this.camera.vUp = vUp.normalize();
+            this.camera.vRight = vTo.crossProduct(vUp).normalize();
             return this;
         }
 
         public Builder setVpSize(double width, double height) {
-            if (alignZero(width) <= 0 || alignZero(height) <= 0) {
-                throw new IllegalArgumentException("width and height must be positive");
+            if (width <= 0 || height <= 0) {
+                throw new IllegalArgumentException("Width and height must be positive");
             }
-            camera.width = width;
-            camera.height = height;
+            this.camera.width = width;
+            this.camera.height = height;
             return this;
         }
 
-        public Builder setDistance(double distance) {
-            if (alignZero(distance) <= 0)
-                throw new IllegalArgumentException("distance must be positive");
-            camera.distance = distance;
+        public Builder setVpDistance(double distance) {
+            if (distance <= 0) {
+                throw new IllegalArgumentException("Distance must be positive");
+            }
+            this.camera.distance = distance;
             return this;
         }
 
-        /**
-         * Builds the Camera object after validating all necessary fields.
-         *
-         * @return a copy of the Camera object with computed fields.
-         * @throws MissingResourceException if any required field is missing.
-         * @throws IllegalArgumentException if any field value is invalid.
-         */
-        public Camera build() throws CloneNotSupportedException {
-            Camera camera = new Camera();
-            final String MISSING_RENDERING_DATA = "Missing rendering data in";
-            final String CAMERA_CLASS_NAME = "Camera";
-            if (camera.location == null) {
-                throw new IllegalArgumentException(MISSING_RENDERING_DATA + CAMERA_CLASS_NAME + " location");
+        // Build method
+        public Camera build() {
+            if (camera.width == 0 || camera.height == 0 || camera.distance == 0) {
+                throw new MissingResourceException("Missing render data", "Camera", "width/height/distance");
             }
-            if (camera.vUp == null) {
-                throw new IllegalArgumentException(MISSING_RENDERING_DATA + CAMERA_CLASS_NAME + " vUp");
-            }
-            if (camera.vTo == null) {
-                throw new IllegalArgumentException(MISSING_RENDERING_DATA + CAMERA_CLASS_NAME + " vTo");
-            }
-            if ((camera.vUp).dotProduct(camera.vTo) != 0) {
-                throw new IllegalArgumentException("vUp and vTo must be orthogonal");
-            }
-            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            // Additional calculations if needed
+            // Clone and return the camera
+            return camera.clone();
+        }
+    }
 
-
-            return (Camera) camera.clone();
+    // Clone method
+    @Override
+    protected Camera clone() {
+        try {
+            return (Camera) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Can't happen
         }
 
     }
