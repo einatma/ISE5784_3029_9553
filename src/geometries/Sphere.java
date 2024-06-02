@@ -51,7 +51,7 @@ public class Sphere extends RadialGeometry {
         // if p0 on center, calculate with line parametric representation
         // the direction vector normalized.
         if (center.equals(P0)) {
-            Point newPoint = ray.getPoint(getRadius());
+            Point newPoint = ray.addToHead(getRadius());
             return List.of(newPoint);
         }
 
@@ -79,15 +79,15 @@ public class Sphere extends RadialGeometry {
 
         // Check if t1 and t2 are valid
         if (t1 > 0 && t2 > 0) {
-            intersections = List.of(ray.getPoint(t1), ray.getPoint(t2));
+            intersections = List.of(ray.addToHead(t1), ray.addToHead(t2));
         } else {
             // Check if t1 is valid
             if (t1 > 0) {
-                intersections = List.of(ray.getPoint(t1));
+                intersections = List.of(ray.addToHead(t1));
             }
             // Check if t2 is valid
             if (t2 > 0) {
-                intersections = List.of(ray.getPoint(t2));
+                intersections = List.of(ray.addToHead(t2));
             }
         }
 
