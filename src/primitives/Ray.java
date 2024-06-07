@@ -36,6 +36,13 @@ public class Ray {
     public Point getHead() {
         return head;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Ray other = (Ray) obj;
+        return head.equals(other.head) && direction.equals(other.direction);
+    }
 
     /**
      * Returns the direction vector of the ray.
