@@ -143,11 +143,13 @@ public class Camera implements Cloneable {
 
         /**
          * Sets the view plane distance for the Camera.
-         *
          * @param distance the distance to set.
+         * @throws IllegalArgumentException If the distance is zero or negative.
          * @return the Builder instance.
          */
         public Builder setVpDistance(double distance) {
+            if (distance<=0)
+                throw new IllegalArgumentException("Distance cannot be zero or negative");
             this.distance = distance;
             return this;
         }
@@ -157,9 +159,12 @@ public class Camera implements Cloneable {
          *
          * @param width  the width to set.
          * @param hight  the height to set.
+         * @throws IllegalArgumentException If the width or the height are zero or negative.
          * @return the Builder instance.
          */
         public Builder setVpSize(double width, double hight) {
+            if (width<=0 || hight<=0)
+                throw new IllegalArgumentException("Width and length cannot be zero or negative");
             this.width = width;
             this.hight = hight;
             return this;
