@@ -164,7 +164,7 @@ public class Camera implements Cloneable {
          */
         public Builder setVpSize(double width, double height) {
             if(alignZero(width)<=0  || alignZero(height)<=0)
-                throw new IllegalArgumentException("width and hight must be positive");
+                throw new IllegalArgumentException("width and height must be positive");
             this.width = width;
             this.height = height;
             return this;
