@@ -31,6 +31,8 @@ public class CameraIntegrationTest {
 
         for (int i = 0; i < Nx; i++) {
             for (int j = 0; j < Ny; j++) {
+                if(camera==null)
+                    System.out.println("camera is null");
                 intersections = geometry.findIntersections(camera.constructRay(Nx, Ny, j, i));
                 count += intersections == null ? 0 : intersections.size();
             }

@@ -14,9 +14,9 @@ import static primitives.Util.isZero;
  * The Camera class represents a camera in a 3D space.
  * It constructs rays through a view plane to capture an image.
  */
-public class Camera implements Cloneable {
-    private RayTracerBase rayTracer;
-    private ImageWriter imageWriter;
+public class Camera implements Cloneable{
+//    private RayTracerBase rayTracer;
+//    private ImageWriter imageWriter;
     private Point location;
     private Vector vTo;
     private Vector vUp;
@@ -84,7 +84,7 @@ public class Camera implements Cloneable {
      * Builder class for constructing Camera objects.
      */
     public static class Builder {
-//        private RayTracerBase rayTracer;
+        //        private RayTracerBase rayTracer;
 //        private ImageWriter imageWriter;
         private Point location;
         private Vector vTo;
@@ -135,7 +135,7 @@ public class Camera implements Cloneable {
          * @return the Builder instance.
          */
         public Builder setDirection(Vector vTo, Vector vUp) {
-            if(!isZero(vTo.dotProduct(vUp)))
+            if (!isZero(vTo.dotProduct(vUp)))
                 throw new IllegalArgumentException("vTo and vUp are not orthogonal");
             this.vTo = vTo.normalize();
             this.vUp = vUp.normalize();
@@ -149,7 +149,7 @@ public class Camera implements Cloneable {
          * @return the Builder instance.
          */
         public Builder setVpDistance(double distance) {
-            if(alignZero(distance)<=0)
+            if (alignZero(distance) <= 0)
                 throw new IllegalArgumentException("distance must be positive");
             this.distance = distance;
             return this;
@@ -159,11 +159,11 @@ public class Camera implements Cloneable {
          * Sets the view plane size for the Camera.
          *
          * @param width  the width to set.
-         * @param height  the height to set.
+         * @param height the height to set.
          * @return the Builder instance.
          */
         public Builder setVpSize(double width, double height) {
-            if(alignZero(width)<=0  || alignZero(height)<=0)
+            if (alignZero(width) <= 0 || alignZero(height) <= 0)
                 throw new IllegalArgumentException("width and height must be positive");
             this.width = width;
             this.height = height;
@@ -176,43 +176,32 @@ public class Camera implements Cloneable {
          * @return the constructed Camera instance.
          */
         final String Exception = "Missing Resource";
-        final String NameClass= "Camera";
+        final String NameClass = "Camera";
 
 
         public Camera build() {
-            if(vTo==null)
+            if (vTo == null)
                 throw new MissingResourceException(Exception, NameClass, "vTo");
-            if(vUp==null)
+            if (vUp == null)
                 throw new MissingResourceException(Exception, NameClass, "vUp");
-            if(location==null)
+            if (location == null)
                 throw new MissingResourceException(Exception, NameClass, "location");
-            if(distance==0)
+            if (distance == 0)
                 throw new MissingResourceException(Exception, NameClass, "distance");
-            if(width==0)
+            if (width == 0)
                 throw new MissingResourceException(Exception, NameClass, "width");
-            if(height ==0)
+            if (height == 0)
                 throw new MissingResourceException(Exception, NameClass, "height");
-            vRight=vTo.crossProduct(vUp).normalize();
+            vRight = vTo.crossProduct(vUp).normalize();
 
-            return new Camera(this);
+            Camera camera = new Camera(this);
+            try {
+                return (Camera) camera.clone();
+            } catch (CloneNotSupportedException ignore) {
+                return null;
+            }
         }
 
-
-    }
-
-    /**
-     * Creates and returns a copy of this Camera object.
-     *
-     * @return a clone of this Camera.
-     */
-    @Override
-    public Camera clone() {
-        try {
-            Camera cloned = (Camera) super.clone();
-            return cloned;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(); // Can't happen, since we are Cloneable
-        }
     }
 
 }
