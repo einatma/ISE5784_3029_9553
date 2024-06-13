@@ -1,5 +1,7 @@
 package primitives;
 
+import java.util.List;
+
 import static primitives.Util.isZero;
 
 /**
@@ -58,5 +60,27 @@ public class Ray {
         if(isZero(t))
             return head;
         return head.add(direction.scale(t));
+    }
+    /**
+     * Finds the closest point to the start of the ray (p0) from a list of points.
+     *
+     * @param points the list of points to search
+     * @return the closest point to p0, or null if the list is empty or null
+     */
+    public Point findClosestPoint(List<Point> points) {
+        Point closestPoint = null;
+        double minDistance = Double.MAX_VALUE;
+        double pointDistance; // the distance between the "this.p0" to each point in the list
+
+        if (!points.isEmpty()) {
+            for (var pointInList : points) {
+                pointDistance = this.head.distance(pointInList);
+                if (pointDistance < minDistance) {
+                    minDistance = pointDistance;
+                    closestPoint = pointInList;
+                }
+            }
+        }
+        return closestPoint;
     }
 }

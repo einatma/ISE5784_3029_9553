@@ -16,6 +16,7 @@ public class CameraIntegrationTest {
 
     static final Point ZERO_POINT = new Point(0, 0, 0);
     final String Error = "WRONG number of intersections";
+
     /**
      * Return the number of intersections points of all geometries.
      *
@@ -31,7 +32,7 @@ public class CameraIntegrationTest {
 
         for (int i = 0; i < Nx; i++) {
             for (int j = 0; j < Ny; j++) {
-                if(camera==null)
+                if (camera == null)
                     System.out.println("camera is null");
                 intersections = geometry.findIntersections(camera.constructRay(Nx, Ny, j, i));
                 count += intersections == null ? 0 : intersections.size();

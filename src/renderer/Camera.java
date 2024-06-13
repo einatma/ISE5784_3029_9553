@@ -1,6 +1,7 @@
 package renderer;
 //H
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -14,9 +15,9 @@ import static primitives.Util.isZero;
  * The Camera class represents a camera in a 3D space.
  * It constructs rays through a view plane to capture an image.
  */
-public class Camera implements Cloneable{
-//    private RayTracerBase rayTracer;
-//    private ImageWriter imageWriter;
+public class Camera implements Cloneable {
+    private RayTracerBase rayTracer;
+    private ImageWriter imageWriter;
     private Point location;
     private Vector vTo;
     private Vector vUp;
@@ -31,8 +32,8 @@ public class Camera implements Cloneable{
      * @param builder the builder object containing all the necessary parameters.
      */
     public Camera(Builder builder) {
-//        this.rayTracer = builder.rayTracer;
-//        this.imageWriter = builder.imageWriter;
+        this.rayTracer = builder.rayTracer;
+        this.imageWriter = builder.imageWriter;
         this.location = builder.location;
         this.vTo = builder.vTo;
         this.vUp = builder.vUp;
@@ -80,12 +81,29 @@ public class Camera implements Cloneable{
         return new Ray(location, Pij.subtract(location));
     }
 
+    public void renderImage() {
+
+    }
+    public void printGrid(int interval, Color color) {
+
+
+    }
+    public void writeToImage() {
+        this.imageWriter.writeToImage();
+    }
+
+    private Color castRay(int j, int i) {
+
+    }
+
+
+
     /**
      * Builder class for constructing Camera objects.
      */
     public static class Builder {
-        //        private RayTracerBase rayTracer;
-//        private ImageWriter imageWriter;
+        private RayTracerBase rayTracer;
+        private ImageWriter imageWriter;
         private Point location;
         private Vector vTo;
         private Vector vUp;
@@ -100,10 +118,10 @@ public class Camera implements Cloneable{
 //         * @param rayTracer the RayTracerBase to set.
 //         * @return the Builder instance.
 //         */
-//        public Builder setRayTracer(RayTracerBase rayTracer) {
-//            this.rayTracer = rayTracer;
-//            return this;
-//        }
+        public Builder setRayTracer(RayTracerBase rayTracer) {
+            this.rayTracer = rayTracer;
+            return this;
+        }
 //
 //        /**
 //         * Sets the ImageWriter for the Camera.
@@ -111,10 +129,10 @@ public class Camera implements Cloneable{
 //         * @param imageWriter the ImageWriter to set.
 //         * @return the Builder instance.
 //         */
-//        public Builder setImageWriter(ImageWriter imageWriter) {
-//            this.imageWriter = imageWriter;
-//            return this;
-//        }
+        public Builder setImageWriter(ImageWriter imageWriter) {
+            this.imageWriter = imageWriter;
+            return this;
+        }
 
         /**
          * Sets the location for the Camera.
@@ -135,8 +153,7 @@ public class Camera implements Cloneable{
          * @return the Builder instance.
          */
         public Builder setDirection(Vector vTo, Vector vUp) {
-            if (!isZero(vTo.dotProduct(vUp)))
-                throw new IllegalArgumentException("vTo and vUp are not orthogonal");
+            if (!isZero(vTo.dotProduct(vUp))) throw new IllegalArgumentException("vTo and vUp are not orthogonal");
             this.vTo = vTo.normalize();
             this.vUp = vUp.normalize();
             return this;
@@ -149,8 +166,7 @@ public class Camera implements Cloneable{
          * @return the Builder instance.
          */
         public Builder setVpDistance(double distance) {
-            if (alignZero(distance) <= 0)
-                throw new IllegalArgumentException("distance must be positive");
+            if (alignZero(distance) <= 0) throw new IllegalArgumentException("distance must be positive");
             this.distance = distance;
             return this;
         }
@@ -180,18 +196,14 @@ public class Camera implements Cloneable{
 
 
         public Camera build() {
-            if (vTo == null)
-                throw new MissingResourceException(Exception, NameClass, "vTo");
-            if (vUp == null)
-                throw new MissingResourceException(Exception, NameClass, "vUp");
-            if (location == null)
-                throw new MissingResourceException(Exception, NameClass, "location");
-            if (distance == 0)
-                throw new MissingResourceException(Exception, NameClass, "distance");
-            if (width == 0)
-                throw new MissingResourceException(Exception, NameClass, "width");
-            if (height == 0)
-                throw new MissingResourceException(Exception, NameClass, "height");
+            if (vTo == null) throw new MissingResourceException(Exception, NameClass, "vTo");
+            if (vUp == null) throw new MissingResourceException(Exception, NameClass, "vUp");
+            if (location == null) throw new MissingResourceException(Exception, NameClass, "location");
+            if (distance == 0) throw new MissingResourceException(Exception, NameClass, "distance");
+            if (width == 0) throw new MissingResourceException(Exception, NameClass, "width");
+            if (height == 0) throw new MissingResourceException(Exception, NameClass, "height");
+            if(rayTracer == null) throw new MissingResourceException(Exception, NameClass, "rayTracer");
+            if(imageWriter == null) throw new MissingResourceException(Exception, NameClass, "imageWriter");
             vRight = vTo.crossProduct(vUp).normalize();
 
             Camera camera = new Camera(this);
