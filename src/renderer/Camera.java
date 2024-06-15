@@ -92,6 +92,7 @@ public class Camera implements Cloneable {
                 this.imageWriter.writePixel(j, i, color);
             }
         }
+
     }
     public void printGrid(int interval, Color color) {
         for (int i = 0; i < imageWriter.getNx(); i++) {
@@ -101,6 +102,7 @@ public class Camera implements Cloneable {
                 }
             }
         }
+
     }
     public void writeToImage() {
         this.imageWriter.writeToImage();
