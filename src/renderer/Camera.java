@@ -103,6 +103,7 @@ public class Camera implements Cloneable {
                 this.imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i)));
             }
         }
+
     }
     /**
      * Prints a grid on the image by setting the color of pixels at regular intervals.
@@ -119,6 +120,7 @@ public class Camera implements Cloneable {
                 }
             }
         }
+
     }
     /**
      * Writes the image to the output file using the ImageWriter.

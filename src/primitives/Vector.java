@@ -8,6 +8,8 @@ import static primitives.Util.isZero;
  * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Vector extends Point {
+
+
     /**
      * Constructs a new Vector object with the specified components.
      *
