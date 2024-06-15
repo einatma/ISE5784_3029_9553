@@ -208,8 +208,6 @@ public class Camera implements Cloneable {
          */
         final String Exception = "Missing Resource";
         final String NameClass = "Camera";
-
-
         public Camera build() {
             if (vTo == null) throw new MissingResourceException(Exception, NameClass, "vTo");
             if (vUp == null) throw new MissingResourceException(Exception, NameClass, "vUp");
