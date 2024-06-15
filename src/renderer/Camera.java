@@ -88,151 +88,147 @@ public class Camera implements Cloneable {
             throw new UnsupportedOperationException("Missing rayTracerBase");
         for (int i = 0; i < this.imageWriter.getNx(); i++) {
             for (int j = 0; j < this.imageWriter.getNy(); j++) {
-                Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(),imageWriter.getNy(),j,i));
+                Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
                 this.imageWriter.writePixel(j, i, color);
-
             }
         }
     }
-
-            public void printGrid ( int interval, Color color){
-                for (int i = 0; i < imageWriter.getNx(); i++) {
-                    for (int j = 0; j < imageWriter.getNy(); j++) {
-                        if (i % interval == 0 || j % interval == 0) {
-                            imageWriter.writePixel(i, j, color);
-                        }
-                    }
+    public void printGrid(int interval, Color color) {
+        for (int i = 0; i < imageWriter.getNx(); i++) {
+            for (int j = 0; j < imageWriter.getNy(); j++) {
+                if (i % interval == 0 || j % interval == 0) {
+                    imageWriter.writePixel(i, j, color);
                 }
-
             }
+        }
+    }
+    public void writeToImage() {
+        this.imageWriter.writeToImage();
+    }
 
-            public void writeToImage () {
-                this.imageWriter.writeToImage();
-            }
-
-            private Color castRay ( int j, int i){
-                return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
-            }
+    private Color castRay(int j, int i) {
+        return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+    }
 
 
-            /**
-             * Builder class for constructing Camera objects.
-             */
-            public static class Builder {
-                private RayTracerBase rayTracer;
-                private ImageWriter imageWriter;
-                private Point location;
-                private Vector vTo;
-                private Vector vUp;
-                private Vector vRight;
-                private double distance;
-                private double width;
-                private double height;
+    /**
+     * Builder class for constructing Camera objects.
+     */
+    public static class Builder {
+        private RayTracerBase rayTracer;
+        private ImageWriter imageWriter;
+        private Point location;
+        private Vector vTo;
+        private Vector vUp;
+        private Vector vRight;
+        private double distance;
+        private double width;
+        private double height;
 
-                //        /**
+        //        /**
 //         * Sets the RayTracerBase for the Camera.
 //         *
 //         * @param rayTracer the RayTracerBase to set.
 //         * @return the Builder instance.
 //         */
-                public Builder setRayTracer(RayTracerBase rayTracer) {
-                    this.rayTracer = rayTracer;
-                    return this;
-                }
+        public Builder setRayTracer(RayTracerBase rayTracer) {
+            this.rayTracer = rayTracer;
+            return this;
+        }
 
-                //
+        //
 //        /**
 //         * Sets the ImageWriter for the Camera.
 //         *
 //         * @param imageWriter the ImageWriter to set.
 //         * @return the Builder instance.
 //         */
-                public Builder setImageWriter(ImageWriter imageWriter) {
-                    this.imageWriter = imageWriter;
-                    return this;
-                }
+        public Builder setImageWriter(ImageWriter imageWriter) {
+            this.imageWriter = imageWriter;
+            return this;
+        }
 
-                /**
-                 * Sets the location for the Camera.
-                 *
-                 * @param location the location to set.
-                 * @return the Builder instance.
-                 */
-                public Builder setLocation(Point location) {
-                    this.location = location;
-                    return this;
-                }
+        /**
+         * Sets the location for the Camera.
+         *
+         * @param location the location to set.
+         * @return the Builder instance.
+         */
+        public Builder setLocation(Point location) {
+            this.location = location;
+            return this;
+        }
 
-                /**
-                 * Sets the direction vectors for the Camera.
-                 *
-                 * @param vTo the direction vector to set.
-                 * @param vUp the up vector to set.
-                 * @return the Builder instance.
-                 */
-                public Builder setDirection(Vector vTo, Vector vUp) {
-                    if (!isZero(vTo.dotProduct(vUp)))
-                        throw new IllegalArgumentException("vTo and vUp are not orthogonal");
-                    this.vTo = vTo.normalize();
-                    this.vUp = vUp.normalize();
-                    return this;
-                }
+        /**
+         * Sets the direction vectors for the Camera.
+         *
+         * @param vTo the direction vector to set.
+         * @param vUp the up vector to set.
+         * @return the Builder instance.
+         */
+        public Builder setDirection(Vector vTo, Vector vUp) {
+            if (!isZero(vTo.dotProduct(vUp)))
+                throw new IllegalArgumentException("vTo and vUp are not orthogonal");
+            this.vTo = vTo.normalize();
+            this.vUp = vUp.normalize();
+            return this;
+        }
 
-                /**
-                 * Sets the view plane distance for the Camera.
-                 *
-                 * @param distance the distance to set.
-                 * @return the Builder instance.
-                 */
-                public Builder setVpDistance(double distance) {
-                    if (alignZero(distance) <= 0) throw new IllegalArgumentException("distance must be positive");
-                    this.distance = distance;
-                    return this;
-                }
+        /**
+         * Sets the view plane distance for the Camera.
+         *
+         * @param distance the distance to set.
+         * @return the Builder instance.
+         */
+        public Builder setVpDistance(double distance) {
+            if (alignZero(distance) <= 0) throw new IllegalArgumentException("distance must be positive");
+            this.distance = distance;
+            return this;
+        }
 
-                /**
-                 * Sets the view plane size for the Camera.
-                 *
-                 * @param width  the width to set.
-                 * @param height the height to set.
-                 * @return the Builder instance.
-                 */
-                public Builder setVpSize(double width, double height) {
-                    if (alignZero(width) <= 0 || alignZero(height) <= 0)
-                        throw new IllegalArgumentException("width and height must be positive");
-                    this.width = width;
-                    this.height = height;
-                    return this;
-                }
+        /**
+         * Sets the view plane size for the Camera.
+         *
+         * @param width  the width to set.
+         * @param height the height to set.
+         * @return the Builder instance.
+         */
+        public Builder setVpSize(double width, double height) {
+            if (alignZero(width) <= 0 || alignZero(height) <= 0)
+                throw new IllegalArgumentException("width and height must be positive");
+            this.width = width;
+            this.height = height;
+            return this;
+        }
 
-                /**
-                 * Builds and returns a Camera instance.
-                 *
-                 * @return the constructed Camera instance.
-                 */
-                final String Exception = "Missing Resource";
-                final String NameClass = "Camera";
+        /**
+         * Builds and returns a Camera instance.
+         *
+         * @return the constructed Camera instance.
+         */
+        final String Exception = "Missing Resource";
+        final String NameClass = "Camera";
 
 
-                public Camera build() {
-                    if (vTo == null) throw new MissingResourceException(Exception, NameClass, "vTo");
-                    if (vUp == null) throw new MissingResourceException(Exception, NameClass, "vUp");
-                    if (location == null) throw new MissingResourceException(Exception, NameClass, "location");
-                    if (distance == 0) throw new MissingResourceException(Exception, NameClass, "distance");
-                    if (width == 0) throw new MissingResourceException(Exception, NameClass, "width");
-                    if (height == 0) throw new MissingResourceException(Exception, NameClass, "height");
-                    if (rayTracer == null) throw new MissingResourceException(Exception, NameClass, "rayTracer");
-                    if (imageWriter == null) throw new MissingResourceException(Exception, NameClass, "imageWriter");
-                    vRight = vTo.crossProduct(vUp).normalize();
+        public Camera build() {
+            if (vTo == null) throw new MissingResourceException(Exception, NameClass, "vTo");
+            if (vUp == null) throw new MissingResourceException(Exception, NameClass, "vUp");
+            if (location == null) throw new MissingResourceException(Exception, NameClass, "location");
+            if (distance == 0) throw new MissingResourceException(Exception, NameClass, "distance");
+            if (width == 0) throw new MissingResourceException(Exception, NameClass, "width");
+            if (height == 0) throw new MissingResourceException(Exception, NameClass, "height");
+            if (rayTracer == null) throw new MissingResourceException(Exception, NameClass, "rayTracer");
+            if (imageWriter == null) throw new MissingResourceException(Exception, NameClass, "imageWriter");
+            vRight = vTo.crossProduct(vUp).normalize();
 
-                    Camera camera = new Camera(this);
-                    try {
-                        return (Camera) camera.clone();
-                    } catch (CloneNotSupportedException ignore) {
-                        return null;
-                    }
-                }
-
+            Camera camera = new Camera(this);
+            try {
+                return (Camera) camera.clone();
+            } catch (CloneNotSupportedException ignore) {
+                return null;
             }
         }
+
+    }
+}
 
