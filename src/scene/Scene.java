@@ -19,68 +19,31 @@ public class Scene {
     public Scene(String name) {
         this.name = name;
     }
+
+
+
     /**
      * Sets the ambient light for the scene.
      *
      * @param ambientLight the ambient light to set
      * @return a SceneBuilder instance for chaining
      */
-    public SceneBuilder setAmbientLight(AmbientLight ambientLight) {
-        this.ambientLight = ambientLight;
-        return new SceneBuilder(name);
+    public Scene setAmbientLight(AmbientLight ambientLight) {
+        this.ambientLight=ambientLight;
+        return this;
+    }
+    public Scene setGeometries(Geometries geometries) {
+        this.geometries = geometries;
+        return this;
+    }
+    public Scene setBackground(Color background) {
+        this.background = background;
+        return this;
     }
 
-    //================== SceneBuilder class ==================//
 
-    /**
-     * The SceneBuilder class is used for constructing Scene instances with a fluent API.
-     */
-    public static class SceneBuilder {
-        private final Scene scene;
 
-        public SceneBuilder(String name) {
-            scene = new Scene(name);
-        }
 
-        //========= chaining method =========//
 
-        /**
-         * Sets the background color for the scene.
-         *
-         * @param background the background color to set
-         * @return the SceneBuilder instance for chaining
-         */
-        public SceneBuilder setBackground(Color background) {
-            scene.background = background;
-            return this;
-        }
-        /**
-         * Sets the ambient light for the scene.
-         *
-         * @param ambientLight the ambient light to set
-         * @return the SceneBuilder instance for chaining
-         */
-        public SceneBuilder setAmbientLight(AmbientLight ambientLight) {
-            scene.ambientLight = ambientLight;
-            return this;
-        }
-        /**
-         * Sets the geometries for the scene.
-         *
-         * @param geometries the geometries to set
-         * @return the SceneBuilder instance for chaining
-         */
-        public SceneBuilder setGeometries(Geometries geometries) {
-            scene.geometries = geometries;
-            return this;
-        }
-        /**
-         * Builds the Scene instance.
-         *
-         * @return the constructed Scene instance
-         */
-        public Scene build() {
-            return scene;
-        }
-    }
+
 }

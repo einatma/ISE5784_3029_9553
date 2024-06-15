@@ -95,8 +95,10 @@ public class Camera implements Cloneable {
 
     }
     public void printGrid(int interval, Color color) {
+        //=== running on the view plane===//
         for (int i = 0; i < imageWriter.getNx(); i++) {
             for (int j = 0; j < imageWriter.getNy(); j++) {
+                //=== create the net ===//
                 if (i % interval == 0 || j % interval == 0) {
                     imageWriter.writePixel(i, j, color);
                 }
