@@ -10,14 +10,14 @@ public class Scene {
     public  AmbientLight ambientLight = AmbientLight.NONE;
     public  Geometries geometries = new Geometries();
 
-    // בנאי
     public Scene(String name) {
         this.name = name;
     }
 
     public SceneBuilder setAmbientLight(AmbientLight ambientLight) {
+        this.ambientLight = ambientLight;
+        return new SceneBuilder(name);
     }
-
 
     //================== SceneBuilder class ==================//
     public static class SceneBuilder {
@@ -43,7 +43,7 @@ public class Scene {
             scene.geometries = geometries;
             return this;
         }
-       
+
 
 
         public Scene build() {
