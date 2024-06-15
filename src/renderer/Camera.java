@@ -80,20 +80,38 @@ public class Camera implements Cloneable {
         }
         return new Ray(location, Pij.subtract(location));
     }
-
+    /**
+     * Renders the image by tracing rays through each pixel and writing the corresponding color to the image.
+     * If the imageWriter or rayTracer is not set, throws an UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException if imageWriter or rayTracer is not set
+     */
     public void renderImage() {
+
         if (this.imageWriter == null)
             throw new UnsupportedOperationException("Missing imageWriter");
         if (this.rayTracer == null)
             throw new UnsupportedOperationException("Missing rayTracerBase");
+        // Loop through each pixel in the image
         for (int i = 0; i < this.imageWriter.getNx(); i++) {
             for (int j = 0; j < this.imageWriter.getNy(); j++) {
-                Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
-                this.imageWriter.writePixel(j, i, color);
+                //write a pixel to an image using a ray tracing algorithm.
+                // It calls the `writePixel` method of the `imageWriter` object to set the color of the pixel at position (j, i) in the image.
+                // The color is determined by tracing a ray through the scene using the `traceRay` method of the `rayTracer` object.
+                // The `traceRay` method constructs a ray originating from the camera's position and passing through the (j, i) pixel on the image plane.
+                // It then calculates the color of the pixel based on the intersections of the ray with objects in the scene. The resulting color is used to set the pixel's color in the image.
+                this.imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i)));
             }
         }
     }
+    /**
+     * Prints a grid on the image by setting the color of pixels at regular intervals.
+     *
+     * @param interval the interval between grid lines
+     * @param color    the color of the grid lines
+     */
     public void printGrid(int interval, Color color) {
+        // Loop through each pixel in the image
         for (int i = 0; i < imageWriter.getNx(); i++) {
             for (int j = 0; j < imageWriter.getNy(); j++) {
                 if (i % interval == 0 || j % interval == 0) {
@@ -102,10 +120,19 @@ public class Camera implements Cloneable {
             }
         }
     }
+    /**
+     * Writes the image to the output file using the ImageWriter.
+     */
     public void writeToImage() {
         this.imageWriter.writeToImage();
     }
-
+    /**
+     * Casts a ray through the specified pixel and returns the color at the intersection point.
+     *
+     * @param j the x index of the pixel
+     * @param i the y index of the pixel
+     * @return the color at the intersection point
+     */
     private Color castRay(int j, int i) {
         return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
     }
