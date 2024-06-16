@@ -3,8 +3,6 @@ package geometries;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -94,7 +92,7 @@ public class PolygonTests {
 
     /**
      * Test method for
-     * {@link geometries.Polygon#findIntersections(primitives.Ray)}.
+     * {@link Intersectable#findIntersections(Ray, double)}.
      */
     @Test
     public void testfindIntersectionsRay() {

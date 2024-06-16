@@ -39,11 +39,12 @@ public class Sphere extends RadialGeometry {
     /**
      * Finds all the intersection points between a given ray and the geometric object.
      *
-     * @param ray the ray to intersect with the geometric object
+     * @param ray      the ray to intersect with the geometric object
+     * @param distance
      * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
         Point P0 = ray.getHead();
         Vector v = ray.getDirection();
         Vector u;
@@ -51,8 +52,8 @@ public class Sphere extends RadialGeometry {
         // if p0 on center, calculate with line parametric representation
         // the direction vector normalized.
         if (center.equals(P0)) {
-            Point newPoint = ray.addToHead(getRadius());
-            return List.of(newPoint);
+            Point newPoint = ray.getPoint(getRadius());
+            return List.of(new GeoPoint(this,newPoint));
         }
 
         try {
@@ -75,19 +76,19 @@ public class Sphere extends RadialGeometry {
         double t1 = alignZero(tm - th);
         double t2 = alignZero(tm + th);
 
-        List<Point> intersections = new ArrayList<>();
+        List<GeoPoint> intersections = null;
 
         // Check if t1 and t2 are valid
-        if (t1 > 0 && t2 > 0) {
-            intersections = List.of(ray.addToHead(t1), ray.addToHead(t2));
+        if (t1 > 0 && t2 > 0 && t1 < distance && t2 < distance ) {
+            intersections = List.of(new GeoPoint(this,ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
         } else {
             // Check if t1 is valid
-            if (t1 > 0) {
-                intersections = List.of(ray.addToHead(t1));
+            if (t1 > 0 && t1 < distance) {
+                intersections = List.of(new GeoPoint(this,ray.getPoint(t1)));
             }
             // Check if t2 is valid
-            if (t2 > 0) {
-                intersections = List.of(ray.addToHead(t2));
+            if (t2 > 0 && t2 < distance) {
+                intersections = List.of(new GeoPoint(this,ray.getPoint(t2)));
             }
         }
 

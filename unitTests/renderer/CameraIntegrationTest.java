@@ -34,7 +34,7 @@ public class CameraIntegrationTest {
             for (int j = 0; j < Ny; j++) {
                 if (camera == null)
                     System.out.println("camera is null");
-                intersections = geometry.findIntersections(camera.constructRay(Nx, Ny, j, i));
+                intersections = geometry.findIntersections(camera.constructRay(Nx, Ny, j, i), );
                 count += intersections == null ? 0 : intersections.size();
             }
         }
@@ -44,7 +44,7 @@ public class CameraIntegrationTest {
     /**
      * Test method for
      * {@link Camera#constructRay(int, int, int, int)}
-     * and {@link geometries.Sphere#findIntersections(Ray)}.
+     * and {@link Intersectable#findIntersections(Ray, double)}.
      */
     @Test
     public void CameraRaySphereIntegration() {
@@ -87,7 +87,7 @@ public class CameraIntegrationTest {
     /**
      * Test method for
      * {@link Camera#constructRay(int, int, int, int)}
-     * and {@link geometries.Triangle#findIntersections(Ray)}.
+     * and {@link Intersectable#findIntersections(Ray, double)}.
      */
     @Test
     public void CameraRayTriangleIntegration() {
@@ -110,7 +110,7 @@ public class CameraIntegrationTest {
     /**
      * Test method for
      * {@link Camera#constructRay(int, int, int, int)}
-     * and {@link geometries.Plane#findIntersections(Ray)}.
+     * and {@link Intersectable#findIntersections(Ray, double)}.
      */
 
     @Test

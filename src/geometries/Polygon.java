@@ -15,7 +15,7 @@ import primitives.Vector;
  * @author Dan
  */
 
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -96,12 +96,15 @@ public class Polygon implements Geometry {
     /**
      * Finds all the intersection points between a given ray and the geometric object.
      *
-     * @param ray the ray to intersect with the geometric object
+     * @param ray      the ray to intersect with the geometric object
+     * @param distance
      * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        if (plane.findIntersections(ray) == null) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+        //אליעזר אמר לשנות לthis את כל ההחזרים מהfindIntersections (חוזר עם מישור, צריך לשנות לפוליגון), וצריך לשנות לבלי הhelper
+        List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray, distance);
+        if (result == null) {
             return null;
         }
         // Iterate through the vertices of the polygon to check if the intersection point is inside the polygon
@@ -119,7 +122,7 @@ public class Polygon implements Geometry {
 
                 // If all the dot products have the same sign, the intersection point is inside the polygon
                 if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0)) {
-                    return plane.findIntersections(ray);
+                    return result;
                 }
             }
         }

@@ -3,17 +3,44 @@ package geometries;
 import primitives.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Intersectable interface represents geometric objects that can be intersected by rays.
  */
-public interface Intersectable {
+public abstract class Intersectable {
+    public static class GeoPoint {
+        public Geometry geometry;
+        public Point point;
 
-    /**
-     * Finds all the intersection points between a given ray and the geometric object.
-     *
-     * @param ray the ray to intersect with the geometric object
-     * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
-     */
-    List<Point> findIntersections(Ray ray);
+        public GeoPoint(Geometry geometry, Point point) {
+            this.geometry = geometry;
+            this.point = point;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof GeoPoint geoPoint)) return false;
+            return geometry.equals( geoPoint.geometry) && point.equals(geoPoint.point);
+        }
+
+    }
+
+    public List<GeoPoint> findGeoIntersections(Ray ray){
+        return findGeoIntersectionsHelper(ray, Double.POSITIVE_INFINITY);
+    }
+    public List<GeoPoint> findGeoIntersections(Ray ray, double distance){
+        return findGeoIntersectionsHelper(ray, distance);
+    }
+
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) ;
+
+
+    public List<Point> findIntersections(Ray ray) {
+        var geoList = findGeoIntersections(ray);
+        return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
+    }
+
+
 }

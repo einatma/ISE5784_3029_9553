@@ -37,28 +37,28 @@ class TriangleTests {
         // ============ Equivalence Partitions Tests ==============
         // TC01: The intersection point is in the triangle
         assertEquals(List.of(new Point(2, 2, 1)),
-                triangle.findIntersections(new Ray(new Point(2, 2, 2), new Vector(0, 0, -1))),
+                triangle.findIntersections(new Ray(new Point(2, 2, 2), new Vector(0, 0, -1)), ),
                 "The point supposed to be in the triangle");
 
         // TC02: The intersection point is outside the triangle, against edge
-        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(1, 0, -1))),
+        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(1, 0, -1)), ),
                 "The point supposed to be outside the triangle, against edge");
 
         // TC03: The intersection point is outside the triangle, against vertex
-        assertNull(triangle.findIntersections(new Ray(new Point(4, 0, 2), new Vector(0, 1, -1))),
+        assertNull(triangle.findIntersections(new Ray(new Point(4, 0, 2), new Vector(0, 1, -1)), ),
                 "The point supposed to be outside the triangle, against vertex");
 
         // =============== Boundary Values Tests ==================
         // TC10: The point is on edge
-        assertNull(triangle.findIntersections(new Ray(new Point(1, 1, 2), new Vector(1, 0, -1))),
+        assertNull(triangle.findIntersections(new Ray(new Point(1, 1, 2), new Vector(1, 0, -1)), ),
                 "The point supposed to be on edge");
 
         // TC11: The point is in vertex
-        assertNull(triangle.findIntersections(new Ray(new Point(3, 1, 2), new Vector(0, 0, -1))),
+        assertNull(triangle.findIntersections(new Ray(new Point(3, 1, 2), new Vector(0, 0, -1)), ),
                 "The point supposed to be in vertex");
 
         // TC12: The point is on edge's continuation
-        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(3, 0, -1))),
+        assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(3, 0, -1)), ),
                 "The point supposed to be on edge's continuation");
     }
 }

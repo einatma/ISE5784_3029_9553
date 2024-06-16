@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Composite class for aggregating multiple Intersectable objects.
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
     // List of intersectable geometries initialized with an empty LinkedList
     private final List<Intersectable> geometries = new LinkedList<>();
 
@@ -42,14 +42,15 @@ public class Geometries implements Intersectable {
     /**
      * Finds all intersection points between the given ray and the geometries in the collection.
      *
-     * @param ray the ray for which intersections are to be found.
+     * @param ray      the ray for which intersections are to be found.
+     * @param distance
      * @return a list of all intersection points. If no intersections are found, returns null.
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> result = null;
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+        List<GeoPoint> result = null;
         for (Intersectable geometry : geometries) {
-            List<Point> intersections = geometry.findIntersections(ray);
+            List<GeoPoint> intersections = geometry.findGeoIntersectionsHelper(ray, distance);
             if (intersections != null) {
                 if (result == null) {
                     result = new LinkedList<>();
@@ -60,7 +61,7 @@ public class Geometries implements Intersectable {
         if(result!=null)
             return result
                     .stream()
-                    .sorted(Comparator.comparingDouble( p -> ((Point)p).distance(ray.getHead())))
+                    .sorted(Comparator.comparingDouble( p -> ((GeoPoint)p).point.distance(ray.getHead())))
                     .toList();
         return null;
     }
