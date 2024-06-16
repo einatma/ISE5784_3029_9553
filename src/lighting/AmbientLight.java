@@ -25,7 +25,11 @@ public class AmbientLight {
     public AmbientLight(Color Ia, double Ka) {
         intensity = Ia.scale(Ka);
     }
-
+    /**
+     * Returns the intensity of the ambient light.
+     *
+     * @return the intensity of the ambient light
+     */
     public Color getIntensity() {
         return intensity;
     }

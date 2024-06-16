@@ -32,10 +32,22 @@ public class Scene {
         this.ambientLight=ambientLight;
         return this;
     }
+    /**
+     * Sets the geometries of the scene.
+     *
+     * @param geometries the geometries to set
+     * @return the Scene object itself for chaining
+     */
     public Scene setGeometries(Geometries geometries) {
         this.geometries = geometries;
         return this;
     }
+    /**
+     * Sets the background color of the scene.
+     *
+     * @param background the background color to set
+     * @return the Scene object itself for chaining
+     */
     public Scene setBackground(Color background) {
         this.background = background;
         return this;
