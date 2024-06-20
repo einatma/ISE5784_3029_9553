@@ -101,9 +101,8 @@ public class Polygon extends Geometry {
      * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
-        //אליעזר אמר לשנות לthis את כל ההחזרים מהfindIntersections (חוזר עם מישור, צריך לשנות לפוליגון), וצריך לשנות לבלי הhelper
-        List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray, distance);
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray/*, double distance*/) {
+        List<GeoPoint> result = plane.findGeoIntersections(ray/*, distance*/);
         if (result == null) {
             return null;
         }

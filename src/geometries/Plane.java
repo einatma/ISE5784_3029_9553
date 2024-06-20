@@ -67,11 +67,11 @@ public class Plane extends Geometry {
      * Finds all the intersection points between a given ray and the geometric object.
      *
      * @param ray      the ray to intersect with the geometric object
-     * @param distance
+     //* @param distance
      * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         Vector direction = ray.getDirection();
         Point head = ray.getHead();
 
@@ -93,7 +93,7 @@ public class Plane extends Geometry {
         double t = alignZero(numerator / denominator);
 
         // If t is less than or equal to zero, there is no intersection (the intersection is behind the ray's origin)
-        if (t <= 0 || t > distance) {
+        if (t <= 0 ) {
             return null;
         }
 
