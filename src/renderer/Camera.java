@@ -29,19 +29,9 @@ public class Camera implements Cloneable {
     /**
      * Constructs a Camera object using a Builder.
      *
-     * @param builder the builder object containing all the necessary parameters.
      */
-    public Camera(Builder builder) {
-        this.rayTracer = builder.rayTracer;
-        this.imageWriter = builder.imageWriter;
-        this.location = builder.location;
-        this.vTo = builder.vTo;
-        this.vUp = builder.vUp;
-        this.vRight = builder.vRight;
-        this.distance = builder.distance;
-        this.width = builder.width;
-        this.height = builder.height;
-    }
+    private Camera() {
+      }
 
     /**
      * Gets the Builder instance for Camera.
@@ -149,24 +139,12 @@ public class Camera implements Cloneable {
      * Builder class for constructing Camera objects.
      */
     public static class Builder {
-        private RayTracerBase rayTracer;
-        private ImageWriter imageWriter;
-        private Point location;
-        private Vector vTo;
-        private Vector vUp;
-        private Vector vRight;
-        private double distance;
-        private double width;
-        private double height;
 
-        //        /**
-//         * Sets the RayTracerBase for the Camera.
-//         *
-//         * @param rayTracer the RayTracerBase to set.
-//         * @return the Builder instance.
-//         */
+        private Camera camera = new Camera();
+
+
         public Builder setRayTracer(RayTracerBase rayTracer) {
-            this.rayTracer = rayTracer;
+            camera.rayTracer = rayTracer;
             return this;
         }
 
@@ -178,7 +156,7 @@ public class Camera implements Cloneable {
 //         * @return the Builder instance.
 //         */
         public Builder setImageWriter(ImageWriter imageWriter) {
-            this.imageWriter = imageWriter;
+            camera.imageWriter = imageWriter;
             return this;
         }
 
@@ -189,7 +167,7 @@ public class Camera implements Cloneable {
          * @return the Builder instance.
          */
         public Builder setLocation(Point location) {
-            this.location = location;
+            camera.location = location;
             return this;
         }
 
@@ -203,8 +181,8 @@ public class Camera implements Cloneable {
         public Builder setDirection(Vector vTo, Vector vUp) {
             if (!isZero(vTo.dotProduct(vUp)))
                 throw new IllegalArgumentException("vTo and vUp are not orthogonal");
-            this.vTo = vTo.normalize();
-            this.vUp = vUp.normalize();
+            camera.vTo = vTo.normalize();
+            camera.vUp = vUp.normalize();
             return this;
         }
 
@@ -216,7 +194,7 @@ public class Camera implements Cloneable {
          */
         public Builder setVpDistance(double distance) {
             if (alignZero(distance) <= 0) throw new IllegalArgumentException("distance must be positive");
-            this.distance = distance;
+            camera.distance = distance;
             return this;
         }
 
@@ -230,8 +208,8 @@ public class Camera implements Cloneable {
         public Builder setVpSize(double width, double height) {
             if (alignZero(width) <= 0 || alignZero(height) <= 0)
                 throw new IllegalArgumentException("width and height must be positive");
-            this.width = width;
-            this.height = height;
+            camera.width = width;
+            camera.height = height;
             return this;
         }
 
@@ -243,17 +221,16 @@ public class Camera implements Cloneable {
         final String Exception = "Missing Resource";
         final String NameClass = "Camera";
         public Camera build() {
-            if (vTo == null) throw new MissingResourceException(Exception, NameClass, "vTo");
-            if (vUp == null) throw new MissingResourceException(Exception, NameClass, "vUp");
-            if (location == null) throw new MissingResourceException(Exception, NameClass, "location");
-            if (distance == 0) throw new MissingResourceException(Exception, NameClass, "distance");
-            if (width == 0) throw new MissingResourceException(Exception, NameClass, "width");
-            if (height == 0) throw new MissingResourceException(Exception, NameClass, "height");
-            if (rayTracer == null) throw new MissingResourceException(Exception, NameClass, "rayTracer");
-            if (imageWriter == null) throw new MissingResourceException(Exception, NameClass, "imageWriter");
-            vRight = vTo.crossProduct(vUp).normalize();
+            if (camera.vTo == null) throw new MissingResourceException(Exception, NameClass, "vTo");
+            if (camera.vUp == null) throw new MissingResourceException(Exception, NameClass, "vUp");
+            if (camera.location == null) throw new MissingResourceException(Exception, NameClass, "location");
+            if (camera.distance == 0) throw new MissingResourceException(Exception, NameClass, "distance");
+            if (camera.width == 0) throw new MissingResourceException(Exception, NameClass, "width");
+            if (camera.height == 0) throw new MissingResourceException(Exception, NameClass, "height");
+            if (camera.rayTracer == null) throw new MissingResourceException(Exception, NameClass, "rayTracer");
+            if (camera.imageWriter == null) throw new MissingResourceException(Exception, NameClass, "imageWriter");
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
 
-            Camera camera = new Camera(this);
             try {
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException ignore) {
@@ -261,6 +238,12 @@ public class Camera implements Cloneable {
             }
         }
 
+        public Builder setDirection(Point inFront, Vector up) {
+            camera.vTo = inFront.subtract(camera.location).normalize();
+            camera.vUp = up.normalize();
+            camera.vRight= camera.vTo.crossProduct(camera.vUp).normalize();
+            return this;
+        }
     }
 }
 

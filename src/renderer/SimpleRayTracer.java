@@ -1,11 +1,12 @@
 package renderer;
 
-import primitives.Color;
-import primitives.Point;
-import primitives.Ray;
+import lighting.*;
+import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
 import java.util.List;
+
+import static primitives.Util.alignZero;
 
 /**
  * Simple ray tracer class that extends RayTracerBase.
@@ -40,17 +41,57 @@ public class SimpleRayTracer extends RayTracerBase {
 
         GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
 
-        return calcColor(closestPoint);
+        return calcColor(closestPoint,ray);
     }
     /**
      * Calculates the color at a given point.
      *
-     * @param geoPoint the point at which to calculate the color
+     * @param intersection the point at which to calculate the color
      * @return the calculated color
      */
-    private Color calcColor(GeoPoint geoPoint) {
+    private Color calcColor(GeoPoint intersection,Ray ray) {
         Color result = this.scene.ambientLight.getIntensity();
-        result = result.add(geoPoint.geometry.getEmission());
+        result = result.add(calcLocalEffects(intersection, ray));
         return result;
+    }
+
+    private Color calcLocalEffects(GeoPoint gp, Ray ray) {
+        Vector n = gp.geometry.getNormal(gp.point);
+        Vector v=ray.getDirection();
+        double nv = alignZero(n.dotProduct(v));
+        if(nv==0)return Color.BLACK;
+        Material material = gp.geometry.getMaterial();
+        Color color=gp.geometry.getEmission();
+        for (LightSource lightSource : this.scene.lights) {
+            Vector l = lightSource.getL(gp.point);
+            double nl = alignZero(n.dotProduct(l));
+            if (nl * nv > 0) {
+                Color iL=lightSource.getIntensity(gp.point);
+                color= color.add(calcDiffusive( material.kD, l, n, iL),
+                        calcSpecular(material.kS, l, n, v, material.nShininess, iL));
+
+            }
+        }
+        return color;
+
+    }
+
+    private Color calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
+        Double3 ks = material.kS;  // מקדם ספוקולרי
+        int nShininess = material.nShininess;  // דרגת ברק
+
+        Vector r = l.subtract(n.scale(2 * nl)).normalize();  // הכיוון המוחזר
+        double vr = alignZero(-v.dotProduct(r));
+
+        if (vr <= 0) return Color.BLACK;  // אם הזווית היא מעל 90 מעלות
+
+        return ks.scale(Math.pow(vr,nShininess));
+    }
+
+
+    private Color calcDiffusive(Material material, double nl) {
+        Double3 kd = material.kD;  // מקדם דיפוסי
+        if (nl < 0) nl = -nl;  // השוויון הוא ערך מוחלט
+        return material.kD.scale(nl);
     }
 }

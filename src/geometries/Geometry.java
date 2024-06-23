@@ -9,13 +9,15 @@ import primitives.*;
  */
 public abstract class Geometry extends Intersectable {
     private Color emission = Color.BLACK;
+
+    private Material material = new Material();
     /**
      * Calculates the normal vector at a given point on the surface of the geometry.
      *
      * @param p The point on the surface of the geometry.
      * @return The normal vector at the given point.
      */
-    abstract Vector getNormal(Point p);
+    public abstract Vector getNormal(Point p);
 
     public Color getEmission() {
         return emission;
@@ -23,6 +25,15 @@ public abstract class Geometry extends Intersectable {
 
     public Geometry setEmission(Color emission) {
         this.emission = emission;
+        return this;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public Geometry setMaterial(Material material) {
+        this.material = material;
         return this;
     }
 }

@@ -10,6 +10,8 @@ import static primitives.Util.isZero;
 public class Vector extends Point {
 
 
+    public static final Vector Y = new Vector(0,-1,0);
+
     /**
      * Constructs a new Vector object with the specified components.
      *
