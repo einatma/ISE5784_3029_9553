@@ -1,6 +1,7 @@
 package geometries;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static primitives.Util.*;
 
@@ -121,7 +122,9 @@ public class Polygon extends Geometry {
 
                 // If all the dot products have the same sign, the intersection point is inside the polygon
                 if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0)) {
-                    return result;
+                    return result.stream()
+                            .map(gp -> new GeoPoint(this, gp.point))
+                            .collect(Collectors.toList());
                 }
             }
         }

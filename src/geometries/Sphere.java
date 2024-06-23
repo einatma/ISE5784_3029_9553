@@ -92,7 +92,7 @@ public class Sphere extends RadialGeometry {
             }
         }
 
-        return intersections.isEmpty() ? null : intersections;
+        return intersections;
     }
 
 

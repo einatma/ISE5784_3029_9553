@@ -5,6 +5,7 @@ import primitives.Ray;
 import primitives.Vector;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static primitives.Util.alignZero;
 
@@ -54,9 +55,10 @@ public class Triangle extends Polygon {
         double dot3 = alignZero(v.dotProduct(n3));
 
         if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0)) {
-            return result;
+            return result.stream()
+                    .map(gp -> new GeoPoint(this, gp.point))
+                    .collect(Collectors.toList());
         }
-
         return null;
     }
 

@@ -3,6 +3,7 @@ package renderer;
 import org.junit.jupiter.api.*;
 import primitives.*;
 import geometries.*;
+import scene.Scene;
 
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class CameraIntegrationTest {
     public void CameraRaySphereIntegration() {
 
         Camera camera1 = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+                .setImageWriter(new ImageWriter("Test", 1, 1))
                 .setLocation(ZERO_POINT)
                 .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
                 .setVpDistance(1d)
@@ -57,6 +60,8 @@ public class CameraIntegrationTest {
                 .build();
 
         Camera camera2 = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+                .setImageWriter(new ImageWriter("Test", 1, 1))
                 .setLocation(new Point(0, 0, 0.5))
                 .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
                 .setVpDistance(1d)
@@ -92,6 +97,8 @@ public class CameraIntegrationTest {
     @Test
     public void CameraRayTriangleIntegration() {
         Camera cam = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+                .setImageWriter(new ImageWriter("Test", 1, 1))
                 .setLocation(ZERO_POINT)
                 .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
                 .setVpDistance(1d)
@@ -116,6 +123,8 @@ public class CameraIntegrationTest {
     @Test
     public void CameraRayPlaneIntegration() {
         Camera camera = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+                .setImageWriter(new ImageWriter("Test", 1, 1))
                 .setLocation(ZERO_POINT)
                 .setDirection(new Vector(0, 0, 1), new Vector(0, -1, 0))
                 .setVpDistance(1d)
