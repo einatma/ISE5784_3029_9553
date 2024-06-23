@@ -60,15 +60,17 @@ public class SimpleRayTracer extends RayTracerBase {
         Vector v=ray.getDirection();
         double nv = alignZero(n.dotProduct(v));
         if(nv==0)return Color.BLACK;
-        Material material = gp.geometry.getMaterial();
+        Material mat = gp.geometry.getMaterial();
         Color color=gp.geometry.getEmission();
         for (LightSource lightSource : this.scene.lights) {
             Vector l = lightSource.getL(gp.point);
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) {
                 Color iL=lightSource.getIntensity(gp.point);
-                color= color.add(calcDiffusive( material.kD, l, n, iL),
-                        calcSpecular(material.kS, l, n, v, material.nShininess, iL));
+                color = color.add(
+                        iL.scale(calcDiffusive(mat, nl)
+                                .add(calcSpecular(mat, n, l, nl, v))));
+
 
             }
         }
@@ -76,22 +78,20 @@ public class SimpleRayTracer extends RayTracerBase {
 
     }
 
-    private Color calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
+    private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
         Double3 ks = material.kS;  // מקדם ספוקולרי
         int nShininess = material.nShininess;  // דרגת ברק
 
         Vector r = l.subtract(n.scale(2 * nl)).normalize();  // הכיוון המוחזר
         double vr = alignZero(-v.dotProduct(r));
 
-        if (vr <= 0) return Color.BLACK;  // אם הזווית היא מעל 90 מעלות
+        if (vr <= 0) return Double3.ZERO;  // הקרן נכנסת לפנים
 
-        return ks.scale(Math.pow(vr,nShininess));
+        return ks.scale(Math.pow(vr, nShininess));
     }
-
-
-    private Color calcDiffusive(Material material, double nl) {
+    private Double3 calcDiffusive(Material material, double nl) {
         Double3 kd = material.kD;  // מקדם דיפוסי
         if (nl < 0) nl = -nl;  // השוויון הוא ערך מוחלט
-        return material.kD.scale(nl);
+        return kd.scale(nl);
     }
 }
