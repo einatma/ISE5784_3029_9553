@@ -73,8 +73,10 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("color render test", 1000, 1000))
                 .build()
-                .renderImage()
-                .printGrid(100, new Color(WHITE))
+                .renderImage();
+        camera.build()
+                .printGrid(100, new Color(WHITE));
+        camera.build()
                 .writeToImage();
     }
 
@@ -89,8 +91,10 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
                 .build()
-                .renderImage()
-                .printGrid(100, new Color(YELLOW))
+                .renderImage();
+        camera.build()
+                .printGrid(100, new Color(YELLOW));
+        camera.build()
                 .writeToImage();
     }
 }
