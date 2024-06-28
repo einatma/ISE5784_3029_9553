@@ -8,8 +8,10 @@ import java.util.List;
 import static java.lang.Math.sqrt;
 
 /**
- * Sphere class represents a three-dimensional sphere in 3D Cartesian coordinate system.
+ * Sphere class represents a three-dimensional sphere in a 3D Cartesian coordinate system.
  * Extends RadialGeometry.
+ *
+ * @author Hadar Cohen and Einat Mazuz
  */
 public class Sphere extends RadialGeometry {
     private final Point center;
@@ -39,8 +41,8 @@ public class Sphere extends RadialGeometry {
     /**
      * Finds all the intersection points between a given ray and the geometric object.
      *
-     * @param ray      the ray to intersect with the geometric object
-     //* @param distance
+     * @param ray the ray to intersect with the geometric object
+     *            //* @param distance
      * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
      */
     @Override
@@ -53,7 +55,7 @@ public class Sphere extends RadialGeometry {
         // the direction vector normalized.
         if (center.equals(P0)) {
             Point newPoint = ray.getPoint(getRadius());
-            return List.of(new GeoPoint(this,newPoint));
+            return List.of(new GeoPoint(this, newPoint));
         }
 
         try {
@@ -80,22 +82,20 @@ public class Sphere extends RadialGeometry {
 
         // Check if t1 and t2 are valid
         if (t1 > 0 && t2 > 0 /*&& t1 < distance && t2 < distance */) {
-            intersections = List.of(new GeoPoint(this,ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
+            intersections = List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
         } else {
             // Check if t1 is valid
             if (t1 > 0 /*&& t1 < distance*/) {
-                intersections = List.of(new GeoPoint(this,ray.getPoint(t1)));
+                intersections = List.of(new GeoPoint(this, ray.getPoint(t1)));
             }
             // Check if t2 is valid
             if (t2 > 0 /*&& t2 < distance*/) {
-                intersections = List.of(new GeoPoint(this,ray.getPoint(t2)));
+                intersections = List.of(new GeoPoint(this, ray.getPoint(t2)));
             }
         }
 
         return intersections;
     }
-
-
 
 
     // Helper method to deal with numerical precision issues

@@ -2,6 +2,7 @@ package primitives;
 
 import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 
 import static primitives.Util.isZero;
@@ -40,6 +41,7 @@ public class Ray {
     public Point getHead() {
         return head;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -57,9 +59,14 @@ public class Ray {
         return direction;
     }
 
-
+    /**
+     * Returns the point at a given parameter t along the ray.
+     *
+     * @param t The parameter value along the ray.
+     * @return The point at parameter t along the ray.
+     */
     public Point getPoint(double t) {
-        if(isZero(t))
+        if (isZero(t))
             return head;
         return head.add(direction.scale(t));
     }
@@ -85,10 +92,24 @@ public class Ray {
 //        }
 //        return closestPoint;
 //    }
+
+    /**
+     * Finds the closest point to the start of the ray (head) from a list of points.
+     *
+     * @param points The list of points to search.
+     * @return The closest point to head, or null if the list is empty or null.
+     */
     public Point findClosestPoint(List<Point> points) {
         return points == null || points.isEmpty() ? null
                 : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
     }
+
+    /**
+     * Finds the closest GeoPoint to the start of the ray (head) from a list of GeoPoints.
+     *
+     * @param geoPoints The list of GeoPoints to search.
+     * @return The closest GeoPoint to head, or null if the list is empty or null.
+     */
     public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
         GeoPoint closestGeoPoint = null;
         double minDistance = Double.MAX_VALUE;

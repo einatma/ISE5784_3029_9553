@@ -22,19 +22,20 @@ public abstract class Intersectable {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof GeoPoint geoPoint)) return false;
-            return geometry.equals( geoPoint.geometry) && point.equals(geoPoint.point);
+            return geometry.equals(geoPoint.geometry) && point.equals(geoPoint.point);
         }
 
     }
 
-    public List<GeoPoint> findGeoIntersections(Ray ray){
-        return findGeoIntersectionsHelper(ray);
-    }
-    public List<GeoPoint> findGeoIntersections(Ray ray, double distance){
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
         return findGeoIntersectionsHelper(ray);
     }
 
-    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray) ;
+    public List<GeoPoint> findGeoIntersections(Ray ray, double distance) {
+        return findGeoIntersectionsHelper(ray);
+    }
+
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
 
 
     public List<Point> findIntersections(Ray ray) {

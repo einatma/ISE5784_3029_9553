@@ -56,11 +56,10 @@ public class Tube extends RadialGeometry {
     }
 
     /**
-     * Finds all the intersection points between a given ray and the geometric object.
+     * Finds all the intersection points between a given ray and the tube.
      *
-     * @param ray      the ray to intersect with the geometric object
-     /* @param distance
-     * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
+     * @param ray the ray to intersect with the tube.
+     * @return a list of points where the ray intersects the tube, or null if there are no intersections.
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
@@ -72,7 +71,7 @@ public class Tube extends RadialGeometry {
         Vector tubeAxisDirection = axis.getDirection();
         Point tubeHead = axis.getHead();
 
-        if(rayHead.equals(tubeHead)){
+        if (rayHead.equals(tubeHead)) {
             return null;
         }
 
@@ -113,11 +112,11 @@ public class Tube extends RadialGeometry {
         double t1 = (-b + sqrtDiscriminant) / (2 * a);
         double t2 = (-b - sqrtDiscriminant) / (2 * a);
 
-        List<GeoPoint> intersections=null;
+        List<GeoPoint> intersections = null;
 
         // Check if the solutions are valid (t > 0) and add them to the intersections list
-        if (t1 > 0 && t2 > 0 /*&& t1 < distance && t2 < distance*/ ) {
-            intersections = List.of(new GeoPoint(this,ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
+        if (t1 > 0 && t2 > 0 /*&& t1 < distance && t2 < distance*/) {
+            intersections = List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
         } else {
             // Check if t1 is valid
             if (t1 > 0 /*&& t1 < distance*/) {

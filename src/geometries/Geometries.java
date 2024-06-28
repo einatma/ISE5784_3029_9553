@@ -36,14 +36,13 @@ public class Geometries extends Intersectable {
      */
     public void add(Intersectable... geometries) {
         Collections.addAll(this.geometries, geometries);
-        }
-
+    }
 
     /**
      * Finds all intersection points between the given ray and the geometries in the collection.
      *
-     * @param ray      the ray for which intersections are to be found.
-     //* @param distance
+     * @param ray the ray for which intersections are to be found.
+     *            //* @param distance
      * @return a list of all intersection points. If no intersections are found, returns null.
      */
     @Override
@@ -58,10 +57,10 @@ public class Geometries extends Intersectable {
                 result.addAll(intersections);
             }
         }
-        if(result!=null)
+        if (result != null)
             return result
                     .stream()
-                    .sorted(Comparator.comparingDouble( p -> ((GeoPoint)p).point.distance(ray.getHead())))
+                    .sorted(Comparator.comparingDouble(p -> ((GeoPoint) p).point.distance(ray.getHead())))
                     .toList();
         return null;
     }

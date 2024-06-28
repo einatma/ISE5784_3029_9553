@@ -79,19 +79,19 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
-        Double3 ks = material.kS;  // מקדם ספוקולרי
-        int nShininess = material.nShininess;  // דרגת ברק
+        Double3 ks = material.kS;
+        int nShininess = material.nShininess;
 
-        Vector r = l.subtract(n.scale(2 * nl)).normalize();  // הכיוון המוחזר
+        Vector r = l.subtract(n.scale(2 * nl)).normalize();
         double vr = alignZero(-v.dotProduct(r));
 
-        if (vr <= 0) return Double3.ZERO;  // הקרן נכנסת לפנים
+        if (vr <= 0) return Double3.ZERO;
 
         return ks.scale(Math.pow(vr, nShininess));
     }
     private Double3 calcDiffusive(Material material, double nl) {
-        Double3 kd = material.kD;  // מקדם דיפוסי
-        if (nl < 0) nl = -nl;  // השוויון הוא ערך מוחלט
+        Double3 kd = material.kD;
+        if (nl < 0) nl = -nl;
         return kd.scale(nl);
     }
 }

@@ -89,17 +89,23 @@ public class Polygon extends Geometry {
         }
     }
 
+    /**
+     * Gets the normal vector to the polygon at a given point.
+     *
+     * @param point The point on the surface of the polygon.
+     * @return The normal vector at the given point.
+     */
     @Override
     public Vector getNormal(Point point) {
         return plane.getNormal();
     }
 
     /**
-     * Finds all the intersection points between a given ray and the geometric object.
+     * Finds all the intersection points between a given ray and the polygon.
      *
-     * @param ray      the ray to intersect with the geometric object
-     * @param distance
-     * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
+     * @param ray the ray to intersect with the polygon.
+     *            //* @param distance
+     * @return a list of points where the ray intersects the polygon, or null if there are no intersections.
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray/*, double distance*/) {

@@ -9,6 +9,7 @@ import static primitives.Util.isZero;
 
 /**
  * Represents a plane in 3D space.
+ * A plane is defined by a point on the plane and a normal vector to the plane.
  *
  * @author Hadar Cohen and Einat Mazuz
  */
@@ -62,13 +63,12 @@ public class Plane extends Geometry {
         return normal;
     }
 
-
     /**
-     * Finds all the intersection points between a given ray and the geometric object.
+     * Finds all the intersection points between a given ray and the plane.
      *
-     * @param ray      the ray to intersect with the geometric object
-     //* @param distance
-     * @return a list of points where the ray intersects the object, or an empty list if there are no intersections
+     * @param ray the ray to intersect with the plane.
+     *            //* @param distance
+     * @return a list of points where the ray intersects the plane, or null if there are no intersections.
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
@@ -84,7 +84,7 @@ public class Plane extends Geometry {
         }
 
         // Calculate the numerator N * (Q - P0)
-        if(q.equals(head))
+        if (q.equals(head))
             return null;
 
         double numerator = alignZero(normal.dotProduct(q.subtract(head)));
@@ -93,7 +93,7 @@ public class Plane extends Geometry {
         double t = alignZero(numerator / denominator);
 
         // If t is less than or equal to zero, there is no intersection (the intersection is behind the ray's origin)
-        if (t <= 0 ) {
+        if (t <= 0) {
             return null;
         }
 

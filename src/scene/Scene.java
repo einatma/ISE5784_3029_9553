@@ -10,13 +10,25 @@ import java.util.List;
 
 /**
  * The Scene class represents a scene in a 3D space with geometries, ambient light, and background color.
+ * <p>
+ * This class encapsulates the components of a scene:
+ * - Name of the scene
+ * - Background color
+ * - Ambient light
+ * - Geometries in the scene
+ * - Light sources in the scene
+ * <p>
+ * Provides methods to set and retrieve these components, allowing easy construction and manipulation of scenes.
+ *
+ * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Scene {
     public String name;
     public Color background = Color.BLACK;
-    public  AmbientLight ambientLight = AmbientLight.NONE;
-    public  Geometries geometries = new Geometries();
+    public AmbientLight ambientLight = AmbientLight.NONE;
+    public Geometries geometries = new Geometries();
     public List<LightSource> lights = new LinkedList<>();
+
     /**
      * Constructs a Scene with the given name.
      *
@@ -26,8 +38,6 @@ public class Scene {
         this.name = name;
     }
 
-
-
     /**
      * Sets the ambient light for the scene.
      *
@@ -35,9 +45,10 @@ public class Scene {
      * @return a SceneBuilder instance for chaining
      */
     public Scene setAmbientLight(AmbientLight ambientLight) {
-        this.ambientLight=ambientLight;
+        this.ambientLight = ambientLight;
         return this;
     }
+
     /**
      * Sets the geometries of the scene.
      *
@@ -48,6 +59,7 @@ public class Scene {
         this.geometries = geometries;
         return this;
     }
+
     /**
      * Sets the background color of the scene.
      *
@@ -59,15 +71,16 @@ public class Scene {
         return this;
     }
 
-
+    /**
+     * Sets the light sources for the scene.
+     *
+     * @param lights the light sources to set
+     * @return the Scene object itself for chaining
+     */
     public Scene setLights(List<LightSource> lights) {
         this.lights = lights;
         return this;
     }
-
-
-
-
 
 
 }

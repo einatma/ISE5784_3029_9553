@@ -26,11 +26,17 @@ public class Triangle extends Polygon {
         super(p1, p2, p3);
     }
 
+    /**
+     * Finds all the intersection points between a given ray and the triangle.
+     *
+     * @param ray the ray to intersect with the triangle.
+     * @return a list of points where the ray intersects the triangle, or null if there are no intersections.
+     */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray/*, double distance*/) {
         //Check if the ray intersects the plane.
-        List<GeoPoint> result = plane.findGeoIntersections(ray/*, distance*/ );
-        if ( result == null) {
+        List<GeoPoint> result = plane.findGeoIntersections(ray/*, distance*/);
+        if (result == null) {
             return null;
         }
 

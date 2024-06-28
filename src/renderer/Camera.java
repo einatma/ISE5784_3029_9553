@@ -6,6 +6,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 import geometries.Intersectable.GeoPoint;
+
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
@@ -14,6 +15,16 @@ import static primitives.Util.isZero;
 /**
  * The Camera class represents a camera in a 3D space.
  * It constructs rays through a view plane to capture an image.
+ * <p>
+ * This class supports building a camera using a fluent Builder pattern,
+ * setting various parameters such as location, direction vectors, distance to view plane,
+ * and view plane size.
+ * <p>
+ * The camera constructs rays through each pixel on the image plane and
+ * traces them using a specified ray tracer to render an image.
+ * It also provides methods to print a grid on the image and write the image to an output file.
+ *
+ * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Camera implements Cloneable {
     private RayTracerBase rayTracer;
@@ -28,10 +39,10 @@ public class Camera implements Cloneable {
 
     /**
      * Constructs a Camera object using a Builder.
-     *
+     * Private constructor to enforce Builder usage.
      */
     private Camera() {
-      }
+    }
 
     /**
      * Gets the Builder instance for Camera.
@@ -70,6 +81,7 @@ public class Camera implements Cloneable {
         }
         return new Ray(location, Pij.subtract(location));
     }
+
     /**
      * Renders the image by tracing rays through each pixel and writing the corresponding color to the image.
      * If the imageWriter or rayTracer is not set, throws an UnsupportedOperationException.
@@ -92,6 +104,7 @@ public class Camera implements Cloneable {
         }
 
     }
+
     /**
      * Prints a grid on the image by setting the color of pixels at regular intervals.
      *
@@ -110,6 +123,7 @@ public class Camera implements Cloneable {
         }
 
     }
+
     /**
      * Writes the image to the output file using the ImageWriter.
      */
@@ -117,6 +131,7 @@ public class Camera implements Cloneable {
         // Save the image to a file
         this.imageWriter.writeToImage();
     }
+
     /**
      * Casts a ray through the specified pixel and returns the color at the intersection point.
      *
@@ -142,19 +157,23 @@ public class Camera implements Cloneable {
 
         private Camera camera = new Camera();
 
-
+        /**
+         * Sets the RayTracerBase for the Camera.
+         *
+         * @param rayTracer the RayTracerBase to set.
+         * @return the Builder instance.
+         */
         public Builder setRayTracer(RayTracerBase rayTracer) {
             camera.rayTracer = rayTracer;
             return this;
         }
 
-        //
-//        /**
-//         * Sets the ImageWriter for the Camera.
-//         *
-//         * @param imageWriter the ImageWriter to set.
-//         * @return the Builder instance.
-//         */
+        /**
+         * Sets the ImageWriter for the Camera.
+         *
+         * @param imageWriter the ImageWriter to set.
+         * @return the Builder instance.
+         */
         public Builder setImageWriter(ImageWriter imageWriter) {
             camera.imageWriter = imageWriter;
             return this;
@@ -177,6 +196,7 @@ public class Camera implements Cloneable {
          * @param vTo the direction vector to set.
          * @param vUp the up vector to set.
          * @return the Builder instance.
+         * @throws IllegalArgumentException if vTo and vUp are not orthogonal.
          */
         public Builder setDirection(Vector vTo, Vector vUp) {
             if (!isZero(vTo.dotProduct(vUp)))
@@ -191,6 +211,7 @@ public class Camera implements Cloneable {
          *
          * @param distance the distance to set.
          * @return the Builder instance.
+         * @throws IllegalArgumentException if distance is not positive.
          */
         public Builder setVpDistance(double distance) {
             if (alignZero(distance) <= 0) throw new IllegalArgumentException("distance must be positive");
@@ -204,6 +225,7 @@ public class Camera implements Cloneable {
          * @param width  the width to set.
          * @param height the height to set.
          * @return the Builder instance.
+         * @throws IllegalArgumentException if width or height is not positive.
          */
         public Builder setVpSize(double width, double height) {
             if (alignZero(width) <= 0 || alignZero(height) <= 0)
@@ -217,9 +239,11 @@ public class Camera implements Cloneable {
          * Builds and returns a Camera instance.
          *
          * @return the constructed Camera instance.
+         * @throws MissingResourceException if any required field is not set.
          */
         final String Exception = "Missing Resource";
         final String NameClass = "Camera";
+
         public Camera build() {
             if (camera.vTo == null) throw new MissingResourceException(Exception, NameClass, "vTo");
             if (camera.vUp == null) throw new MissingResourceException(Exception, NameClass, "vUp");
@@ -241,7 +265,7 @@ public class Camera implements Cloneable {
         public Builder setDirection(Point inFront, Vector up) {
             camera.vTo = inFront.subtract(camera.location).normalize();
             camera.vUp = up.normalize();
-            camera.vRight= camera.vTo.crossProduct(camera.vUp).normalize();
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
             return this;
         }
     }
