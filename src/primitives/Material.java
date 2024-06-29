@@ -19,8 +19,14 @@ public class Material {
      * Specular reflection coefficient
      */
     public Double3 kS = Double3.ZERO;
-//    private Double3 kT = Double3.ZERO;
-//    private Double3 kR = Double3.ZERO;
+    /*
+     * Transparency coefficient
+     */
+    public Double3 kT = Double3.ZERO;
+    /*
+     * Reflection coefficient
+     */
+    public Double3 kR = Double3.ZERO;
     /**
      * Shininess coefficient
      */
@@ -72,16 +78,51 @@ public class Material {
         return this;
     }
 
-//    public Material setkT(Double3 kT) {
-//        this.kT = kT;
-//        return this;
-//    }
-//
-//    public Material setkR(Double3 kR) {
-//        this.kR = kR;
-//        return this;
-//    }
+    /**
+     * Sets the transparency coefficient (kT) of the material.
+     *
+     * @param kT The new transparency coefficient.
+     * @return This Material object with the updated transparency coefficient.
+     */
+    public Material setKt (Double3 kT) {
+        this.kT = kT;
+        return this;
+    }
 
+    /**
+     * Sets the specular Transparency coefficient (Kt) of the material using a scalar value,
+     * which sets all components of Kt to the same value.
+     *
+     * @param kt The new specular reflection coefficient as a scalar value.
+     * @return This Material object with the updated specular reflection coefficient.
+     */
+    public Material setKt(double kt) {
+        this.kT = new Double3(kt);
+        return this;
+    }
+    /*
+     * Sets the Reflection coefficient (kT) of the material using a scalar value,
+     * which sets all components of kT to the same value.
+     *
+     * @param kT The new Reflection coefficient as a scalar value.
+     * @return This Material object with the updated Reflection coefficient.
+     */
+    public Material setKr(Double3 kR) {
+        this.kR = kR;
+        return this;
+    }
+
+    /**
+     * Sets the specular Transparency coefficient (kR) of the material using a scalar value,
+     * which sets all components of kR to the same value.
+     *
+     * @param kR The new specular reflection coefficient as a scalar value.
+     * @return This Material object with the updated specular reflection coefficient.
+     */
+    public Material setKr(double kR) {
+        this.kR = new Double3(kR);
+        return this;
+    }
     /**
      * Sets the shininess coefficient (nShininess) of the material.
      *
@@ -92,6 +133,7 @@ public class Material {
         this.nShininess = nShininess;
         return this;
     }
+
 
 
 }

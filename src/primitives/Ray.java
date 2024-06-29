@@ -13,6 +13,7 @@ import static primitives.Util.isZero;
  * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Ray {
+    private static final double DELTA = 0.1;
     /**
      * The starting point (head) of the ray.
      */
@@ -32,7 +33,18 @@ public class Ray {
         head = p;
         direction = vec.normalize();
     }
-
+    /**
+     * Constructor to initialize ray
+     *
+     * @param p0  point of the ray
+     * @param n   normal vector
+     * @param dir direction vector of the ray
+     */
+    public Ray(Point p0, Vector dir, Vector n) {
+        double delta = dir.dotProduct(n) >= 0 ? DELTA : -DELTA;
+        this.head = p0.add(n.scale(delta));
+        this.direction = dir;
+    }
     /**
      * Returns the starting point (head) of the ray.
      *
@@ -70,12 +82,12 @@ public class Ray {
             return head;
         return head.add(direction.scale(t));
     }
-    /**
-     * Finds the closest point to the start of the ray (p0) from a list of points.
-     *
-     * @param points the list of points to search
-     * @return the closest point to p0, or null if the list is empty or null
-     */
+//    /**
+//     * Finds the closest point to the start of the ray (p0) from a list of points.
+//     *
+//     * @param points the list of points to search
+//     * @return the closest point to p0, or null if the list is empty or null
+//     */
 //    public Point findClosestPoint(List<Point> points) {
 //        Point closestPoint = null;
 //        double minDistance = Double.MAX_VALUE;
