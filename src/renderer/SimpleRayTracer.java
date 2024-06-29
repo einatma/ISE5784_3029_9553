@@ -46,32 +46,47 @@ public class SimpleRayTracer extends RayTracerBase {
      */
     @Override
     public Color traceRay(Ray ray) {
-        List<GeoPoint> intersections = this.scene.geometries.findGeoIntersections(ray);
-
-        if (intersections == null)
-            return this.scene.background;
-
-        GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
-
+        GeoPoint closestPoint = findClosestIntersection(ray);
+if (closestPoint==null)
+    return this.scene.background;
         return calcColor(closestPoint, ray);
     }
 
     /**
-     * Get the color of an intersection point
+     * Calculates the color at an intersection point considering global and local lighting effects.
      *
-     * @param point point of intersection
-     * @return Color of the intersection point
+     * @param point the intersection point
+     * @param ray the ray that intersects the point
+     * @return the color at the intersection point
      */
     private Color calcColor(GeoPoint point, Ray ray) {
         return calcColor(point, ray, MAX_CALC_COLOR_LEVEL, Double3.ONE)
                 .add(this.scene.ambientLight.getIntensity());
     }
+    /**
+     * Recursive method to calculate the color at an intersection point, including global effects like reflection and refraction.
+     *
+     * @param geoPoint the intersection point
+     * @param ray the ray that intersects the point
+     * @param level current recursion level
+     * @param k coefficient for color calculation
+     * @return the color at the intersection point considering global effects
+     */
     private Color calcColor(GeoPoint geoPoint, Ray ray, int level, Double3 k) {
         Color color = geoPoint.geometry.getEmission()
                 .add(calcLocalEffects(geoPoint, ray, k));
 
         return 1 == level ? color : color.add(calcGlobalEffects(geoPoint, ray, level, k));
     }
+    /**
+     * Calculates global lighting effects like reflection and refraction.
+     *
+     * @param gp the intersection point
+     * @param ray the ray that intersects the point
+     * @param level current recursion level
+     * @param k coefficient for color calculation
+     * @return the color considering global lighting effects
+     */
     private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k) {
         Color color = Color.BLACK;
         Material material = gp.geometry.getMaterial();
@@ -116,11 +131,24 @@ public class SimpleRayTracer extends RayTracerBase {
 
         return new Ray(gp.point, r, n); //use the constructor with the normal for moving the head
     }
-
+    /**
+     * Constructs a refracted ray based on the intersection point and incident ray.
+     *
+     * @param gp the intersection point
+     * @param ray the incident ray
+     * @return the refracted ray
+     */
     private Ray constructRefracted(GeoPoint gp, Ray ray) {
         return new Ray(gp.point, ray.getDirection(), gp.geometry.getNormal(gp.point));
     }
-
+    /**
+     * Calculates the local lighting effects (diffuse and specular) at an intersection point.
+     *
+     * @param gp the intersection point
+     * @param ray the ray that intersects with the point
+     * @param k coefficient for color calculation
+     * @return the color with local lighting effects
+     */
     private Color calcLocalEffects(GeoPoint gp, Ray ray, Double3 k) {
         Vector v = ray.getDirection();
 
@@ -149,7 +177,15 @@ public class SimpleRayTracer extends RayTracerBase {
         }
         return color;
     }
-
+    /**
+     * Calculates the transparency of an intersection point in relation to a light source.
+     *
+     * @param geopoint the intersection point
+     * @param light the light source
+     * @param l the direction vector to the light source
+     * @param n the normal vector at the intersection point
+     * @return the transparency coefficient for the point and light source
+     */
     private Double3 transparency(GeoPoint geopoint, LightSource light, Vector l, Vector n) {
         Double3 result = Double3.ONE;
         // Calculate the direction vector from the point to the light source (opposite of light direction)
