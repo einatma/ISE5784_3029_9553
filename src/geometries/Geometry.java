@@ -10,7 +10,7 @@ import primitives.*;
  * @author Hadar Cohen-213953029 and Einat Mazuz -324019553</p>
  */
 public abstract class Geometry extends Intersectable {
-    private Color emission = Color.BLACK;
+    protected Color emission = Color.BLACK;
 
     private Material material = new Material();
 
