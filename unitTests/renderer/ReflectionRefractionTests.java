@@ -132,29 +132,31 @@ public class ReflectionRefractionTests {
     public void reflectionFourObjectsTest() {
         // Add geometries to the scene
         scene.geometries.add(
-                // Big triangle for basic structure
                 new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135),
                         new Point(75, 75, -150))
-                        .setMaterial(new Material().setKd(0.01).setKs(0.2).setShininess(500)),
-                // Second triangle for additional detail
+                        .setMaterial(new Material().setKd(0.5).setKs(0.8).setShininess(60)),
                 new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
-                // First sphere with magenta emission and transparency
-                new Sphere(new Point(-20, -20, -150), 30d).setEmission(new Color(magenta))
-                        .setMaterial(new Material().setKd(0.99).setKs(0.9).setShininess(5).setKt(0.89)),
-                // Second sphere with blue emission and transparency
-                new Sphere(new Point(50, 50, 50), 50d).setEmission(new Color(blue))
-                        .setMaterial(new Material().setKd(0.8).setKs(0.5).setShininess(900).setKt(0.5))
-        );
+                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)),
+
+                        new Sphere(new Point(0, 20, -50), 50) //
+                                .setEmission(new Color(cyan)) //
+                                .setMaterial(new Material().setKd(0.001).setKs(0.5)
+                                        .setShininess(100).setKt(0.8)),
+                        new Sphere(new Point(0, 20, -50), 30) //
+                                .setEmission(new Color(blue)) //
+                                .setMaterial(new Material().setKd(0.02).setKs(0.2)
+                                        .setShininess(10).setKt(0.9)));
+
         // Set ambient light for the scene
         scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));
         // Add spot lights to the scene
         scene.lights.add(new SpotLight(new Color(1020, 400, 400), new Point(-750, -750, -150), new Vector(-1, -1, -4))
                 .setKl(0.00001).setKq(0.000005));
         scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
-        scene.lights.add(
-                new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4))
-                        .setKl(4E-4).setKq(2E-5));
+        scene.lights.add(new SpotLight(new Color(700, 400, 400),
+                new Point(30, 25, 0),
+                new Vector(0, 0, -1)) //
+                .setKl(4E-5).setKq(2E-7));
         // Configure camera settings
         cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
                 .setVpSize(200, 200)
