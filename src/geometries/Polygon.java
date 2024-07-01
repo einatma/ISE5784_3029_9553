@@ -108,8 +108,8 @@ public class Polygon extends Geometry {
      * @return a list of points where the ray intersects the polygon, or null if there are no intersections.
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray/*, double distance*/) {
-        List<GeoPoint> result = plane.findGeoIntersections(ray/*, distance*/);
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+        List<GeoPoint> result = plane.findGeoIntersections(ray, distance);
         if (result == null) {
             return null;
         }

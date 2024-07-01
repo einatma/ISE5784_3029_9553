@@ -33,6 +33,7 @@ public class Ray {
         head = p;
         direction = vec.normalize();
     }
+
     /**
      * Constructor to initialize ray
      *
@@ -45,6 +46,7 @@ public class Ray {
         this.head = p0.add(n.scale(delta));
         this.direction = dir;
     }
+
     /**
      * Returns the starting point (head) of the ray.
      *
@@ -113,7 +115,10 @@ public class Ray {
      */
     public Point findClosestPoint(List<Point> points) {
         return points == null || points.isEmpty() ? null
-                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+                : findClosestGeoPoint(points.stream()
+                .map(p -> new GeoPoint(null, p))
+                .toList())
+                .point;
     }
 
     /**
@@ -127,15 +132,15 @@ public class Ray {
         double minDistance = Double.MAX_VALUE;
         double pointDistance; // the distance between the "this.p0" to each point in the list
 
-        if (!geoPoints.isEmpty()) {
-            for (var geoPoint : geoPoints) {
-                pointDistance = this.head.distance(geoPoint.point);
-                if (pointDistance < minDistance) {
-                    minDistance = pointDistance;
-                    closestGeoPoint = geoPoint;
-                }
+
+        for (var geoPoint : geoPoints) {
+            pointDistance = this.head.distance(geoPoint.point);
+            if (pointDistance < minDistance) {
+                minDistance = pointDistance;
+                closestGeoPoint = geoPoint;
             }
         }
+
         return closestGeoPoint;
     }
 

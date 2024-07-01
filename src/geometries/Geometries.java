@@ -46,10 +46,10 @@ public class Geometries extends Intersectable {
      * @return a list of all intersection points. If no intersections are found, returns null.
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray/*, double distance*/) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
         List<GeoPoint> result = null;
         for (Intersectable geometry : geometries) {
-            List<GeoPoint> intersections = geometry.findGeoIntersections(ray/*, distance*/);
+            List<GeoPoint> intersections = geometry.findGeoIntersections(ray, distance);
             if (intersections != null) {
                 if (result == null) {
                     result = new LinkedList<>();
@@ -57,11 +57,6 @@ public class Geometries extends Intersectable {
                 result.addAll(intersections);
             }
         }
-        if (result != null)
-            return result
-                    .stream()
-                    .sorted(Comparator.comparingDouble(p -> ((GeoPoint) p).point.distance(ray.getHead())))
-                    .toList();
-        return null;
+        return result;
     }
 }

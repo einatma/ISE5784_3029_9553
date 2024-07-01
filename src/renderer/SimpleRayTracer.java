@@ -234,6 +234,32 @@ public class SimpleRayTracer extends RayTracerBase {
         }
         return result;
     }
+    private boolean unshaded(GeoPoint geopoint, LightSource light, Vector l, double nl, Vector n) {
+        // Calculate the direction vector from the point to the light source (opposite of light direction)
+        Vector lightDirection = l.scale(-1);
+
+        // Apply a small offset to the point in the direction of the normal to avoid self-intersection
+        Vector epsVector = n.scale(n.dotProduct(l) < 0 ? DELTA : -DELTA);
+        Point point = geopoint.point.add(epsVector);
+        double lightDistance = light.getDistance(geopoint.point);
+        // Create a ray from the point towards the light source
+        Ray lightRay = new Ray(point, lightDirection);
+
+        // Find intersections of this ray with the geometries in the scene
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
+
+        // If no intersections are found, the point is unshaded
+        if (intersections == null) {
+            return true; //no intersections
+        }
+
+        for (GeoPoint gp : intersections) {
+            if (alignZero(gp.point.distance(geopoint.point) - lightDistance) <= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Calculates the local effects (diffuse and specular) at a given point.

@@ -71,7 +71,7 @@ public class Plane extends Geometry {
      * @return a list of points where the ray intersects the plane, or null if there are no intersections.
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
         Vector direction = ray.getDirection();
         Point head = ray.getHead();
 
@@ -93,7 +93,7 @@ public class Plane extends Geometry {
         double t = alignZero(numerator / denominator);
 
         // If t is less than or equal to zero, there is no intersection (the intersection is behind the ray's origin)
-        if (t <= 0) {
+        if (t <= 0 || alignZero(t - distance) > 0){
             return null;
         }
 
