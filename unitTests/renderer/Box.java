@@ -27,35 +27,41 @@ public class Box {
             throw new IllegalArgumentException("Width, height and depth must be positive");
         if (directionWidth == null || directionDepth == null || !isZero(directionWidth.dotProduct(directionDepth)))
             throw new IllegalArgumentException("Direction vectors must be orthogonal");
+
         this.width = width;
         this.height = height;
         this.depth = depth;
-        Vector directionHightNormalized = directionWidth.crossProduct(directionDepth).normalize();
+
+        Vector directionHeight = directionWidth.crossProduct(directionDepth).normalize();
         Vector directionWidthNormalized = directionWidth.normalize();
         Vector directionDepthNormalized = directionDepth.normalize();
+
         this.frontBottomLeft = frontBottomLeft;
         this.frontBottomRight = frontBottomLeft.add(directionWidthNormalized.scale(width));
         this.backBottomLeft = frontBottomLeft.add(directionDepthNormalized.scale(depth));
-        this.backBottomRight = backBottomLeft.add(directionWidthNormalized.scale(width));
-        this.frontTopLeft = frontBottomLeft.add(directionHightNormalized.scale(height));
-        this.frontTopRight = frontBottomRight.add(directionHightNormalized.scale(height));
-        this.backTopLeft = backBottomLeft.add(directionHightNormalized.scale(height));
-        this.backTopRight = backBottomRight.add(directionHightNormalized.scale(height));
+        this.backBottomRight = this.backBottomLeft.add(directionWidthNormalized.scale(width));
+
+        this.frontTopLeft = this.frontBottomLeft.add(directionHeight.scale(height));
+        this.frontTopRight = this.frontBottomRight.add(directionHeight.scale(height));
+        this.backTopLeft = this.backBottomLeft.add(directionHeight.scale(height));
+        this.backTopRight = this.backBottomRight.add(directionHeight.scale(height));
+
         // Create the cube
         cubeWigs = new LinkedList<>();
-        //cube's front wig
+        // Cube's front face
         cubeWigs.add(new Polygon(frontBottomLeft, frontBottomRight, frontTopRight, frontTopLeft));
-        //cube's back wig
+        // Cube's back face
         cubeWigs.add(new Polygon(backBottomLeft, backBottomRight, backTopRight, backTopLeft));
-        //cube's left wigs
+        // Cube's left face
         cubeWigs.add(new Polygon(frontBottomLeft, backBottomLeft, backTopLeft, frontTopLeft));
-        //cube's right wigs
+        // Cube's right face
         cubeWigs.add(new Polygon(frontBottomRight, backBottomRight, backTopRight, frontTopRight));
-        //cube's top wigs
+        // Cube's top face
         cubeWigs.add(new Polygon(frontTopLeft, frontTopRight, backTopRight, backTopLeft));
-        //cube's bottom wigs
+        // Cube's bottom face
         cubeWigs.add(new Polygon(frontBottomLeft, frontBottomRight, backBottomRight, backBottomLeft));
     }
+
 
     public List<Polygon> getCubeWigs() {
         return cubeWigs;
