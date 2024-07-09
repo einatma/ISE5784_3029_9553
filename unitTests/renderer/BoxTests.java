@@ -20,7 +20,7 @@ class BoxTests {
          */
         private final Camera.Builder camera = Camera.getBuilder()
                 .setRayTracer(new SimpleRayTracer(scene))
-                .setLocation(new Point(100, 100, 100))
+                .setLocation(new Point(30, 35, 40))
                 .setDirection(new Vector(-1, -1, -1), new Vector(0, 1, -1))  // Ensuring the up vector is perpendicular
                 .setVpDistance(500)
                 .setVpSize(500, 500);
@@ -31,8 +31,7 @@ class BoxTests {
         @Test
         public void renderBoxTest() {
             // Create a Box (rectangular prism)
-            Box box = new Box(new Point(0, 0, 0), 10, 15, 20, new Vector(1, 0, 0), new Vector(0, 1, 0));
-
+            Box box = new Box(new Point(0, 0, 0), 10, 15, 20, new Vector(1, 0, 0), new Vector(0, 1, 0)).setMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(90)).setEmission(new Color(blue));
             // Print points for debugging
             System.out.println("Front Bottom Left: " + box.getFrontBottomLeft());
             System.out.println("Front Bottom Right: " + box.getFrontBottomRight());
@@ -45,17 +44,16 @@ class BoxTests {
 
             // Add Box polygons to the scene
             int i = 2;
-            for (Polygon face : box.getCubeWigs()) {
+            for (Geometry face : box.getCubeWigs()) {
                 i++;
-                scene.geometries.add(face.setMaterial(new Material().setKd(0.8).setKs(0.2).setShininess(30)).setEmission(new Color(i, i * 2, i * i)));
+                scene.geometries.add(face);
             }
-
             // Set ambient light and background color
             scene.setAmbientLight(new AmbientLight(new Color(100, 120, 120), Double3.ONE))
-                    .setBackground(new Color(75, 127, 90));
-
-            // Add a directional light to illuminate the box
-            scene.lights.add(new DirectionalLight(new Color(255, 255, 255), new Vector(-1, -1, -1)), new SpotLight(new Color(255, 255, 255), new Point(0, 0, 0), new Vector(-1, -1, -1), 0.1, 0.00001, 0.000005));
+                    .setBackground(new Color(50, 100, 50));
+            scene.lights.add(
+                    new SpotLight(new Color(500, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4))
+                            .setKl(4E-4).setKq(2E-5));
 
             // Configure the camera and render the image
             camera.setImageWriter(new ImageWriter("box_render_test", 1000, 1000))

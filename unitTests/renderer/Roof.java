@@ -3,59 +3,65 @@ package renderer;
 import geometries.*;
 import primitives.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Roof {
-    private final double width;
-    private final double length;
-    private final double roofHeight;
-    //a house represented by polygons.
-    public Roof(Point frontBottomLeft ,double width, double length, double roofHeight) {
-        this.width = width;
-        this.length = length;
-        this.roofHeight = roofHeight;
-        //create the roof
+    private final Point frontBottomLeft;
+    private final Point frontBottomRight;
+    private final Point backBottomLeft;
+    private final Point backBottomRight;
+    private final Point ridgeFront;
+    private final Point ridgeBack;
+    private Material material = new Material();
+    private Color emission = new Color(0, 0, 0);
+    private final List<Geometry> roofGeometry;
 
-        // Create the points for the roof
-        Point frontTopCenter = new Point(frontBottomLeft.getX() + width / 2, frontBottomLeft.getY(), frontBottomLeft.getZ() + roofHeight);
-        Point backTopCenter = new Point(frontBottomLeft.getX() + width / 2, frontBottomLeft.getY() + length, frontBottomLeft.getZ() + roofHeight);
+    public Roof(Point frontBottomLeft, double width, double height, double depth, Vector directionWidth, Vector directionDepth) {
+        if (width <= 0 || height <= 0 || depth <= 0)
+            throw new IllegalArgumentException("Width, height and depth must be positive");
+        if (directionWidth == null || directionDepth == null || !Util.isZero(directionWidth.dotProduct(directionDepth)))
+            throw new IllegalArgumentException("Direction vectors must be orthogonal");
+        Vector directionHeight = directionWidth.crossProduct(directionDepth).normalize();
+        Vector directionWidthNormalized = directionWidth.normalize();
+        Vector directionDepthNormalized = directionDepth.normalize();
 
-        // Create the front triangular part of the roof
-        Polygon frontTriangle = new Polygon(
-                frontBottomLeft,
-                new Point(frontBottomLeft.getX() + width, frontBottomLeft.getY(), frontBottomLeft.getZ()),
-                frontTopCenter
-        );
+        this.frontBottomLeft = frontBottomLeft;
+        this.frontBottomRight = frontBottomLeft.add(directionWidthNormalized.scale(width));
+        this.backBottomLeft = frontBottomLeft.add(directionDepthNormalized.scale(depth));
+        this.backBottomRight = backBottomLeft.add(directionWidthNormalized.scale(width));
+        this.ridgeFront = frontBottomLeft.add(directionHeight.scale(height)).add(directionWidthNormalized.scale(width / 2));
+        this.ridgeBack = backBottomLeft.add(directionHeight.scale(height)).add(directionWidthNormalized.scale(width / 2));
 
-        // Create the back triangular part of the roof
-        Polygon backTriangle = new Polygon(
-                new Point(frontBottomLeft.getX(), frontBottomLeft.getY() + length, frontBottomLeft.getZ()),
-                new Point(frontBottomLeft.getX() + width, frontBottomLeft.getY() + length, frontBottomLeft.getZ()),
-                backTopCenter
-        );
-
-        // Create the left rectangular part of the roof
-        Polygon leftRectangle = new Polygon(
-                frontBottomLeft,
-                new Point(frontBottomLeft.getX(), frontBottomLeft.getY() + length, frontBottomLeft.getZ()),
-                backTopCenter,
-                frontTopCenter
-        );
-
-        // Create the right rectangular part of the roof
-        Polygon rightRectangle = new Polygon(
-                new Point(frontBottomLeft.getX() + width, frontBottomLeft.getY(), frontBottomLeft.getZ()),
-                new Point(frontBottomLeft.getX() + width, frontBottomLeft.getY() + length, frontBottomLeft.getZ()),
-                backTopCenter,
-                frontTopCenter
-        );
-
+        // Create the roof
+        roofGeometry = new LinkedList<>();
+        // Left slope
+        roofGeometry.add(new Polygon(frontBottomLeft, ridgeFront, ridgeBack, backBottomLeft));
+        // Right slope
+        roofGeometry.add(new Polygon(frontBottomRight, ridgeFront, ridgeBack, backBottomRight));
+        // Front triangle
+        roofGeometry.add(new Triangle(frontBottomLeft, frontBottomRight, ridgeFront));
+        // Back triangle
+        roofGeometry.add(new Triangle(backBottomLeft, backBottomRight, ridgeBack));
     }
-    public double getRoofHeight() {
-        return roofHeight;
+
+    public List<Geometry> getRoofGeometry() {
+        return roofGeometry;
     }
-    public double getWidth() {
-        return width;
+
+    public Roof setMaterial(Material material) {
+        this.material = material;
+        for (Geometry face : roofGeometry) {
+            face.setMaterial(material);
+        }
+        return this;
     }
-    public double getLength() {
-        return length;
+
+    public Roof setEmission(Color emission) {
+        this.emission = emission;
+        for (Geometry face : roofGeometry) {
+            face.setEmission(emission);
+        }
+        return this;
     }
 }

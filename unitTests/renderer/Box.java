@@ -17,21 +17,15 @@ public class Box {
     private final Point frontTopRight;
     private final Point backTopLeft;
     private final Point backTopRight;
-    private final double width;
-    private final double height;
-    private final double depth;
-    private final List<Polygon> cubeWigs;
+    private Color emission = new Color(0, 0, 0);
+    private Material material = new Material();
+    private final List<Geometry> cubeWigs;
 
     public Box(Point frontBottomLeft, double width, double height, double depth, Vector directionWidth, Vector directionDepth) {
         if (width <= 0 || height <= 0 || depth <= 0)
             throw new IllegalArgumentException("Width, height and depth must be positive");
         if (directionWidth == null || directionDepth == null || !isZero(directionWidth.dotProduct(directionDepth)))
             throw new IllegalArgumentException("Direction vectors must be orthogonal");
-
-        this.width = width;
-        this.height = height;
-        this.depth = depth;
-
         Vector directionHeight = directionWidth.crossProduct(directionDepth).normalize();
         Vector directionWidthNormalized = directionWidth.normalize();
         Vector directionDepthNormalized = directionDepth.normalize();
@@ -63,7 +57,8 @@ public class Box {
     }
 
 
-    public List<Polygon> getCubeWigs() {
+
+    public List<Geometry> getCubeWigs() {
         return cubeWigs;
     }
 
@@ -98,16 +93,18 @@ public class Box {
     public Point getBackTopRight() {
         return backTopRight;
     }
-
-    public double getWidth() {
-        return width;
+    public Box setMaterial(Material material) {
+        this.material = material;
+        for (Geometry face : cubeWigs) {
+            face.setMaterial(material);
+        }
+        return this;
     }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public double getDepth() {
-        return depth;
+    public Box setEmission(Color color) {
+        this.emission = color;
+        for (Geometry face : cubeWigs) {
+            face.setEmission(color);
+        }
+        return this;
     }
 }
