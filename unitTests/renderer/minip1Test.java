@@ -1,91 +1,246 @@
 package renderer;
 
-import geometries.*;
+import static java.awt.Color.*;
+
 import lighting.*;
+import org.junit.jupiter.api.Test;
+
+import geometries.*;
+import lighting.AmbientLight;
 import primitives.*;
-import renderer.*;
 import scene.Scene;
 
+/**
+ * Test rendering a basic image
+ */
 public class minip1Test {
+    /**
+     * Scene of the tests
+     */
+    private final Scene scene = new Scene("minip1 scene");
+    /**
+     * Camera builder of the tests
+     */
+    private final Camera.Builder camera = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
+            .setLocation(new Point(200, 200, 200)).setDirection(new Vector(-1, -1, -1), new Vector(0, 1, -1))
+            .setVpDistance(1000)
+            .setVpSize(500, 500);
 
-    public static void main(String[] args) {
-        Scene scene = new Scene("Mickey Mouse")
-                .setBackground(new Color(0, 255, 0)) // Green background
-                .setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), new Double3(0.15)));
+    /**
+     * Produce a scene with basic 3D model and render it into a png image with a grid
+     */
+    @Test
+    public void renderCastleScene() {
+        scene.setBackground(new Color(135, 206, 235));  // Light blue sky
+        scene.setAmbientLight(new AmbientLight(new Color(BLUE), 0.15));
 
-        // Mickey Mouse's head and face
-        scene.geometries.add(
-                new Sphere(new Point(0, 0, -100), 50) // Head (black)
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        // Create walls
+        Polygon wall1 = new Polygon(
+                new Point(0, 0, 0),
+                new Point(0, 50, 0),
+                new Point(50, 50, 0),
+                new Point(50, 0, 0)
+        );
+        wall1.setEmission(new Color(169, 169, 169));  // Gray color for walls
 
-                new Sphere(new Point(0, 0, -98), 48) // Face (flesh color)
-                        .setEmission(new Color(255, 224, 189))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        Polygon wall2 = new Polygon(
+                new Point(50, 0, 0),
+                new Point(50, 50, 0),
+                new Point(100, 50, 0),
+                new Point(100, 0, 0)
+        );
+        wall2.setEmission(new Color(169, 169, 169));  // Gray color for walls
 
-                // Left ear
-                new Sphere(new Point(-55, 55, -70), 30)
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        // Add roofs to towers (pyramids)
+        Polygon roof1 = new Polygon(
+                new Point(15, 15, 60),
+                new Point(35, 15, 60),
+                new Point(25, 25, 80)
+        );
+        roof1.setEmission(new Color(178, 34, 34));  // Red color for roofs
 
-                // Right ear
-                new Sphere(new Point(55, 55, -70), 30)
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        Polygon roof2 = new Polygon(
+                new Point(65, 15, 60),
+                new Point(85, 15, 60),
+                new Point(75, 25, 80)
+        );
+        roof2.setEmission(new Color(178, 34, 34));  // Red color for roofs
 
-                // Left eye
-                new Sphere(new Point(-15, 10, -60), 10)
-                        .setEmission(new Color(java.awt.Color.WHITE))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        Polygon roof3 = new Polygon(
+                new Point(15, 65, 60),
+                new Point(35, 65, 60),
+                new Point(25, 75, 80)
+        );
+        roof3.setEmission(new Color(178, 34, 34));  // Red color for roofs
 
-                // Right eye
-                new Sphere(new Point(15, 10, -60), 10)
-                        .setEmission(new Color(java.awt.Color.WHITE))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        Polygon roof4 = new Polygon(
+                new Point(65, 65, 60),
+                new Point(85, 65, 60),
+                new Point(75, 75, 80)
+        );
+        roof4.setEmission(new Color(178, 34, 34));  // Red color for roofs
 
-                // Left eye pupil
-                new Sphere(new Point(-15, 10, -55), 2)
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        // Create a reflective plane for the lake
+        Plane lake = new Plane(
+                new Point(0, 0, -1),
+                new Vector(0, 0, 1)
+        );
+        lake.setEmission(new Color(70, 130, 180))  // Blue color for the lake
+                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(300).setKr(0.8)); // High reflectivity
 
-                // Right eye pupil
-                new Sphere(new Point(15, 10, -55), 2)
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+        // Add geometries to the scene
+        scene.geometries.add(wall1, wall2, roof1, roof2, roof3, roof4, lake);
 
-                // Nose
-                new Sphere(new Point(0, -10, -55), 7)
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
-
-                // Mouth (creating a smile using two triangles)
-                new Triangle(new Point(-20, -30, -50), new Point(20, -30, -50), new Point(0, -20, -45))
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
-                new Triangle(new Point(-20, -30, -50), new Point(20, -30, -50), new Point(0, -40, -55))
-                        .setEmission(new Color(java.awt.Color.BLACK))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100))
+        // Add a spot light to the scene
+        scene.lights.add(
+                new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4))
+                        .setKl(4E-4).setKq(2E-5)
         );
 
-        // Adding lights
-        scene.lights.add(new PointLight(new Color(700, 400, 400), new Point(-100, 100, -50))
-                .setKl(4E-4).setKq(2E-5));
-        scene.lights.add(new SpotLight(new Color(400, 400, 700), new Point(100, 100, -50), new Vector(-1, -1, -2))
-                .setKl(4E-4).setKq(2E-5));
-        scene.lights.add(new DirectionalLight(new Color(300, 150, 150), new Vector(0, -1, -1)));
-
-        // Camera setup
-        Camera camera = Camera.getBuilder()
-                .setRayTracer(new SimpleRayTracer(scene))
-                .setLocation(new Point(0, 0, 1000))
-                .setDirection(Point.ZERO, Vector.Y)
-                .setVpSize(200, 200)
-                .setVpDistance(1000)
-                .setImageWriter(new ImageWriter("mickey_mouse", 500, 500))
-                .build();
-
-        camera.renderImage();
-        camera.writeToImage();
+        camera
+                .setImageWriter(new ImageWriter("minip1Test", 600, 600))
+                .build()
+                .renderImage();
+        camera.build()
+                .writeToImage();
     }
 }
 
+
+
+//package renderer;
+//
+//import static java.awt.Color.*;
+//
+//import lighting.*;
+//import org.junit.jupiter.api.Test;
+//
+//import geometries.*;
+//import lighting.AmbientLight;
+//import primitives.*;
+//import scene.Scene;
+//
+///**
+// * Test rendering a basic image
+// *
+// * @author Dan
+// */
+//public class minip1Test {
+//    /**
+//     * Scene of the tests
+//     */
+//    private final Scene scene = new Scene("minip1 scene");
+//    /**
+//     * Camera builder of the tests
+//     */
+//    private final Camera.Builder camera = Camera.getBuilder()
+//            .setRayTracer(new SimpleRayTracer(scene))
+//            .setLocation(new Point(200, 200, 200)).setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+//            .setVpDistance(500)
+//            .setVpSize(500, 500);
+//
+//    /**
+//     * Produce a scene with basic 3D model and render it into a png image with a
+//     * grid
+//     */
+//    @Test
+//    public void renderCastleScene() {
+//        scene.setBackground(new Color(135, 206, 235));  // Light blue sky
+//        scene.setAmbientLight(new AmbientLight(new Color(BLUE), 0.15));
+//
+//        // Create walls
+//        Polygon wall1 = new Polygon(
+//                new Point(0, 0, 0),
+//                new Point(0, 50, 0),
+//                new Point(50, 50, 0),
+//                new Point(50, 0, 0)
+//        );
+//        wall1.setEmission(new Color(169, 169, 169));  // Gray color for walls
+//
+//        Polygon wall2 = new Polygon(
+//                new Point(50, 0, 0),
+//                new Point(50, 50, 0),
+//                new Point(100, 50, 0),
+//                new Point(100, 0, 0)
+//        );
+//        wall2.setEmission(new Color(169, 169, 169));  // Gray color for walls
+//
+//        // Create towers (cylinders)
+//        //Cylinder tower1 = new Cylinder(
+//         //       60, new Ray(new Point(25, 25, 0), new Vector(0, 0, 1)), 10
+//        //);
+//        //tower1.setEmission(new Color(169, 169, 169));  // Gray color for towers
+//
+//        //Cylinder tower2 = new Cylinder(
+//        //        60, new Ray(new Point(75, 25, 0), new Vector(0, 0, 1)), 10
+//        //);
+//        //tower2.setEmission(new Color(169, 169, 169));  // Gray color for towers
+//
+//        //Cylinder tower3 = new Cylinder(
+//        //        60, new Ray(new Point(25, 75, 0), new Vector(0, 0, 1)), 10
+//        //);
+//        //tower3.setEmission(new Color(169, 169, 169));  // Gray color for towers
+//
+//        //Cylinder tower4 = new Cylinder(
+//        //        60, new Ray(new Point(75, 75, 0), new Vector(0, 0, 1)), 10
+//        //);
+//        //tower4.setEmission(new Color(169, 169, 169));  // Gray color for towers
+//
+//        // Add roofs to towers (pyramids)
+//        Polygon roof1 = new Polygon(
+//                new Point(15, 15, 60),
+//                new Point(35, 15, 60),
+//                new Point(25, 25, 80)
+//        );
+//        roof1.setEmission(new Color(178, 34, 34));  // Red color for roofs
+//
+//        Polygon roof2 = new Polygon(
+//                new Point(65, 15, 60),
+//                new Point(85, 15, 60),
+//                new Point(75, 25, 80)
+//        );
+//        roof2.setEmission(new Color(178, 34, 34));  // Red color for roofs
+//
+//        Polygon roof3 = new Polygon(
+//                new Point(15, 65, 60),
+//                new Point(35, 65, 60),
+//                new Point(25, 75, 80)
+//        );
+//        roof3.setEmission(new Color(178, 34, 34));  // Red color for roofs
+//
+//        Polygon roof4 = new Polygon(
+//                new Point(65, 65, 60),
+//                new Point(85, 65, 60),
+//                new Point(75, 75, 80)
+//        );
+//        roof4.setEmission(new Color(178, 34, 34));  // Red color for roofs
+//
+//        // Create a reflective plane for the lake
+//        Plane lake = new Plane(
+//                new Point(0, 0, -1),
+//                new Vector(0, 0, 1)
+//        );
+//        lake.setEmission(new Color(70, 130, 180))  // Blue color for the lake
+//                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(300).setKr(0.8)); // High reflectivity
+//
+//        // Add geometries to the scene
+//        scene.geometries.add(wall1, wall2, /*tower1, tower2, tower3, tower4,*/ roof1, roof2, roof3, roof4, lake);
+//
+//        // Add a spot light to the scene
+//        scene.lights.add(
+//                new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4))
+//                        .setKl(4E-4).setKq(2E-5)
+//        );
+//
+//        // right
+//        camera
+//                .setImageWriter(new ImageWriter("minip1Test", 600, 600))
+//                .build()
+//                .renderImage();
+//        camera.build()
+//                .writeToImage();
+//    }
+//
+//}
+//
