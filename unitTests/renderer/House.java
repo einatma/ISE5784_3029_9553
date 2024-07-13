@@ -1,44 +1,57 @@
-//package renderer;
-//
-//import geometries.*;
-//import primitives.*;
-//
-//public class House {
-//    private final Box base;
-//    private final Roof roof;
-//    Material baseMaterial = new Material();
-//    Material roofMaterial = new Material();
-//    Color baseEmission = new Color(0, 0, 0);
-//    Color roofEmission = new Color(0, 0, 0);
-//
-//    public House(Point frontBottomLeft, double length, double width, double height, double roofHeight, Vector directionWidth, Vector directionDepth) {
-//        // Create the base
-//        this.base = new Box(frontBottomLeft, length, width, height, new Vector(1, 0, 0), new Vector(0, 1, 0))
-//        // Create the roof
-//        this.roof = new Roof(frontBottomLeft.add(new Vector(0, 0, height)), length, roofHeight, width, new Vector(1, 0, 0), new Vector(0, 1, 0))
-//    }
-//
-//    public Box getBase() {
-//        return base;
-//    }
-//
-//    public Roof getRoof() {
-//        return roof;
-//    }
-//    public House setBaseMaterial(Material material) {
-//        base.setMaterial(material);
-//        return this;
-//    }
-//    public House setRoofMaterial(Material material) {
-//        roof.setMaterial(material);
-//        return this;
-//    }
-//    public House setBaseEmission(Color emission) {
-//        base.setEmission(emission);
-//        return this;
-//    }
-//    public House setRoofEmission(Color emission) {
-//        roof.setEmission(emission);
-//        return this;
-//    }
-//}
+package renderer;
+
+import geometries.*;
+import primitives.*;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class House {
+    private final Box base;
+    private final Roof roof;
+    private final List<Geometry> houseWigs;
+
+    public House(Point frontBottomLeft, double length, double width, double height, double roofHeight, Vector directionWidth, Vector directionDepth)  {
+        if (length <= 0 || width <= 0 || height <= 0 || roofHeight <= 0)
+            throw new IllegalArgumentException("Length, width, height and roof height must be positive");
+        if (directionWidth == null || directionDepth == null || !Util.isZero(directionWidth.dotProduct(directionDepth)))
+            throw new IllegalArgumentException("Direction vectors must be orthogonal");
+        houseWigs = new LinkedList<>();
+        // Create the base
+        this.base = new Box(frontBottomLeft, length, height, width, directionWidth, directionDepth);
+        houseWigs.addAll(base.getCubeWigs());
+
+        // Calculate the directionHeight vector
+        Vector directionHeight = directionWidth.crossProduct(directionDepth).normalize();
+
+        // Calculate the position of the roof's front bottom left point
+        Point roofFrontBottomLeft = frontBottomLeft.add(directionHeight.scale(height));
+
+        // Create the roof
+        this.roof = new Roof(roofFrontBottomLeft, length, roofHeight, width, directionWidth, directionDepth);
+        houseWigs.addAll(roof.getRoofGeometry());
+}
+    public House setBaseMaterial(Material material) {
+        base.setMaterial(material);
+        return this;
+    }
+
+    public House setRoofMaterial(Material material) {
+        roof.setMaterial(material);
+        return this;
+    }
+
+    public House setBaseEmission(Color emission) {
+        base.setEmission(emission);
+        return this;
+    }
+
+    public House setRoofEmission(Color emission) {
+        roof.setEmission(emission);
+        return this;
+    }
+    public List<Geometry> getHouseWigs() {
+        return houseWigs;
+    }
+}
+
