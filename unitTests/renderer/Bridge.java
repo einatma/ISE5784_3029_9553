@@ -1,57 +1,44 @@
-package renderer;
-
-import geometries.*;
-        import primitives.*;
-
-public class Bridge {
-    public Bridge(Box bridgeBase, int numOfBottomPoles, double bottomPolesHeight, int numOfTopPoles, double topPolesHeight, double roofHeight) {
-        double bridgeWidth = bridgeBase.getWidth();
-        double poleRadius = bridgeWidth / (2 * numOfBottomPoles);
-        double topPoleWidth = poleRadius/3;
-        double topPoleSpacing = (bridgeWidth - numOfTopPoles * topPoleWidth) / (numOfTopPoles + 1);
-
-        // Create the bottom poles (cylinders)
-        for (int i = 0; i < numOfBottomPoles; i++) {
-            double xPosition = bridgeBase.getFrontBottomLeft().getX() + i * (2 * poleRadius);
-            Cylinder bottomPole = new Cylinder(
-                    bottomPolesHeight,
-                    new Ray(
-                            new Point(xPosition, bridgeBase.getFrontBottomLeft().getY(), bridgeBase.getFrontBottomLeft().getZ()),
-                            new Vector(0, 1, 0)
-                    ),
-                    poleRadius
-            );
-            // Add the bottom pole to the scene (implementation dependent)
-        }
-
-        // Create the top poles (cubes)
-        for (int i = 0; i < numOfTopPoles; i++) {
-            double xPosition = bridgeBase.getFrontBottomLeft().getX() + topPoleSpacing + i * (topPoleWidth + topPoleSpacing);
-            Box topPole = new Box(
-                    new Point(xPosition, bridgeBase.getFrontBottomLeft().getY() + bottomPolesHeight, bridgeBase.getFrontBottomLeft().getZ()),
-                    topPoleWidth,
-                    topPolesHeight,
-                    topPoleWidth, new Vector(1, 0, 0), new Vector(0, 1, 0)
-            );
-            // Add the top pole to the scene (implementation dependent)
-        }
-
-        // Create the railing (another beam)
-        double railingHeight = topPolesHeight / 2;
-        Box railing = new Box(
-                new Point(bridgeBase.getFrontBottomLeft().getX(), bridgeBase.getFrontBottomLeft().getY() + bottomPolesHeight + topPolesHeight, bridgeBase.getFrontBottomLeft().getZ()),
-                bridgeWidth,
-                railingHeight,
-                topPoleWidth, new Vector(1, 0, 0), new Vector(0, 1, 0)
-        );
-        //Create the roof
-        Polygon roof = new Polygon(
-                new Point(bridgeBase.getFrontBottomLeft().getX(), bridgeBase.getFrontBottomLeft().getY() + bottomPolesHeight + topPolesHeight + railingHeight, bridgeBase.getFrontBottomLeft().getZ()),
-                new Point(bridgeBase.getFrontBottomLeft().getX() + bridgeWidth, bridgeBase.getFrontBottomLeft().getY() + bottomPolesHeight + topPolesHeight + railingHeight, bridgeBase.getFrontBottomLeft().getZ()),
-                new Point(bridgeBase.getFrontBottomLeft().getX() + bridgeWidth, bridgeBase.getFrontBottomLeft().getY() + bottomPolesHeight + topPolesHeight + railingHeight, bridgeBase.getFrontBottomLeft().getZ() + bridgeWidth),
-                new Point(bridgeBase.getFrontBottomLeft().getX(), bridgeBase.getFrontBottomLeft().getY() + bottomPolesHeight + topPolesHeight + railingHeight, bridgeBase.getFrontBottomLeft().getZ() + bridgeWidth)
-        );
-    }
-}
-
-
+//package renderer;
+//
+//import geometries.*;
+//        import primitives.*;
+//
+//public class Bridge {
+//    public Bridge(double length, double width, double baseHight,  int numOfBottomPoles, double bottomPolesHeight, int numOfTopPoles, double topPolesHeight, double roofHeight) {
+//        // Create the bottom poles
+//        for (int i = 0; i < numOfBottomPoles; i++) {
+//            // Create the bottom pole
+//            Cylinder bottomPole = new Cylinder(new Point(0, 0, 0), bottomPolesHeight, 1)
+//                    .setEmission(new Color(0, 0, 0))
+//                    .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30));
+//            // Add the bottom pole to the scene
+//            //scene.geometries.add(bottomPole);
+//        }
+//
+//        // Create the top poles
+//        for (int i = 0; i < numOfTopPoles; i++) {
+//            // Create the top pole
+//            Cylinder topPole = new Cylinder(1, new Point(0, 0, 0), topPolesHeight, 1)
+//                    .setEmission(new Color(0, 0, 0))
+//                    .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30));
+//            // Add the top pole to the scene
+//            //scene.geometries.add(topPole);
+//        }
+//
+//        // Create the bridge
+//        Box bridge = new Box(new Point(0, 0, 0), length, width, baseHight, new Vector(1, 0, 0), new Vector(0, 1, 0))
+//                .setEmission(new Color(0, 0, 0))
+//                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30));
+//        // Add the bridge to the scene
+//        //scene.geometries.add(bridge);
+//
+//        // Create the roof
+//        Box roof = new Box(new Point(0, 0, 0), length, width, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0))
+//                .setEmission(new Color(0, 0, 0))
+//                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30));
+//        // Add the roof to the scene
+//        //scene.geometries.add(roof);
+//    }
+//}
+//
+//

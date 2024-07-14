@@ -1,13 +1,10 @@
 package geometries;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static primitives.Util.*;
 
-import primitives.Double3;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -110,8 +107,10 @@ public class Polygon extends Geometry {
      *            //* @param distance
      * @return a list of points where the ray intersects the polygon, or null if there are no intersections.
      */
+//איך מכניסים את distance
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double disnatce) {
+
         List<GeoPoint> intersections = plane.findGeoIntersections(ray);
 
         // Check if the plane of the polygon intersects with the ray
@@ -148,6 +147,5 @@ public class Polygon extends Geometry {
 
         return List.of(new GeoPoint(this, intersections.get(0).point));
     }
-
-
 }
+

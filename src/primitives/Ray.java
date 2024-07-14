@@ -80,9 +80,12 @@ public class Ray {
      * @return The point at parameter t along the ray.
      */
     public Point getPoint(double t) {
-        if (isZero(t))
+        try {
+            return head.add(direction.scale(t));
+        }
+        catch (IllegalArgumentException ignore ) {
             return head;
-        return head.add(direction.scale(t));
+        }
     }
 //    /**
 //     * Finds the closest point to the start of the ray (p0) from a list of points.
