@@ -24,16 +24,16 @@ public class minip1Test {
     /**
      * Camera builder of the tests
      */
-    private final Camera.Builder camera = Camera.getBuilder()
-            .setRayTracer(new SimpleRayTracer(scene))
-            .setLocation(new Point(0 ,-150, 150)).setDirection(new Vector(0, 1, -1), new Vector(-1, 0, 0))
-            .setVpDistance(100)
-            .setVpSize(500, 500);
 //    private final Camera.Builder camera = Camera.getBuilder()
 //            .setRayTracer(new SimpleRayTracer(scene))
-//            .setLocation(new Point(0 ,-200, 50)).setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
+//            .setLocation(new Point(0 ,-150, 150)).setDirection(new Vector(0, 1, -1), new Vector(-1, 0, 0))
 //            .setVpDistance(100)
 //            .setVpSize(500, 500);
+    private final Camera.Builder camera = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
+            .setLocation(new Point(0 ,-200, 50)).setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
+            .setVpDistance(100)
+            .setVpSize(500, 500);
     /**
      * Produce a scene with basic 3D model and render it into a png image with a grid
      */
@@ -66,21 +66,21 @@ public class minip1Test {
         double wallHeight = 50;
         double wallWidth = 10;
 
-//        // חומה קדמית
-//        Point frontWallPosition = new Point(-70, -100, 0);
-//        Box frontWall = new Box(frontWallPosition, 140, wallHeight, wallWidth, new Vector(1, 0, 0), new Vector(0, 1, 0));
+        // חומה קדמית
+        Point frontWallPosition = frontLeftTurret.getBase().getFrontBottomRight();
+        Box frontWall = new Box(frontWallPosition, 140, wallHeight, wallWidth, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
         // חומה אחורית
-        Point backWallPosition = new Point(-70, 70, 0);
-        Box backWall = new Box(backWallPosition, 140, wallHeight, wallWidth, new Vector(1, 0, 0), new Vector(0, -1, 0));
-//
-//        // חומה שמאלית (מאונך לקדמית)
-//        Point leftWallPosition = frontLeftTurret.getBase().getBackBottomLeft();
-//        Box leftWall = new Box(leftWallPosition, wallWidth, wallHeight, 140, new Vector(1, 0, 0), new Vector(0, 1, 0));
-//
-//        // חומה ימנית (מאונך לקדמית)
-//        Point rightWallPosition = frontRightTurret.getBase().getFrontBottomRight().add(new Vector(0, wallHeight, 0));
-//        Box rightWall = new Box(rightWallPosition, wallWidth, wallHeight, 140, new Vector(1, 0, 0), new Vector(0, 1, 0));
+        Point backWallPosition = backRightTurret.getBase().getBackBottomLeft();
+        Box backWall = new Box(backWallPosition, 140, wallHeight, wallWidth, new Vector(-1, 0, 0), new Vector(0, -1, 0));
+
+        // חומה שמאלית (מאונך לקדמית)
+        Point leftWallPosition = frontLeftTurret.getBase().getBackBottomLeft();
+        Box leftWall = new Box(leftWallPosition, wallWidth, wallHeight, 140, new Vector(1, 0, 0), new Vector(0, 1, 0));
+
+        // חומה ימנית (מאונך לקדמית)
+        Point rightWallPosition = frontRightTurret.getBase().getFrontBottomRight().add(new Vector(0, wallHeight, 0));
+        Box rightWall = new Box(rightWallPosition, wallWidth, wallHeight, 140, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
         // יצירת הבית במרכז המבצר
         Point housePosition = new Point(-25, -25, 0);
@@ -92,10 +92,10 @@ public class minip1Test {
         allGeometries.addAll(backLeftTurret.getHouseWigs());
         allGeometries.addAll(backRightTurret.getHouseWigs());
 
-    //    allGeometries.addAll(frontWall.getCubeWigs());
+        allGeometries.addAll(frontWall.getCubeWigs());
         allGeometries.addAll(backWall.getCubeWigs());
-    //    allGeometries.addAll(leftWall.getCubeWigs());
-    //    allGeometries.addAll(rightWall.getCubeWigs());
+        allGeometries.addAll(leftWall.getCubeWigs());
+        allGeometries.addAll(rightWall.getCubeWigs());
 
         allGeometries.addAll(house.getHouseWigs());
         for (Geometry geometry : allGeometries) {
