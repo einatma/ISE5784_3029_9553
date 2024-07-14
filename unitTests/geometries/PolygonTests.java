@@ -3,6 +3,8 @@ package geometries;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -92,46 +94,48 @@ public class PolygonTests {
 
     /**
      * Test method for
-     * {@link Intersectable#findIntersections(Ray, double)}.
+     * {@link Intersectable#findGeoIntersectionsHelper(Ray, double)}.
      */
     @Test
     public void testfindIntersectionsRay() {
-//        Polygon pol        = new Polygon(new Point(0, 0, 1), new Point(2, 0, 1), new Point(2, 2, 1), new Point(0, 2, 1));
-//        Plane   pl         = new Plane(new Point(0, 0, 1), new Point(1, 0, 1), new Point(0, 1, 1));
-//        Ray     ray;
-//        String  errorPlane = "Wrong intersection with plane";
-//        String  errorBad   = "Bad intersection";
-//
-//        // ============ Equivalence Partitions Tests ==============
-//        // TC01: Inside polygon
-//        ray = new Ray(new Point(1, 1, 0), new Vector(0, 0, 1));
-//        assertEquals(List.of(new Point(1, 1, 1)), pol.findIntersections(ray), errorBad);
-//
-//        // TC02: Against edge
-//        ray = new Ray(new Point(-1, 1, 0), new Vector(0, 0, 1));
-//        assertEquals(List.of(new Point(-1, 1, 1)), pl.findIntersections(ray), errorPlane);
-//        assertNull(pol.findIntersections(ray), errorBad);
-//
-//        // TC03: Against vertex
-//        ray = new Ray(new Point(-1, -1, 0), new Vector(0, 0, 1));
-//        assertEquals(List.of(new Point(-1, -1, 1)), pl.findIntersections(ray), errorPlane);
-//        assertNull(pol.findIntersections(ray), errorBad);
-//
-//        // =============== Boundary Values Tests ==================
-//        // TC11: In vertex
-//        ray = new Ray(new Point(0, 2, 0), new Vector(0, 0, 1));
-//        assertEquals(List.of(new Point(0, 2, 1)), pl.findIntersections(ray), errorPlane);
-//        assertNull(pol.findIntersections(ray), errorBad);
-//
-//        // TC12: On edge
-//        ray = new Ray(new Point(0, 1, 0), new Vector(0, 0, 1));
-//        assertEquals(List.of(new Point(0, 1, 1)), pl.findIntersections(ray), errorPlane);
-//        assertNull(pol.findIntersections(ray), errorBad);
-//
-//        // TC13: On edge continuation
-//        ray = new Ray(new Point(0, 3, 0), new Vector(0, 0, 1));
-//        assertEquals(List.of(new Point(0, 3, 1)), pl.findIntersections(ray), errorPlane);
-//        assertNull(pol.findIntersections(ray), errorBad);
+
+        Polygon pol = new Polygon(new Point(0, 0, 1), new Point(2, 0, 1), new Point(2, 2, 1), new Point(0, 2, 1));
+        Plane pl = new Plane(new Point(0, 0, 1), new Point(1, 0, 1), new Point(0, 1, 1));
+        Ray ray;
+        String errorPlane = "Wrong intersection with plane";
+        String errorBad = "Bad intersection";
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Inside polygon
+        ray = new Ray(new Point(1, 1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(1, 1, 1)), pol.findIntersections(ray), errorBad);
+
+        // TC02: Against edge
+        ray = new Ray(new Point(-1, 1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(-1, 1, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
+
+        // TC03: Against vertex
+        ray = new Ray(new Point(-1, -1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(-1, -1, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
+
+        // =============== Boundary Values Tests ==================
+        // TC11: In vertex
+        ray = new Ray(new Point(0, 2, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(0, 2, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
+
+        // TC12: On edge
+        ray = new Ray(new Point(0, 1, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(0, 1, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
+
+        // TC13: On edge continuation
+        ray = new Ray(new Point(0, 3, 0), new Vector(0, 0, 1));
+        assertEquals(List.of(new Point(0, 3, 1)), pl.findIntersections(ray), errorPlane);
+        assertNull(pol.findIntersections(ray), errorBad);
+
     }
 }
 

@@ -1,10 +1,13 @@
 package geometries;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static primitives.Util.*;
 
+import primitives.Double3;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -109,33 +112,42 @@ public class Polygon extends Geometry {
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
-        List<GeoPoint> result = plane.findGeoIntersections(ray, distance);
-        if (result == null) {
+        List<GeoPoint> intersections = plane.findGeoIntersections(ray);
+
+        // Check if the plane of the polygon intersects with the ray
+        // if there's no intersection with the plane - there's no intersection with the polygon.
+        if (intersections == null) {
             return null;
         }
-        // Iterate through the vertices of the polygon to check if the intersection point is inside the polygon
-        for (int i = 1; i < size - 1; i++) {
-            for (int j = i + 1; j < size - 1; j++) {
-                Vector v1 = vertices.get(0).subtract(ray.getHead());
-                Vector v2 = vertices.get(i).subtract(ray.getHead());
-                Vector v3 = vertices.get(j).subtract(ray.getHead());
-                Vector direction = ray.getDirection();
+        Point p0 = ray.getHead();
+        Vector v = ray.getDirection();
 
-                // Calculate the dot products for the cross products of the vectors formed by the vertices and the ray direction
-                double dot1 = alignZero(direction.dotProduct(v1.crossProduct(v2).normalize()));
-                double dot2 = alignZero(direction.dotProduct(v2.crossProduct(v3).normalize()));
-                double dot3 = alignZero(direction.dotProduct(v3.crossProduct(v1).normalize()));
+        Vector v1 = vertices.get(1).subtract(p0);
+        Vector v2 = vertices.get(0).subtract(p0);
 
-                // If all the dot products have the same sign, the intersection point is inside the polygon
-                if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0)) {
-                    return result.stream()
-                            .map(gp -> new GeoPoint(this, gp.point))
-                            .collect(Collectors.toList());
-                }
+        double sign = v.dotProduct(v1.crossProduct(v2));
+
+        if (isZero(sign)) {
+            return null;
+        }
+        boolean positive = sign > 0;
+
+        for (int i = vertices.size() - 1; i > 0; --i) {
+            v1 = v2;
+            v2 = vertices.get(i).subtract(p0);
+            sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+
+            if (isZero(sign)){
+                return null;
+            }
+
+            if (positive != (sign > 0)) {
+                return null;
             }
         }
 
-        // If no intersection point is found inside the polygon, return null
-        return null;
+        return List.of(new GeoPoint(this, intersections.get(0).point));
     }
+
+
 }
