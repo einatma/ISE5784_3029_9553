@@ -32,22 +32,14 @@ class BoxTests {
         public void renderBoxTest() {
             // Create a Box (rectangular prism)
             Box box = new Box(new Point(0, 0, 0), 10, 15, 20, new Vector(1, 0, 0), new Vector(0, 1, 0)).setMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(90)).setEmission(new Color(blue));
-            // Print points for debugging
-            System.out.println("Front Bottom Left: " + box.getFrontBottomLeft());
-            System.out.println("Front Bottom Right: " + box.getFrontBottomRight());
-            System.out.println("Back Bottom Left: " + box.getBackBottomLeft());
-            System.out.println("Back Bottom Right: " + box.getBackBottomRight());
-            System.out.println("Front Top Left: " + box.getFrontTopLeft());
-            System.out.println("Front Top Right: " + box.getFrontTopRight());
-            System.out.println("Back Top Left: " + box.getBackTopLeft());
-            System.out.println("Back Top Right: " + box.getBackTopRight());
-
+//scene.geometries.add( new Cylinder(10, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 20).setMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(90)).setEmission(new Color(blue)));
             // Add Box polygons to the scene
             int i = 2;
             for (Geometry face : box.getCubeWigs()) {
                 i++;
                 scene.geometries.add(face);
             }
+
             // Set ambient light and background color
             scene.setAmbientLight(new AmbientLight(new Color(100, 120, 120), Double3.ONE))
                     .setBackground(new Color(50, 100, 50));
