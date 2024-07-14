@@ -53,5 +53,8 @@ public class House {
     public List<Geometry> getHouseWigs() {
         return houseWigs;
     }
+    public Box getBase() {
+        return base;
+    }
 }
 

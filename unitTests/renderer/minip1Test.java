@@ -10,6 +10,9 @@ import lighting.AmbientLight;
 import primitives.*;
 import scene.Scene;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Test rendering a basic image
  */
@@ -23,10 +26,14 @@ public class minip1Test {
      */
     private final Camera.Builder camera = Camera.getBuilder()
             .setRayTracer(new SimpleRayTracer(scene))
-            .setLocation(new Point(200, 200, 200)).setDirection(new Vector(-1, -1, -1), new Vector(0, 1, -1))
-            .setVpDistance(1000)
+            .setLocation(new Point(0 ,-150, 150)).setDirection(new Vector(0, 1, -1), new Vector(-1, 0, 0))
+            .setVpDistance(100)
             .setVpSize(500, 500);
-
+//    private final Camera.Builder camera = Camera.getBuilder()
+//            .setRayTracer(new SimpleRayTracer(scene))
+//            .setLocation(new Point(0 ,-200, 50)).setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
+//            .setVpDistance(100)
+//            .setVpSize(500, 500);
     /**
      * Produce a scene with basic 3D model and render it into a png image with a grid
      */
@@ -34,76 +41,74 @@ public class minip1Test {
     public void renderCastleScene() {
         scene.setBackground(new Color(135, 206, 235));  // Light blue sky
         scene.setAmbientLight(new AmbientLight(new Color(BLUE), 0.15));
+        double turretLength = 30;
+        double turretWidth = 30;
+        double turretHeight = 70;
+        double roofHeight = 15;
 
-        // Create walls
-        Polygon wall1 = new Polygon(
-                new Point(0, 0, 0),
-                new Point(0, 50, 0),
-                new Point(50, 50, 0),
-                new Point(50, 0, 0)
-        );
-        wall1.setEmission(new Color(169, 169, 169));  // Gray color for walls
+        // מגדל קדמי שמאלי
+        Point frontLeftTurretPosition = new Point(-100, -100, 0);
+        House frontLeftTurret = new House(frontLeftTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
-        Polygon wall2 = new Polygon(
-                new Point(50, 0, 0),
-                new Point(50, 50, 0),
-                new Point(100, 50, 0),
-                new Point(100, 0, 0)
-        );
-        wall2.setEmission(new Color(169, 169, 169));  // Gray color for walls
+        // מגדל קדמי ימני
+        Point frontRightTurretPosition = new Point(70, -100, 0);
+        House frontRightTurret = new House(frontRightTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
-        // Add roofs to towers (pyramids)
-        Polygon roof1 = new Polygon(
-                new Point(15, 15, 60),
-                new Point(35, 15, 60),
-                new Point(25, 25, 80)
-        );
-        roof1.setEmission(new Color(178, 34, 34));  // Red color for roofs
+        // מגדל אחורי שמאלי
+        Point backLeftTurretPosition = new Point(-100, 70, 0);
+        House backLeftTurret = new House(backLeftTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
-        Polygon roof2 = new Polygon(
-                new Point(65, 15, 60),
-                new Point(85, 15, 60),
-                new Point(75, 25, 80)
-        );
-        roof2.setEmission(new Color(178, 34, 34));  // Red color for roofs
+        // מגדל אחורי ימני
+        Point backRightTurretPosition = new Point(70, 70, 0);
+        House backRightTurret = new House(backRightTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
-        Polygon roof3 = new Polygon(
-                new Point(15, 65, 60),
-                new Point(35, 65, 60),
-                new Point(25, 75, 80)
-        );
-        roof3.setEmission(new Color(178, 34, 34));  // Red color for roofs
+        // יצירת חומות בין המגדלים
+        double wallHeight = 50;
+        double wallWidth = 10;
 
-        Polygon roof4 = new Polygon(
-                new Point(65, 65, 60),
-                new Point(85, 65, 60),
-                new Point(75, 75, 80)
-        );
-        roof4.setEmission(new Color(178, 34, 34));  // Red color for roofs
+//        // חומה קדמית
+//        Point frontWallPosition = new Point(-70, -100, 0);
+//        Box frontWall = new Box(frontWallPosition, 140, wallHeight, wallWidth, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
-        // Create a reflective plane for the lake
-        Plane lake = new Plane(
-                new Point(0, 0, -1),
-                new Vector(0, 0, 1)
-        );
-        lake.setEmission(new Color(70, 130, 180))  // Blue color for the lake
-                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(300).setKr(0.8)); // High reflectivity
+        // חומה אחורית
+        Point backWallPosition = new Point(-70, 70, 0);
+        Box backWall = new Box(backWallPosition, 140, wallHeight, wallWidth, new Vector(1, 0, 0), new Vector(0, -1, 0));
+//
+//        // חומה שמאלית (מאונך לקדמית)
+//        Point leftWallPosition = frontLeftTurret.getBase().getBackBottomLeft();
+//        Box leftWall = new Box(leftWallPosition, wallWidth, wallHeight, 140, new Vector(1, 0, 0), new Vector(0, 1, 0));
+//
+//        // חומה ימנית (מאונך לקדמית)
+//        Point rightWallPosition = frontRightTurret.getBase().getFrontBottomRight().add(new Vector(0, wallHeight, 0));
+//        Box rightWall = new Box(rightWallPosition, wallWidth, wallHeight, 140, new Vector(1, 0, 0), new Vector(0, 1, 0));
 
-        // Add geometries to the scene
-        scene.geometries.add(wall1, wall2, roof1, roof2, roof3, roof4, lake);
+        // יצירת הבית במרכז המבצר
+        Point housePosition = new Point(-25, -25, 0);
+        House house = new House(housePosition, 50, 50, 40, 20, new Vector(1, 0, 0), new Vector(0, 1, 0));
+        List<Geometry> allGeometries = new LinkedList<>();
+        // הוספת כל הגיאומטריות לסצנה
+        allGeometries.addAll(frontLeftTurret.getHouseWigs());
+        allGeometries.addAll(frontRightTurret.getHouseWigs());
+        allGeometries.addAll(backLeftTurret.getHouseWigs());
+        allGeometries.addAll(backRightTurret.getHouseWigs());
 
-        // Add a spot light to the scene
-        scene.lights.add(
-                new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4))
-                        .setKl(4E-4).setKq(2E-5)
-        );
+    //    allGeometries.addAll(frontWall.getCubeWigs());
+        allGeometries.addAll(backWall.getCubeWigs());
+    //    allGeometries.addAll(leftWall.getCubeWigs());
+    //    allGeometries.addAll(rightWall.getCubeWigs());
 
-        camera
-                .setImageWriter(new ImageWriter("minip1Test", 600, 600))
+        allGeometries.addAll(house.getHouseWigs());
+        for (Geometry geometry : allGeometries) {
+            scene.geometries.add(geometry.setMaterial(new Material().setKd(0.2).setKs(0.4).setShininess(30)).setEmission(new Color(255, 0, 0)));
+        }
+        scene.setAmbientLight(new AmbientLight(new Color(100, 120, 120), Double3.ONE));
+        scene.lights.add(new SpotLight(new Color(2000, 1600, 1600), new Point(0, 0, 200), new Vector(0, 0, -1))
+                .setKl(4E-4).setKq(2E-5));
+        camera.setImageWriter(new ImageWriter("minip1Test", 1000, 1000))
                 .build()
                 .renderImage();
-        camera.build()
-                .writeToImage();
+        // Write rendered image to file
+        camera.build().writeToImage();
     }
 }
 
