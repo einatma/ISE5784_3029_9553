@@ -7,10 +7,14 @@ import org.junit.jupiter.api.Test;
 import geometries.*;
 import lighting.AmbientLight;
 import primitives.*;
+import primitives.Color;
+import primitives.Point;
 import scene.Scene;
+
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
-
+//hadar Cohen
 /**
  * Test rendering a basic image
  */
@@ -23,17 +27,17 @@ public class minip1Test {
     /**
      * Camera builder of the tests
      */
-        private final Camera.Builder camera = Camera.getBuilder()
-            .setRayTracer(new SimpleRayTracer(scene))
-            .setLocation(new Point(0 ,-150, 150)).setDirection(new Vector(0, 1, -1), new Vector(-1, 0, 0))
-            .setVpDistance(100)
-            .setVpSize(500, 500);
-//    private final Camera.Builder camera = Camera.getBuilder()
+//        private final Camera.Builder camera = Camera.getBuilder()
 //            .setRayTracer(new SimpleRayTracer(scene))
-//            .setLocation(new Point(10, -170, 50))
-//            .setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
+//            .setLocation(new Point(0 ,-150, 150)).setDirection(new Vector(0, 1, -1), new Vector(-1, 0, 0))
 //            .setVpDistance(100)
 //            .setVpSize(500, 500);
+    private final Camera.Builder camera = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
+            .setLocation(new Point(10, -170, 50))
+            .setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
+            .setVpDistance(100)
+            .setVpSize(500, 500);
 
     /**
      * Produce a scene with a basic 3D model and render it into a png image with a grid
@@ -44,6 +48,7 @@ public class minip1Test {
         scene.setBackground(new Color(135, 206, 235));  // Light blue sky
         scene.setAmbientLight(new AmbientLight(new Color(BLUE), 0.15));
         Material buildingsMaterial = new Material().setKd(0.5).setKs(0.5).setShininess(100);
+
         // Dimensions and colors for turrets
         double turretLength = 15;
         double turretWidth = 15;
@@ -51,9 +56,11 @@ public class minip1Test {
         double roofHeight = 1;
         Color turretColor = new Color(194, 193, 183);
 
+        // הזזת הבניינים לאחור
+        double moveBackDistance = 30;
 
         // Creating the front-left turret
-        Point frontLeftTurretPosition = new Point(-100, -100, 0);
+        Point frontLeftTurretPosition = new Point(-100, -100 + moveBackDistance, 0);
         House frontLeftTurret = new House(frontLeftTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(turretColor)
                 .setRoofEmission(turretColor)
@@ -61,7 +68,7 @@ public class minip1Test {
                 .setRoofMaterial(buildingsMaterial);
 
         // Creating the front-right turret
-        Point frontRightTurretPosition = new Point(70, -100, 0);
+        Point frontRightTurretPosition = new Point(70, -100 + moveBackDistance, 0);
         House frontRightTurret = new House(frontRightTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(turretColor)
                 .setRoofEmission(turretColor)
@@ -69,7 +76,7 @@ public class minip1Test {
                 .setRoofMaterial(buildingsMaterial);
 
         // Creating the back-left turret
-        Point backLeftTurretPosition = new Point(-100, 70, 0);
+        Point backLeftTurretPosition = new Point(-100, 70 + moveBackDistance, 0);
         House backLeftTurret = new House(backLeftTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(turretColor)
                 .setRoofEmission(turretColor)
@@ -77,7 +84,7 @@ public class minip1Test {
                 .setRoofMaterial(buildingsMaterial);
 
         // Creating the back-right turret
-        Point backRightTurretPosition = new Point(70, 70, 0);
+        Point backRightTurretPosition = new Point(70, 70 + moveBackDistance, 0);
         House backRightTurret = new House(backRightTurretPosition, turretLength, turretWidth, turretHeight, roofHeight, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(turretColor)
                 .setRoofEmission(turretColor)
@@ -99,8 +106,8 @@ public class minip1Test {
                 .setMaterial(buildingsMaterial);
 
         // Upper part of the front wall
-        Point upperFrontWallPosition = frontLeftWallPosition.add(new Vector(0, 0, wallHeight-10));
-        Box upperFrontWall = new Box(upperFrontWallPosition, wallLength , 10, wallWidth, new Vector(1, 0, 0), new Vector(0, 1, 0))
+        Point upperFrontWallPosition = frontLeftWallPosition.add(new Vector(0, 0, wallHeight - 10));
+        Box upperFrontWall = new Box(upperFrontWallPosition, wallLength, 10, wallWidth, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setEmission(turretColor)
                 .setMaterial(buildingsMaterial);
         // Adding the doors at a 45-degree angle to the castle wall
@@ -146,9 +153,8 @@ public class minip1Test {
         Color wallColor = new Color(243, 236, 186);
         Color roofColor = new Color(139, 67, 69);
 
-
         // Creating the house in the center of the castle
-        Point housePosition = new Point(-50, -90, 0);
+        Point housePosition = new Point(-50, -90 + moveBackDistance, 0);
         House house = new House(housePosition, 60, 100, 60, 15, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(wallColor)
                 .setRoofEmission(roofColor)
@@ -170,21 +176,21 @@ public class minip1Test {
                 .setRoofMaterial(buildingsMaterial);
 
         // Creating the towers
-        Point tower1Position = new Point(-10, -60, 0);
+        Point tower1Position = new Point(-10, -60 + moveBackDistance, 0);
         House tower1 = new House(tower1Position, 20, 40, 120, 20, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(wallColor)
                 .setRoofEmission(roofColor)
                 .setBaseMaterial(buildingsMaterial)
                 .setRoofMaterial(buildingsMaterial);
 
-        Point tower2Position = new Point(35, 10, 0);
+        Point tower2Position = new Point(35, 10 + moveBackDistance, 0);
         House tower2 = new House(tower2Position, 20, 30, 150, 30, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(wallColor)
                 .setRoofEmission(roofColor)
                 .setBaseMaterial(buildingsMaterial)
                 .setRoofMaterial(buildingsMaterial);
 
-        Point tower3Position = new Point(-60, -50, 0);
+        Point tower3Position = new Point(-60, -50 + moveBackDistance, 0);
         House tower3 = new House(tower3Position, 30, 30, 100, 20, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setBaseEmission(wallColor)
                 .setRoofEmission(roofColor)
@@ -223,7 +229,7 @@ public class minip1Test {
 
         // Adding additional planes and sphere
         allGeometries.add(new Plane(new Point(1, 0, -10), new Point(0, 1, -10), new Point(0, 0, -10))
-                        .setEmission(new Color(0, 39, 78))
+                .setEmission(new Color(0, 39, 78))
                 .setMaterial(new Material().setShininess(50).setKt(0.9).setKs(0.7).setKd(0.2).setKr(0.1)));
         allGeometries.add(new Plane(new Point(0, 0, -60), new Point(0, 1, -60), new Point(1, 1, -60))
                 .setEmission(new Color(52, 66, 39)).setMaterial(new Material().setKd(0.5).setKs(0.8).setShininess(0)));
@@ -231,18 +237,101 @@ public class minip1Test {
                 .setEmission(new Color(86, 125, 50)));
         allGeometries.add(new Sphere(new Point(-70, 130, -878), 900)
                 .setEmission(new Color(86, 125, 50)));
-allGeometries.add(new Cylinder(100, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 50)
-                .setEmission(new Color(0, 0, 0))
-                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)));
+
+
+
+        //sun
+
+        // Setting ambient light and adding a spotlight
+        Geometry sun  =  new Sphere(new Point(0, -50, 240), 30)
+                .setEmission(new Color(255, 223, 0))  // צבע צהוב עז
+                .setMaterial(new Material().setKt(0).setKd(0.9).setKs(0.1).setKr(0).setShininess(30));
+        scene.geometries.add(sun);
+
+        // Setting ambient light and adding a directional light to simulate the sun
+        // הגדרת מקור אור חזק יותר לשמש
+        scene.setAmbientLight(new AmbientLight(new Color(50, 60, 60), Double3.ONE));
+        DirectionalLight sunLight = new DirectionalLight(new Color(WHITE).scale(1.5), new Vector(0, -1, -1));
+        scene.lights.add(sunLight);
+
+        //Grass
+        // הוספת צל לדשא
+        Material grassMaterial = new Material().setKd(0.5).setKs(0.3).setShininess(50).setKr(0.1); // הגדרת חומר הדשא עם החזרות חלקיות ליצירת צל
+
+// הוספת גבעולי דשא בתלת-ממד באמצעות משולשים מצטלבים עם צל
+        // הוספת גבעולי דשא בצורה מפוזרת על המשטח הירוק במקומות החדשים
+        addGrassPatch(new Point(-60, -90, 1), 10, 20, grassMaterial);
+        addGrassPatch(new Point(20, -100, 1), 10, 20, grassMaterial);
+        addGrassPatch(new Point(-30, -60, 1), 8, 15, grassMaterial);
+        addGrassPatch(new Point(60, -80, 1), 8, 15, grassMaterial);   // מיקום חדש כדי להרחיק מהמים
+        addGrassPatch(new Point(0, 0, 1), 12, 25, grassMaterial);
+        addGrassPatch(new Point(-50, 40, 1), 10, 20, grassMaterial);
+        addGrassPatch(new Point(50, 40, 1), 10, 20, grassMaterial);
+        addGrassPatch(new Point(-80, -90, 1), 12, 25, grassMaterial);
+        addGrassPatch(new Point(80, -90, 1), 12, 25, grassMaterial);
+        addGrassPatch(new Point(-60, -50, 1), 8, 15, grassMaterial);
+        addGrassPatch(new Point(60, -50, 1), 8, 15, grassMaterial);
+        addGrassPatch(new Point(-40, -30, 1), 10, 20, grassMaterial);
+        addGrassPatch(new Point(40, -30, 1), 10, 20, grassMaterial);
+        addGrassPatch(new Point(70, -100, 1), 10, 20, grassMaterial);
+
+        // Parameters for the boat
+        Material boatMaterial = new Material().setKd(0.5).setKs(0.5).setShininess(30);
+        Color boatColor = new Color(73, 50, 17);
+        Color roofColorBoat = new Color(150, 75, 0);
+
+        Point boatBase = new Point(100, -100, 0); // Adjusted base position
+        double boatLength = 40; // Reduced length
+        double boatWidth = 15; // Reduced width
+        double boatHeight = 10; // Reduced height
+
+// Lower part of the boat
+        Box boatBottom = new Box(boatBase, boatLength, boatWidth, boatHeight / 2, new Vector(1, 0, 0), new Vector(0, 1, 0))
+                .setEmission(boatColor)
+                .setMaterial(boatMaterial);
+        allGeometries.addAll(boatBottom.getCubeWigs());
+
+// Upper part of the boat
+        Box boatTop = new Box(boatBase.add(new Vector(0, 0, boatHeight / 2)), boatLength, boatWidth / 2, boatHeight / 2, new Vector(1, 0, 0), new Vector(0, 1, 0))
+                .setEmission(boatColor)
+                .setMaterial(boatMaterial);
+        allGeometries.addAll(boatTop.getCubeWigs());
+
+// Creating the arch for the front of the boat
+        Point archFront = boatBase.add(new Vector(boatLength / 2, 0, boatHeight / 2));
+        Point archBackLeft = boatBase.add(new Vector(-boatLength / 2, -boatWidth / 2, boatHeight / 2));
+        Point archBackRight = boatBase.add(new Vector(-boatLength / 2, boatWidth / 2, boatHeight / 2));
+
+        Geometry archLeft = new Triangle(archFront, archBackLeft, archBackRight)
+                .setEmission(boatColor)
+                .setMaterial(boatMaterial);
+        scene.geometries.add(archLeft);
+
+        Geometry archRight = new Triangle(archFront, archBackRight, archBackLeft)
+                .setEmission(boatColor)
+                .setMaterial(boatMaterial);
+        scene.geometries.add(archRight);
+
+// Creating the roof of the boat
+        Point roofBase = boatBase.add(new Vector(0, 0, boatHeight));
+        Point roofFront = roofBase.add(new Vector(boatLength / 2, 0, 0));
+        Point roofBackLeft = roofBase.add(new Vector(-boatLength / 2, -boatWidth / 4, 0));
+        Point roofBackRight = roofBase.add(new Vector(-boatLength / 2, boatWidth / 4, 0));
+
+        Geometry roofLeft = new Triangle(roofFront, roofBackLeft, roofBackRight)
+                .setEmission(roofColorBoat)
+                .setMaterial(boatMaterial);
+        scene.geometries.add(roofLeft);
+
+        Geometry roofRight = new Triangle(roofFront, roofBackRight, roofBackLeft)
+                .setEmission(roofColorBoat)
+                .setMaterial(boatMaterial);
+        scene.geometries.add(roofRight);
         // Adding all geometries to the scene
         for (Geometry geometry : allGeometries) {
             scene.geometries.add(geometry);
         }
-
-        // Setting ambient light and adding a spotlight
-        scene.setAmbientLight(new AmbientLight(new Color(50, 60, 60), Double3.ONE));
-        scene.lights.add(new SpotLight(new Color(750, 650, 700), new Point(0, 0, 200), new Vector(0, 0, -1))
-                .setKl(4E-4).setKq(2E-5));
+        // Center point for the boat's hull
 
         // Rendering the image
         camera.setImageWriter(new ImageWriter("minip1Test", 1000, 1000))
@@ -251,5 +340,24 @@ allGeometries.add(new Cylinder(100, new Ray(new Point(0, 0, 0), new Vector(0, 0,
 
         // Write rendered image to file
         camera.build().writeToImage();
+    }
+
+    // פונקציה מעודכנת להוספת גבעולי דשא עם חומר מוגדר
+    private void addGrassPatch(Point base, double width, double height, Material material) {
+        Color grassColor = new Color(34, 139, 34); // Green color for grass
+        Point basePoint1 = base.add(new Vector(-width / 2, 0, 0));
+        Point basePoint2 = base.add(new Vector(width / 2, 0, 0));
+        Point tipPoint1 = base.add(new Vector(0, 0, height));
+        Point tipPoint2 = base.add(new Vector(0, -width / 2, height));
+
+        Geometry grass1a = new Triangle(basePoint1, basePoint2, tipPoint1)
+                .setEmission(grassColor)
+                .setMaterial(material);
+        Geometry grass1b = new Triangle(basePoint1, basePoint2, tipPoint2)
+                .setEmission(grassColor)
+                .setMaterial(material);
+
+        scene.geometries.add(grass1a);
+        scene.geometries.add(grass1b);
     }
 }
