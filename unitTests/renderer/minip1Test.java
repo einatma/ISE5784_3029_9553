@@ -11,7 +11,6 @@ import primitives.Color;
 import primitives.Point;
 import scene.Scene;
 
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 //hadar Cohen
@@ -38,16 +37,13 @@ public class minip1Test {
             .setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
             .setVpDistance(100)
             .setVpSize(500, 500)
-            .setDoFActive(true)
+            .setDoFActive(false)
             .setFocalLength(170)
             .setApertureRadius(5);
-
-
 
     /**
      * Produce a scene with a basic 3D model and render it into a png image with a grid
      */
-
     @Test
     public void renderCastleScene() {
         // Setting the background and ambient light
@@ -234,9 +230,36 @@ public class minip1Test {
                 .setEmission(new Color(86, 125, 50)));
         allGeometries.add(new Sphere(new Point(-70, 130, -878), 900)
                 .setEmission(new Color(86, 125, 50)));
-
-
-
+        //adding mountings
+        Color mountingsColor = new Color(5,60,150);
+        allGeometries.add(new Sphere(new Point(4200, 2050, -600), 1100)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(3500, 1900, -700), 950)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(2800, 1900, -600), 800)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(2500, 1900, -200), 300)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(1500, 1900, -600), 950)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(700, 1900, -550), 1000)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(100, 1900, -600), 1000)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(-1000, 1900, -600), 1000)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(-1800, 1900, -550), 900)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(-2500, 1900, -300), 700)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(-3000, 1900, -300), 500)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(-4000, 1900, -700), 800)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(-5000, 1900, -600), 1000)
+                .setEmission(mountingsColor));
+        allGeometries.add(new Sphere(new Point(-5555, 1900, -600), 1100)
+                .setEmission(mountingsColor));
         //sun
 
         // Setting ambient light and adding a spotlight
@@ -250,16 +273,6 @@ public class minip1Test {
         scene.setAmbientLight(new AmbientLight(new Color(50, 60, 60), Double3.ONE));
         DirectionalLight sunLight = new DirectionalLight(new Color(WHITE).scale(1.5), new Vector(0, -1, -1));
         scene.lights.add(sunLight);
-        // Additional light sources
-        PointLight pointLight1 = new PointLight(new Color(255, 255, 224), new Point(-50, -50, 150))
-                .setKl(0.0001).setKq(0.00005);
-        scene.lights.add(pointLight1);
-
-        PointLight spotLight1 = new SpotLight(new Color(255, 228, 181), new Point(50, 50, 100), new Vector(-1, -1, -0.5))
-                .setKl(0.0001).setKq(0.00005);
-        scene.lights.add(spotLight1);
-
-
 
         //Grass
         // הוספת צל לדשא
@@ -342,18 +355,12 @@ public class minip1Test {
         }
         // Center point for the boat's hull
 
-//        // Rendering the image
-//        camera.setImageWriter(new ImageWriter("minip1Test", 1000, 1000))
-//                .build()
-//                .renderImage();
-//
-//        // Write rendered image to file
-//        camera.build().writeToImage();
-        // Rendering the image with depth of field effect
-        camera.setImageWriter(new ImageWriter("minip1Test_with_DoF", 1000, 1000))
+        // Rendering the image
+        camera.setImageWriter(new ImageWriter("minip1Test", 1000, 1000))
                 .build()
                 .renderImage();
-         //Write rendered image to file
+
+        // Write rendered image to file
         camera.build().writeToImage();
     }
 
@@ -374,6 +381,5 @@ public class minip1Test {
 
         scene.geometries.add(grass1a);
         scene.geometries.add(grass1b);
-    }
-
+}
 }

@@ -137,11 +137,13 @@ public class Camera implements Cloneable {
             } else {
                 for (int i = 0; i < x; i++) {
                     for (int j = 0; j < y; j++) {
-                        this.castRay(j, i);
+                        //  Construct a ray through the current pixel and trace it and get the color at the intersection point
+                        Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+                        // Write the color to the pixel in the image
+                        this.imageWriter.writePixel(j, i, color);
                     }
                 }
             }
-
     }
 
     /**
