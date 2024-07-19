@@ -37,11 +37,17 @@ public class minip1Test {
             .setLocation(new Point(10, -170, 50))
             .setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
             .setVpDistance(100)
-            .setVpSize(500, 500);
+            .setVpSize(500, 500)
+            .setDoFActive(true)
+            .setFocalLength(170)
+            .setApertureRadius(5);
+
+
 
     /**
      * Produce a scene with a basic 3D model and render it into a png image with a grid
      */
+
     @Test
     public void renderCastleScene() {
         // Setting the background and ambient light
@@ -244,6 +250,16 @@ public class minip1Test {
         scene.setAmbientLight(new AmbientLight(new Color(50, 60, 60), Double3.ONE));
         DirectionalLight sunLight = new DirectionalLight(new Color(WHITE).scale(1.5), new Vector(0, -1, -1));
         scene.lights.add(sunLight);
+        // Additional light sources
+        PointLight pointLight1 = new PointLight(new Color(255, 255, 224), new Point(-50, -50, 150))
+                .setKl(0.0001).setKq(0.00005);
+        scene.lights.add(pointLight1);
+
+        PointLight spotLight1 = new SpotLight(new Color(255, 228, 181), new Point(50, 50, 100), new Vector(-1, -1, -0.5))
+                .setKl(0.0001).setKq(0.00005);
+        scene.lights.add(spotLight1);
+
+
 
         //Grass
         // הוספת צל לדשא
@@ -326,12 +342,18 @@ public class minip1Test {
         }
         // Center point for the boat's hull
 
-        // Rendering the image
-        camera.setImageWriter(new ImageWriter("minip1Test", 1000, 1000))
+//        // Rendering the image
+//        camera.setImageWriter(new ImageWriter("minip1Test", 1000, 1000))
+//                .build()
+//                .renderImage();
+//
+//        // Write rendered image to file
+//        camera.build().writeToImage();
+        // Rendering the image with depth of field effect
+        camera.setImageWriter(new ImageWriter("minip1Test_with_DoF", 1000, 1000))
                 .build()
                 .renderImage();
-
-        // Write rendered image to file
+         //Write rendered image to file
         camera.build().writeToImage();
     }
 
@@ -353,4 +375,5 @@ public class minip1Test {
         scene.geometries.add(grass1a);
         scene.geometries.add(grass1b);
     }
+
 }

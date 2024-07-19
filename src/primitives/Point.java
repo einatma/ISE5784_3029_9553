@@ -1,5 +1,8 @@
 package primitives;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents a point in 3D space using Cartesian coordinates (x, y, z).
  *
@@ -31,6 +34,30 @@ public class Point {
      */
     public Point(double x, double y, double z) {
         this(new Double3(x, y, z));
+    }
+
+    /**
+     * Generates points within the target area based on the given parameters.
+     *
+     * @param gridDensity The number of points to generate.
+     * @param radius 	The radius within which to generate points.
+     * @param center 	The center point of the target area.
+     * @param up The 	up vector defining the orientation of the target area.
+     * @param right 	The right vector defining the orientation of the target area.
+     */
+    public static List<Point> generatePoints(int gridDensity, double radius, Point center, Vector up, Vector right) {
+        List<Point> points  = new ArrayList<>();
+
+        for (int i = 0; i < gridDensity; i++) {
+            double angle = 2 * Math.PI * Math.random();
+            double r = radius * Math.sqrt(Math.random());
+            double offsetX = r * Math.cos(angle);
+            double offsetY = r * Math.sin(angle);
+
+            Point point = center.add(right.scale(offsetX)).add(up.scale(offsetY));
+            points.add(point);
+        }
+        return points;
     }
 
     //Getters

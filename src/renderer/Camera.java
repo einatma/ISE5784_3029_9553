@@ -7,6 +7,7 @@ import primitives.Ray;
 import primitives.Vector;
 import geometries.Intersectable.GeoPoint;
 
+import java.util.List;
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
@@ -36,6 +37,26 @@ public class Camera implements Cloneable {
     private double distance = 0;
     private double width = 0;
     private double height = 0;
+    /** Aperture radius */
+    double apertureRadius = 0;
+
+    /** Focal length */
+    double focalLength = 0;
+
+    /** DoF active */
+    boolean DoFActive = false;
+
+    /**
+     * Aperture area grid density
+     */
+    int gridDensity = 7;
+
+
+    /**
+     * DoF points on the aperture plane
+     */
+    public List<Point> DoFPoints = null;
+    //private TargetArea DoFPoints = new TargetArea(gridDensity,apertureRadius,location,vUp,vRight);
 
     /**
      * Constructs a Camera object using a Builder.
@@ -89,19 +110,37 @@ public class Camera implements Cloneable {
      * @throws UnsupportedOperationException if imageWriter or rayTracer is not set
      */
     public void renderImage() {
-        if (this.imageWriter == null)
-            throw new UnsupportedOperationException("Missing imageWriter");
-        if (this.rayTracer == null)
-            throw new UnsupportedOperationException("Missing rayTracerBase");
-        // Loop through each pixel in the image
-        for (int i = 0; i < this.imageWriter.getNx(); i++) {
-            for (int j = 0; j < this.imageWriter.getNy(); j++) {
-                // Construct a ray through the current pixel and trace it and get the color at the intersection point
-                Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
-                // Write the color to the pixel in the image
-                this.imageWriter.writePixel(j, i, color);
+//        if (this.imageWriter == null)
+//            throw new UnsupportedOperationException("Missing imageWriter");
+//        if (this.rayTracer == null)
+//            throw new UnsupportedOperationException("Missing rayTracerBase");
+//        // Loop through each pixel in the image
+//        for (int i = 0; i < this.imageWriter.getNx(); i++) {
+//            for (int j = 0; j < this.imageWriter.getNy(); j++) {
+//                // Construct a ray through the current pixel and trace it and get the color at the intersection point
+//                Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+//                // Write the color to the pixel in the image
+//                this.imageWriter.writePixel(j, i, color);
+//            }
+//        }
+            int x = this.imageWriter.getNx();
+            int y = this.imageWriter.getNy();
+            if (DoFActive) {
+                this.DoFPoints = Point.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
+                for (int i = 0; i < x; i++) {
+                    for (int j = 0; j < y; j++) {
+                        var focalPoint = constructRay(this.imageWriter.getNx(), this.imageWriter.getNy(), j, i)
+                                .getPoint(focalLength);
+                        imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
+                    }
+                }
+            } else {
+                for (int i = 0; i < x; i++) {
+                    for (int j = 0; j < y; j++) {
+                        this.castRay(j, i);
+                    }
+                }
             }
-        }
 
     }
 
@@ -148,7 +187,41 @@ public class Camera implements Cloneable {
         // The resulting color is used to set the pixel's color in the image.
         return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
     }
-
+//    // פונקציה ליצירת קרני דגימה עם אפקט עומק שדה
+//    public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
+//        Point Pij = getPij(nX, nY, j, i);  // חישוב הנקודה במישור התמונה
+//        System.out.println("Pij: " + Pij);
+//        Point focalPoint = Pij.add(vTo.scale(focusDistance));  // חישוב נקודת המוקד
+//        System.out.println("Focal Point: " + focalPoint);
+//
+//        // אם הצמצם גדול מאפס, ניצור קרני דגימה סביב הנקודה במישור התמונה
+//        if (aperture > 0) {
+//            double randomX, randomY;
+//            if (targetAreaCircle) {
+//                double angle = 2 * Math.PI * Math.random();
+//                double radius = aperture * Math.sqrt(Math.random());
+//                randomX = radius * Math.cos(angle);
+//                randomY = radius * Math.sin(angle);
+//            } else {
+//                randomX = (Math.random() - 0.5) * aperture;
+//                randomY = (Math.random() - 0.5) * aperture;
+//            }
+//            System.out.println("Random X: " + randomX + ", Random Y: " + randomY);
+//            Point randomPoint = Pij.add(vRight.scale(randomX)).add(vUp.scale(randomY));
+//            System.out.println("Random Point: " + randomPoint);
+//            return new Ray(location, focalPoint.subtract(randomPoint));
+//        } else {
+//            return new Ray(location, focalPoint.subtract(location));
+//        }
+//    }
+//
+//    private Point getPij(int nX, int nY, int j, int i) {
+//        double Ry = height / nY;
+//        double Rx = width / nX;
+//        double xj = (j - (nX - 1) / 2.0) * Rx;
+//        double yi = -(i - (nY - 1) / 2.0) * Ry;
+//        return location.add(vTo.scale(distance)).add(vRight.scale(xj)).add(vUp.scale(yi));
+//    }
 
     /**
      * Builder class for constructing Camera objects.
@@ -156,6 +229,26 @@ public class Camera implements Cloneable {
     public static class Builder {
 
         private Camera camera = new Camera();
+
+        public Builder setApertureRadius(double apertureRadius) {
+            this.camera.apertureRadius = apertureRadius;
+            return this;
+        }
+
+        public Builder setFocalLength(double focalLength) {
+            this.camera.focalLength = focalLength;
+            return this;
+        }
+
+        public Builder setDoFActive(boolean doFActive) {
+            this.camera.DoFActive = doFActive;
+            return this;
+        }
+
+        public Builder setGridDensity(int gridDensity) {
+            this.camera.gridDensity = gridDensity;
+            return this;
+        }
 
         /**
          * Sets the RayTracerBase for the Camera.

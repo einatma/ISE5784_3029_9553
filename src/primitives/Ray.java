@@ -3,6 +3,7 @@ package primitives;
 import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static primitives.Util.isZero;
@@ -46,6 +47,9 @@ public class Ray {
         this.head = p0.add(n.scale(delta));
         this.direction = dir;
     }
+
+
+
 
     /**
      * Returns the starting point (head) of the ray.
@@ -145,6 +149,14 @@ public class Ray {
         }
 
         return closestGeoPoint;
+    }
+
+    public static List<Ray> RayBundle(Point focusPoint, List<Point> points) {
+        List<Ray> rays = new ArrayList<>();
+        for (Point point : points) {
+            rays.add(new Ray(point, focusPoint.subtract(point)));
+        }
+        return rays;
     }
 
 }
