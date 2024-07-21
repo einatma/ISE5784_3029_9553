@@ -1,7 +1,6 @@
 package renderer;
 import static java.awt.Color.*;
 
-import lighting.DirectionalLight;
 import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
 import geometries.*;

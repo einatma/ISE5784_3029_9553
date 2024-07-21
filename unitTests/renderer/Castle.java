@@ -23,16 +23,16 @@ public class Castle {
         house = new House(frontBottomLeft, centerLength, centerWidth, centerHeight, centerRoofHeight, directionWidthNormalized, directionDepthNormalized);
 
 // Creating the towers around the house
-        Point towerFrontLeftPosition = house.getBase().getFrontBottomLeft().add(directionWidthNormalized.scale(-towersSideWidthAndLength));
+        Point towerFrontLeftPosition = house.getBase().getFrontBottomLeft().add(directionDepthNormalized.scale(-towersSideWidthAndLength)).add(directionWidthNormalized.scale(-towersSideWidthAndLength));
         towerFrontLeft = new House(towerFrontLeftPosition, towersSideWidthAndLength, towersSideWidthAndLength, towersHeight, towersRoofHeight, directionWidth, directionDepth);
 
-        Point towerFrontRightPosition = house.getBase().getFrontBottomRight();
+        Point towerFrontRightPosition = house.getBase().getFrontBottomRight().add(directionDepthNormalized.scale(-towersSideWidthAndLength));
         towerFrontRight = new House(towerFrontRightPosition, towersSideWidthAndLength, towersSideWidthAndLength, towersHeight, towersRoofHeight, directionWidth, directionDepth);
 
-        Point towerBackLeftPosition = house.getBase().getBackBottomLeft().add(directionDepthNormalized.scale(-towersSideWidthAndLength)).add(directionWidthNormalized.scale(-towersSideWidthAndLength));
+        Point towerBackLeftPosition = house.getBase().getBackBottomLeft().add(directionWidthNormalized.scale(-towersSideWidthAndLength));
         towerBackLeft = new House(towerBackLeftPosition, towersSideWidthAndLength, towersSideWidthAndLength, towersHeight, towersRoofHeight, directionWidth, directionDepth);
 
-        Point towerBackRightPosition = house.getBase().getBackBottomRight();//.add(directionWidthNormalized.scale(-towersSideWidthAndLength));
+        Point towerBackRightPosition = house.getBase().getBackBottomRight();
         towerBackRight = new House(towerBackRightPosition, towersSideWidthAndLength, towersSideWidthAndLength, towersHeight, towersRoofHeight, directionWidth, directionDepth);
 
         castleWigs = new LinkedList<>();

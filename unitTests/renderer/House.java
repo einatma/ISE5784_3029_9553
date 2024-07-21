@@ -56,5 +56,9 @@ public class House {
     public Box getBase() {
         return base;
     }
+
+    protected Roof getRoof() {
+        return roof;
+    }
 }
 

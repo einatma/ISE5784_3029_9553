@@ -15,8 +15,8 @@ class CastleTests {
             .setRayTracer(new SimpleRayTracer(scene))
             .setLocation(new Point(-100, -100, 80))  // Moving the camera to show two walls
             .setDirection(new Vector(1, 1, 0), new Vector(0, 0, 1))  // Ensuring the up vector is perpendicular and direction to (1, 1, 0)
-            .setLocation(new Point(200, 200, 80))  // Moving the camera to show the back side
-            .setDirection(new Vector(-1, -1, 0), new Vector(0, 0, 1))
+//            .setLocation(new Point(200, 200, 80))  // Moving the camera to show the back side
+//            .setDirection(new Vector(-1, -1, 0), new Vector(0, 0, 1))
             .setVpDistance(300)
             .setVpSize(500, 500);
 
@@ -60,7 +60,7 @@ class CastleTests {
             .setKl(4E-4).setKq(2E-5));
 
     // Configure the camera and render the image
-        camera.setImageWriter(new ImageWriter("house_render_test",1000,1000)).build().renderImage();
+        camera.setImageWriter(new ImageWriter("castle_render_test",1000,1000)).build().renderImage();
         camera.build().writeToImage();
 }
 
