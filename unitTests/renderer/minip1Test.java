@@ -26,17 +26,23 @@ public class minip1Test {
     /**
      * Camera builder of the tests
      */
-        private final Camera.Builder camera = Camera.getBuilder()
-            .setRayTracer(new SimpleRayTracer(scene))
-            .setLocation(new Point(0 ,-150, 150)).setDirection(new Vector(0, 1, -1), new Vector(-1, 0, 0))
-            .setVpDistance(100)
-            .setVpSize(500, 500);
+//    private final Camera.Builder camera = Camera.getBuilder()
+//            .setRayTracer(new SimpleRayTracer(scene))
+//            .setLocation(new Point(0, -150, 150)).setDirection(new Vector(0, 1, -1), new Vector(-1, 0, 0))
+//            .setVpDistance(100)
+//            .setVpSize(500, 500);
 //    private final Camera.Builder camera = Camera.getBuilder()
 //            .setRayTracer(new SimpleRayTracer(scene))
 //            .setLocation(new Point(10, -170, 50))
 //            .setDirection(new Vector(0, 1, 0), new Vector(0, 0, 1))
 //            .setVpDistance(100)
 //            .setVpSize(500, 500);
+    private final Camera.Builder camera = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(scene))
+            .setLocation(new Point(-100, -155, 70))
+            .setDirection(new Vector(1, 1.5, 0).normalize(), new Vector(0, 0, 1))
+            .setVpDistance(100)
+            .setVpSize(500, 500);
 
     /**
      * Produce a scene with a basic 3D model and render it into a png image with a grid
@@ -107,27 +113,7 @@ public class minip1Test {
         Box upperFrontWall = new Box(upperFrontWallPosition, wallLength, 10, wallWidth, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setEmission(wallColor)
                 .setMaterial(buildingsMaterial);
-        // Adding the doors at a 45-degree angle to the castle wall
-        double doorWidth = 10;
-        double doorHeight = 30;
-        double doorDepth = 2;
-        Color doorColor = new Color(86, 17, 0);
 
-        // Door 1
-        Point door1Position = frontLeftWall.getFrontBottomRight();
-        Vector door1Direction = new Vector(1, 1, 0).normalize();
-        Vector door1Normal = door1Direction.crossProduct(new Vector(0, 0, -1)).normalize();
-        Box door1 = new Box(door1Position, doorWidth, doorHeight, doorDepth, door1Direction, door1Normal)
-                .setEmission(doorColor)
-                .setMaterial(buildingsMaterial);
-
-        // Door 2
-        Point door2Position = frontRightWall.getFrontBottomLeft();
-        Vector door2Direction = new Vector(-1, 1, 0).normalize();
-        Vector door2Normal = door2Direction.crossProduct(new Vector(0, 0, -1)).normalize();
-        Box door2 = new Box(door2Position, doorWidth, doorHeight, doorDepth, door2Direction, door2Normal)
-                .setEmission(doorColor)
-                .setMaterial(buildingsMaterial);
 
         // Back wall
         Point backWallPosition = backRightTurret.getBase().getBackBottomLeft();
@@ -142,20 +128,27 @@ public class minip1Test {
                 .setMaterial(buildingsMaterial);
 
         // Right wall
-        Point rightWallPosition = frontRightTurret.getBase().getBackBottomRight();
+        Point rightWallPosition = frontRightTurret.getBase().getFrontBottomLeft();
         Box rightWall = new Box(rightWallPosition, wallWidth, wallHeight, 155, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setEmission(wallColor)
                 .setMaterial(buildingsMaterial);
+        //adding lights to the castle
+        scene.lights.add(new DirectionalLight(new Color(43, 40, 40),new Vector(0,1,0)));
+        scene.geometries.add(new Sphere(new Point(700, 400, 800),40).setEmission(new Color(159, 159, 47)).setMaterial(new Material().setKt(0.99).setShininess(0)));
+        scene.lights.add(new PointLight(new Color(250, 250, 250), new Point(700, 400, 800)).setKc(0.000005).setKl(0.000005).setKq(0.000005));
+
 // Dimensions for the castle
         Color castleColor = new Color(155, 133, 103);
         Color roofColor = new Color(153, 39, 41);
-        Castle castle = new Castle(new Point(-40, -60, 0), 60, 100, 60, 15, 20, 70, 30, new Vector(1, 0, 0), new Vector(0, 1, 0))
-                .setBuilingsMaterial(buildingsMaterial)
+        Color windowsColor = new Color(5, 50, 89);
+        Material windowsMaterial = new Material().setKd(0.1).setKs(0.1).setShininess(0).setKt(0.8);
+        Castle castle = new Castle(new Point(-50,-60,0), 60, 100, 60, 15, 30, 10, 20, 70, 30, 5, 10, new Vector(1,0,0), new Vector(0,1,0))
                 .setRoofsMaterial(buildingsMaterial)
-                .setBuilingsEmission(castleColor)
-                .setRoofsEmission(roofColor);
-
-
+                .setRoofsMaterial(buildingsMaterial)
+                .setWindowsMaterial(windowsMaterial)
+                .setWallsEmission(castleColor)
+                .setRoofsEmission(roofColor)
+                .setWindowsEmission(windowsColor);
         List<Geometry> allGeometries = new LinkedList<>();
         // List of all geometries to add to the scene
         allGeometries.addAll(frontLeftTurret.getHouseWigs());
@@ -169,19 +162,18 @@ public class minip1Test {
         allGeometries.addAll(backWall.getCubeWigs());
         allGeometries.addAll(leftWall.getCubeWigs());
         allGeometries.addAll(rightWall.getCubeWigs());
-        allGeometries.addAll(door1.getCubeWigs());
-        allGeometries.addAll(door2.getCubeWigs());
+
 
 
         // Adding additional planes and sphere
         allGeometries.add(new Plane(new Point(1, 0, -10), new Point(0, 1, -10), new Point(0, 0, -10))
                 .setEmission(new Color(0, 39, 78))
                 .setMaterial(new Material().setShininess(50).setKt(0.9).setKs(0.7).setKd(0.2).setKr(0.1)));
-        allGeometries.add(new Plane(new Point(0, 0, -60), new Point(0, 1, -60), new Point(1, 1, -60))
-                .setEmission(new Color(52, 66, 39)).setMaterial(new Material().setKd(0.5).setKs(0.8).setShininess(0)));
-        allGeometries.add(new Sphere(new Point(5, 120, -878), 900)
+        allGeometries.add(new Plane(new Point(1, 0, -1500), new Point(0, 1, -1500), new Point(0, 0, -1500))
+                .setEmission(new Color(101, 61, 0)));
+        allGeometries.add(new Sphere(new Point(60, 60, -1000), 1007)
                 .setEmission(new Color(86, 125, 50)));
-        allGeometries.add(new Sphere(new Point(-70, 130, -878), 900)
+        allGeometries.add(new Sphere(new Point(-3, 55, -1000), 1006)
                 .setEmission(new Color(86, 125, 50)));
 
 
@@ -205,41 +197,54 @@ public class minip1Test {
                 .setEmission(mountainsColor));
         allGeometries.add(new Sphere(new Point(-1800, 1900, -350), 900)
                 .setEmission(mountainsColor));
-        allGeometries.add(new Sphere(new Point(-2500, 1900, -200), 800)
+        allGeometries.add(new Sphere(new Point(5000, 1900, -200), 800)
                 .setEmission(mountainsColor));
-        allGeometries.add(new Sphere(new Point(-3000, 1900, -200), 600)
+        allGeometries.add(new Sphere(new Point(5500, 1900, -200), 600)
                 .setEmission(mountainsColor));
-        allGeometries.add(new Sphere(new Point(-4000, 1900, -500), 800)
+        allGeometries.add(new Sphere(new Point(6500, 1900, -500), 800)
                 .setEmission(mountainsColor));
-        allGeometries.add(new Sphere(new Point(-5000, 1900, -400), 1000)
+        allGeometries.add(new Sphere(new Point(8000, 1900, -400), 1000)
                 .setEmission(mountainsColor));
-        allGeometries.add(new Sphere(new Point(-5555, 1900, -500), 1100)
+        allGeometries.add(new Sphere(new Point(9000, 1900, -500), 1100)
                 .setEmission(mountainsColor));
-        //sun
-
-        // Setting ambient light and adding a spotlight
-        Geometry sun  =  new Sphere(new Point(-700, 1000, 2000), 200)
-                .setEmission(new Color(255, 223, 150))
-                .setMaterial(new Material().setKt(0).setKd(0.9).setKs(0.1).setKr(0).setShininess(1000));
-        scene.geometries.add(sun);
+        //adding boats
+        Color boatColor = new Color(81, 61, 34);
+        Color sailColor = new Color(WHITE);
+        Material boatMaterial = new Material().setKd(0.1).setKs(0.1).setShininess(0);
+        Material sailMaterial = new Material().setKd(0.1).setKs(0.1).setShininess(100);
+        Sailboat sailboat1 = new Sailboat(new Point(70, -130, -5), 7, 10, 30,1,40, 30,30,new Vector(-1, -1, 0), new Vector(1, 1, 0).crossProduct(new Vector(0,0,1)))
+                .setBoatEmission(boatColor).setSailEmission(sailColor).setBoatMaterial(boatMaterial).setSailMaterial(sailMaterial);
+        for (Geometry face : sailboat1.getSailWigs()) {
+            scene.geometries.add(face);
+        }
+        Sailboat sailboat2 = new Sailboat(new Point(100, -110, -5), 7, 10, 30,1,40, 30,30,new Vector(-1, -1, 0), new Vector(1, 1, 0).crossProduct(new Vector(0,0,1)))
+                .setBoatEmission(boatColor).setSailEmission(sailColor).setBoatMaterial(boatMaterial).setSailMaterial(sailMaterial);
+        for (Geometry face : sailboat2.getSailWigs()) {
+            scene.geometries.add(face);
+        }
+        double shipLocationX = 400;
+    for (int i = 0; i < 8; i++) {
+        Sailboat sailboat = new Sailboat(new Point(shipLocationX, Math.random()*1000-800, 0), 20, 30, 40, 1, 70, 40, 50, new Vector(-1, -1, 0), new Vector(1, 1, 0).crossProduct(new Vector(0, 0, 1)))
+                .setBoatEmission(boatColor).setSailEmission(sailColor).setBoatMaterial(boatMaterial).setSailMaterial(sailMaterial);
+        for (Geometry face : sailboat.getSailWigs()) {
+            scene.geometries.add(face);
+        }
+        shipLocationX *= 1.3;
+    }
 
         // Setting ambient light and adding a directional light to simulate the sun
         scene.setAmbientLight(new AmbientLight(new Color(50, 60, 60), Double3.ONE));
-        DirectionalLight sunLight = new DirectionalLight(new Color(WHITE).scale(1.5), new Vector(0, -1, -1));
-        scene.lights.add(sunLight);
 
         //Grass
-        // הוספת צל לדשא
-        Material grassMaterial = new Material().setKd(0.5).setKs(0.3).setShininess(50).setKr(0.1); // הגדרת חומר הדשא עם החזרות חלקיות ליצירת צל
+        Material grassMaterial = new Material().setKd(0.5).setKs(0.3).setShininess(50).setKr(0.1);
 
         double grossWidth = 3;
         double grossHeight = 6;
-// הוספת גבעולי דשא בתלת-ממד באמצעות משולשים מצטלבים עם צל
-        // הוספת גבעולי דשא בצורה מפוזרת על המשטח הירוק במקומות החדשים
+//adding grass patches
         addGrassPatch(new Point(-60, -100, -0.75), grossWidth, grossHeight, grassMaterial);
         addGrassPatch(new Point(20, -115, -0.75), grossWidth, grossHeight, grassMaterial);
         addGrassPatch(new Point(-30, -90, -0.75), grossWidth, grossHeight, grassMaterial);
-        addGrassPatch(new Point(60, -80, -0.75), grossWidth, grossHeight, grassMaterial);   // מיקום חדש כדי להרחיק מהמים
+        addGrassPatch(new Point(60, -80, -0.75), grossWidth, grossHeight, grassMaterial);
         addGrassPatch(new Point(0, -120, -0.75), grossWidth, grossHeight, grassMaterial);
         addGrassPatch(new Point(50, -100, -0.75), grossWidth, grossHeight, grassMaterial);
         addGrassPatch(new Point(50, -110, -0.75), grossWidth, grossHeight, grassMaterial);
@@ -255,10 +260,8 @@ public class minip1Test {
         for (Geometry geometry : allGeometries) {
             scene.geometries.add(geometry);
         }
-        // Center point for the boat's hull
-
         // Rendering the image
-        camera.setImageWriter(new ImageWriter("minip1Test", 1000, 1000))
+        camera.setImageWriter(new ImageWriter("castleWithWindowsSenseEliezer'sSideView", 1000, 1000))
                 .build()
                 .renderImage();
 
@@ -266,7 +269,6 @@ public class minip1Test {
         camera.build().writeToImage();
     }
 
-    // פונקציה מעודכנת להוספת גבעולי דשא עם חומר מוגדר
     private void addGrassPatch(Point base, double width, double height, Material material) {
         Color grassColor = new Color(34, 139, 34); // Green color for grass
         Point basePoint1 = base.add(new Vector(-width / 2, 0, 0));

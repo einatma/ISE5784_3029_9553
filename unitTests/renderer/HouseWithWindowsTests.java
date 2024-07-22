@@ -8,8 +8,8 @@ import scene.Scene;
 
 import static java.awt.Color.red;
 
-class HouseTests {
-    private final Scene scene = new Scene("House Test Scene");
+class HouseWithWindowsTests {
+    private final Scene scene = new Scene("House With Windows Test Scene");
 
     private final Camera.Builder camera = Camera.getBuilder()
             .setRayTracer(new SimpleRayTracer(scene))
@@ -21,19 +21,20 @@ class HouseTests {
             .setVpSize(500, 500);
 
     @Test
-    public void renderHouseTest() {
+    public void renderHouseWithWindowsTest() {
         // Create a house with a base and a roof
-        House house = new House(
+        HouseWithWindows house = new HouseWithWindows(
                 new Point(0, 0, 0),
-                60, 60, 50, 25,
+                30, 40, 50, 20, 20, 10,
                 new Vector(1, 0, 0),  // Width direction
                 new Vector(0, 1, 0)   // Depth direction
         );
 
-        house.setBaseMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30)) // base material
+        house.setWallsMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30)) // base material
                 .setRoofMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30)) // roof material
-                .setBaseEmission(new Color(100,70,50)) // base emission color
-                .setRoofEmission(new Color(red)); // roof emission color
+                .setWallsEmission(new Color(100,70,50)) // base emission color
+                .setRoofEmission(new Color(red))
+                .setWindowsEmission(new Color(0, 0, 0)).setWindowsMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(0).setKt(0.8)); // roof emission color
 
         // Add house geometries to the scene
         for(
@@ -60,7 +61,7 @@ class HouseTests {
                 .setKl(4E-4).setKq(2E-5));
 
         // Configure the camera and render the image
-        camera.setImageWriter(new ImageWriter("house_render_test",1000,1000)).build().renderImage();
+        camera.setImageWriter(new ImageWriter("house_with_windows_render_test",1000,1000)).build().renderImage();
         camera.build().writeToImage();
     }
 

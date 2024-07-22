@@ -25,15 +25,16 @@ class CastleTests {
     // Create a house with a base and a roof
     Castle castle = new Castle(
             new Point(0, 0, 0),
-            60, 60, 50, 10, 20, 60, 20,
+            60, 100, 50, 10, 40, 20, 20, 60, 20, 10,10,
             new Vector(1, 0, 0),  // Width direction
             new Vector(0, 1, 0)   // Depth direction
     );
 
-        castle.setBuilingsMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30)) // base material
+        castle.setWallsMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30)) // base material
                 .setRoofsMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30)) // roof material
-                .setBuilingsEmission(new Color(100,70,50)) // base emission color
-                .setRoofsEmission(new Color(red)); // roof emission color
+                .setWallsEmission(new Color(100,70,50)) // base emission color
+                .setRoofsEmission(new Color(red))
+                .setWindowsEmission(new Color(0, 0, 0)).setWindowsMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(0).setKt(0.8)); // roof emission color
 
     // Add house geometries to the scene
         for(

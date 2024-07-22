@@ -6,19 +6,19 @@ import geometries.*;
 import primitives.*;
 import scene.Scene;
 
-class HouseBaseTests {
+class SailboatTests {
     /**
      * Scene of the tests
      */
-    private final Scene scene = new Scene("Box Test Scene");
+    private final Scene scene = new Scene("Sailboat Test Scene");
 
     /**
      * Camera builder of the tests
      */
     private final Camera.Builder camera = Camera.getBuilder()
             .setRayTracer(new SimpleRayTracer(scene))
-            .setLocation(new Point(-20, -20, 10))
-            .setDirection(new Vector(1, 1, 0), new Vector(0,0,1))  // Ensuring the up vector is perpendicular
+            .setLocation(new Point(-30, -100, 0))
+            .setDirection(new Vector(1, 3, 0), new Vector(0,0,1))  // Ensuring the up vector is perpendicular
             .setVpDistance(500)
             .setVpSize(500, 500);
 
@@ -26,13 +26,13 @@ class HouseBaseTests {
      * Produce a scene with a Box and render it into a png image with a grid
      */
     @Test
-    public void renderBoxTest() {
+    public void renderSailboatTests() {
         // Create a Box (rectangular prism)
-        HouseBase houseBase = new HouseBase(new Point(0, 0, 0), 10, 15, 20,7,5, new Vector(1, 0, 0), new Vector(0, 1, 0))
-                .setWallMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(90)).setWallEmission(new Color(blue)).setWindowEmission(new Color(100, 100, 255)).setWindowMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30).setKt(0.8));
+        Sailboat sailboat = new Sailboat(new Point(0, 0, 0), 5, 10, 25,1,20, 30,15, new Vector(0, -1, 0), new Vector(1, 0, 0))
+                .setBoatEmission(new Color(115, 69, 22)).setSailEmission(new Color(WHITE)).setBoatMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(90)).setSailMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30));
         // Add Box polygons to the scene
         int i = 2;
-        for (Geometry face : houseBase.getHouseBaseGeometries()) {
+        for (Geometry face : sailboat.getSailWigs()) {
             i++;
             scene.geometries.add(face);
         }
@@ -45,7 +45,7 @@ class HouseBaseTests {
                         .setKl(4E-4).setKq(2E-5));
 
         // Configure the camera and render the image
-        camera.setImageWriter(new ImageWriter("houseBase_render_test", 1000, 1000))
+        camera.setImageWriter(new ImageWriter("sailboat_render_test", 1000, 1000))
                 .build()
                 .renderImage();
         camera.build()
