@@ -134,9 +134,9 @@ public class minip1Test {
                 .setMaterial(buildingsMaterial);
         //adding lights to the castle
         scene.lights.add(new DirectionalLight(new Color(43, 40, 40),new Vector(0,1,0)));
-        scene.geometries.add(new Sphere(new Point(700, 400, 800),40).setEmission(new Color(159, 159, 47)).setMaterial(new Material().setKt(0.99).setShininess(0)));
-        scene.lights.add(new PointLight(new Color(250, 250, 250), new Point(700, 400, 800)).setKc(0.000005).setKl(0.000005).setKq(0.000005));
-
+        Point sunPosition = new Point(100000, -10000, 8000);
+        Color sunColor = new Color(126, 116, 0);
+        scene.lights.add(new PointLight(sunColor, sunPosition).setKc(0.0000000004).setKl(0.0000000004).setKq(0.0000000004));
 // Dimensions for the castle
         Color castleColor = new Color(155, 133, 103);
         Color roofColor = new Color(153, 39, 41);
@@ -179,6 +179,14 @@ public class minip1Test {
 
         //adding mountains in the background
         Color mountainsColor = new Color(84, 114, 120);
+//        int mountainWidth = 1000;
+//        int mountainLocationX = -1800;
+//        for (int i = 0; i < 15; i++) {
+//            allGeometries.add(new Sphere(new Point(mountainLocationX, Math.random()*600+1900, -500), mountainWidth)
+//                    .setEmission(mountainsColor));
+//            mountainWidth *= 1.3;
+//            mountainLocationX += 700;
+//        }
         allGeometries.add(new Sphere(new Point(4200, 2050, -400), 1100)
                 .setEmission(mountainsColor));
         allGeometries.add(new Sphere(new Point(3500, 1900, -500), 950)
