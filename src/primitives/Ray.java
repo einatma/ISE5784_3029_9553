@@ -151,6 +151,15 @@ public class Ray {
         return closestGeoPoint;
     }
 
+    /**
+     * Generates a bundle of rays originating from points in a list and directed
+     * towards a focus point.
+     *
+     * @param focusPoint The point towards which all the rays will be directed.
+     * @param points     The list of points from which the rays will originate.
+     * @return A list of rays originating from the given points and directed towards
+     *         the focus point.
+     */
     public static List<Ray> RayBundle(Point focusPoint, List<Point> points) {
         List<Ray> rays = new ArrayList<>();
         for (Point point : points) {
@@ -158,5 +167,6 @@ public class Ray {
         }
         return rays;
     }
+
 
 }
