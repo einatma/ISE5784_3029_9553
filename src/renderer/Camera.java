@@ -9,6 +9,7 @@ import geometries.Intersectable.GeoPoint;
 
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.stream.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -59,6 +60,27 @@ public class Camera implements Cloneable {
     //private TargetArea DoFPoints = new TargetArea(gridDensity,apertureRadius,location,vUp,vRight);
 
     /**
+     * Number of threads to use for rendering.
+     */
+    private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
+
+    /**
+     * Number of spare threads to keep available.
+     */
+    private final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
+
+    /**
+     * Interval for printing progress percentage.
+     */
+    private double printInterval = 0; // printing progress percentage interval
+
+
+    /**
+     * PixelManager instance for managing pixels in multi-threading.
+     */
+    private PixelManager pixelManager; // PixelManager instance
+
+    /**
      * Constructs a Camera object using a Builder.
      * Private constructor to enforce Builder usage.
      */
@@ -72,6 +94,23 @@ public class Camera implements Cloneable {
      */
     public static Builder getBuilder() {
         return new Builder();
+    }
+
+    /**
+     * Sets the number of threads to use for rendering.
+     *
+     * @param threads the number of threads, -2 for auto, -1 for range/stream, 0 for no threads, 1+ for specific number of threads
+     * @return the Camera instance
+     * @throws IllegalArgumentException if threads is less than -2
+     */
+    public Camera setMultithreading(int threads) {
+        if (threads < -2) throw new IllegalArgumentException("Multithreading must be -2 or higher");
+        if (threads >= -1) threadsCount = threads;
+        else { // == -2
+            int cores = Runtime.getRuntime().availableProcessors() - SPARE_THREADS;
+            threadsCount = cores <= 2 ? 1 : cores;
+        }
+        return this;
     }
 
     /**
@@ -123,28 +162,82 @@ public class Camera implements Cloneable {
 //                this.imageWriter.writePixel(j, i, color);
 //            }
 //        }
-            int x = this.imageWriter.getNx();
-            int y = this.imageWriter.getNy();
-            if (DoFActive) {
-                this.DoFPoints = Point.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
-                for (int i = 0; i < x; i++) {
-                    for (int j = 0; j < y; j++) {
-                        var focalPoint = constructRay(this.imageWriter.getNx(), this.imageWriter.getNy(), j, i)
-                                .getPoint(focalLength);
-                        imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
-                    }
+
+//            int x = this.imageWriter.getNx();
+//            int y = this.imageWriter.getNy();
+//
+//        pixelManager = new PixelManager(y, x, printInterval);
+//
+//            if (DoFActive) {
+//                this.DoFPoints = Point.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
+//                for (int i = 0; i < x; i++) {
+//                    for (int j = 0; j < y; j++) {
+//                        var focalPoint = constructRay(this.imageWriter.getNx(), this.imageWriter.getNy(), j, i)
+//                                .getPoint(focalLength);
+//                        imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
+//                    }
+//                }
+//            } else {
+//                for (int i = 0; i < x; i++) {
+//                    for (int j = 0; j < y; j++) {
+//                        //  Construct a ray through the current pixel and trace it and get the color at the intersection point
+//                        Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+//                        // Write the color to the pixel in the image
+//                        this.imageWriter.writePixel(j, i, color);
+//                    }
+//                }
+
+
+            if (this.imageWriter == null)
+                throw new UnsupportedOperationException("Missing imageWriter");
+            if (this.rayTracer == null)
+                throw new UnsupportedOperationException("Missing rayTracerBase");
+
+            int nX = this.imageWriter.getNx();
+            int nY = this.imageWriter.getNy();
+
+            pixelManager = new PixelManager(nY, nX, printInterval);
+
+            // Multithreading logic
+            if (threadsCount > 0) {
+                if (threadsCount == -1) {
+                    Stream.iterate(0, i -> i + 1).limit(nY).parallel().forEach(i -> {
+                        for (int j = 0; j < nX; j++) {
+                            this.imageWriter.writePixel(j, i, castRay(j, i));
+                            pixelManager.pixelDone();
+                        }
+                    });
+                } else {
+                    IntStream.range(0, nY).parallel().forEach(i -> {
+                        for (int j = 0; j < nX; j++) {
+                            this.imageWriter.writePixel(j, i, castRay(j, i));
+                            pixelManager.pixelDone();
+                        }
+                    });
                 }
-            } else {
-                for (int i = 0; i < x; i++) {
-                    for (int j = 0; j < y; j++) {
-                        //  Construct a ray through the current pixel and trace it and get the color at the intersection point
-                        Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
-                        // Write the color to the pixel in the image
-                        this.imageWriter.writePixel(j, i, color);
+            } else { // Single-threaded rendering
+                if (DoFActive) {
+                    this.DoFPoints = Point.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
+                    for (int i = 0; i < nX; i++) {
+                        for (int j = 0; j < nY; j++) {
+                            var focalPoint = constructRay(nX, nY, j, i)
+                                    .getPoint(focalLength);
+                            imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < nX; i++) {
+                        for (int j = 0; j < nY; j++) {
+                            // Construct a ray through the current pixel and trace it to get the color at the intersection point
+                            Color color = rayTracer.traceRay(constructRay(nX, nY, j, i));
+                            // Write the color to the pixel in the image
+                            this.imageWriter.writePixel(j, i, color);
+                        }
                     }
                 }
             }
-    }
+        }
+
 
     /**
      * Prints a grid on the image by setting the color of pixels at regular intervals.
@@ -188,6 +281,7 @@ public class Camera implements Cloneable {
         // It then calculates the color of the pixel based on the intersections of the ray with objects in the scene.
         // The resulting color is used to set the pixel's color in the image.
         return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+
     }
 //    // פונקציה ליצירת קרני דגימה עם אפקט עומק שדה
 //    public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
