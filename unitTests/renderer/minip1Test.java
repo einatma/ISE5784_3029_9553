@@ -46,7 +46,7 @@ public class minip1Test {
             .setVpSize(500, 500)
             .setDoFActive(true)
             .setFocalSize(10,100,20)
-            .setMultiThreading(4)
+            .setMultiThreading(3)
             .setDebugPrint(0.1);
 
     /**

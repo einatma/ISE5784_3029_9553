@@ -106,8 +106,7 @@ public abstract class Intersectable {
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
     /**
-     * Checks if a ray intersects with this bounding box, used for BVH optimization.
-     *
+     * Checks if a ray intersects with this bounding box, used for BVH optimization.*
      * This method calculates the intersection of the ray with the bounding box using
      * the slab method, which involves checking intersection with the planes defining
      * the bounding box's sides. The method returns true if the ray intersects the
