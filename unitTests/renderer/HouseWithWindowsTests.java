@@ -25,7 +25,7 @@ class HouseWithWindowsTests {
         // Create a house with a base and a roof
         HouseWithWindows house = new HouseWithWindows(
                 new Point(0, 0, 0),
-                30, 40, 50, 20, 20, 10,
+                30, 20, 20, 10, 5, 10,
                 new Vector(1, 0, 0),  // Width direction
                 new Vector(0, 1, 0)   // Depth direction
         );

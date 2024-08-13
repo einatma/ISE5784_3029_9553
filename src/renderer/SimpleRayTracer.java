@@ -29,19 +29,8 @@ public class SimpleRayTracer extends RayTracerBase {
      * Initial value for the calculation of the color coefficient.
      */
     private static final Double3 INITIAL_K = Double3.ONE;
-    // All three were added.
-    /** Camera key size */
-    // private double apertureSize = 0;
-    /** focal length */
-    // private double focalLength = 0;
-    /** Number of rays per pixel for depth of field */
-    // private int numRays = 0;
 
-    /**
-     * Constructs a SimpleRayTracer with the specified scene.
-     *
-     * @param scene the scene to be traced.
-     */
+
     /**
      * Constructs a SimpleRayTracer with the specified scene.
      *
@@ -50,23 +39,6 @@ public class SimpleRayTracer extends RayTracerBase {
     public SimpleRayTracer(Scene scene) {
         super(scene);
     }
-
-    /**
-     * public SimpleRayTracer(Scene scene, double apertureSize, double focalLength,
-     * int numRays) { super(scene); this.apertureSize = apertureSize; //Added
-     * this.focalLength = focalLength; //Added this.numRays = numRays; //Added }
-     */
-
-    /**
-     * private List<Ray> createFocusRays(Ray ray, Point focalPoint) { //Added
-     * List<Ray> rays = new ArrayList<>(); rays.add(ray);
-     *
-     * Point origin = ray.getHead(); for (int i = 0; i < numRays; i++) { // יצירת
-     * קרן מפוזרת סביב הקרן המקורית Point p =
-     * origin.add(Vector.random(apertureSize)); Vector direction =
-     * focalPoint.subtract(p).normalize(); rays.add(new Ray(p, direction)); } return
-     * rays; }
-     */
 
     /**
      * Traces a ray through the scene and calculates the color at the point where
@@ -81,17 +53,6 @@ public class SimpleRayTracer extends RayTracerBase {
         var intersection = findClosestIntersection(ray);
         return intersection == null ? this.scene.background : calcColor(intersection, ray);
     }
-
-    // Added
-    /**
-     * public Color traceRay(Ray ray) { Point focalPoint =
-     * ray.getPoint(focalLength); List<Ray> rays = createFocusRays(ray, focalPoint);
-     *
-     * Color color = Color.BLACK; for (Ray r : rays) { var intersection =
-     * findClosestIntersection(r); color = color.add(intersection == null ?
-     * this.scene.background : calcColor(intersection, r)); } return
-     * color.reduce(rays.size()); }
-     */
 
     /**
      * Calculates the color at an intersection point considering global and local

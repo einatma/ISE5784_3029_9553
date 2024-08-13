@@ -36,41 +36,42 @@ public class Triangle extends Polygon {
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
-        //Check if the ray intersects the plane.
+        // Check if the ray intersects the plane of the triangle
         List<GeoPoint> result = plane.findGeoIntersections(ray, distance);
+
+        // If there are no intersections with the plane, there can be no intersection with the triangle
         if (result == null) {
             return null;
         }
 
-        // the three vectors from the same starting point
-        Vector v1 = vertices.get(0).subtract(ray.getHead());
-        Vector v2 = vertices.get(1).subtract(ray.getHead());
-        Vector v3 = vertices.get(2).subtract(ray.getHead());
+        // Calculate vectors from the ray's origin to each vertex of the triangle
+        Vector v1 = vertices.get(0).subtract(ray.getHead());  // Vector from ray's origin to the first vertex
+        Vector v2 = vertices.get(1).subtract(ray.getHead());  // Vector from ray's origin to the second vertex
+        Vector v3 = vertices.get(2).subtract(ray.getHead());  // Vector from ray's origin to the third vertex
 
-        // we want to get a normal for each pyramid's face so we do the crossProduct
-        Vector n1 = v1.crossProduct(v2).normalize();
-        Vector n2 = v2.crossProduct(v3).normalize();
-        Vector n3 = v3.crossProduct(v1).normalize();
+        // Compute the normal vectors for each side of the triangle
+        Vector n1 = v1.crossProduct(v2).normalize();  // Normal vector for the face formed by the first two vertices
+        Vector n2 = v2.crossProduct(v3).normalize();  // Normal vector for the face formed by the second and third vertices
+        Vector n3 = v3.crossProduct(v1).normalize();  // Normal vector for the face formed by the third and first vertices
 
-        // the ray's vector  - it has the same starting point as the three vectors from above
+        // Get the direction vector of the ray
         Vector v = ray.getDirection();
 
-        // check if the vector's direction (from Subtraction between the ray's vector to each vector from above) are equal
-        // if not - there is no intersection point between the ray and the triangle
-        // Check if the intersection point is inside the triangle
-        double dot1 = alignZero(v.dotProduct(n1));
-        double dot2 = alignZero(v.dotProduct(n2));
-        double dot3 = alignZero(v.dotProduct(n3));
+        // Calculate the dot products between the ray's direction and the normal vectors of the triangle's sides
+        double dot1 = alignZero(v.dotProduct(n1));  // Dot product with the normal vector of the first side
+        double dot2 = alignZero(v.dotProduct(n2));  // Dot product with the normal vector of the second side
+        double dot3 = alignZero(v.dotProduct(n3));  // Dot product with the normal vector of the third side
 
+        // Check if the intersection point is inside the triangle by examining the signs of the dot products
+        // If all dot products are positive or all are negative, the point is inside the triangle
         if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0)) {
+            // If the point is inside the triangle, return a list of GeoPoints with the intersection points
             return result.stream()
                     .map(gp -> new GeoPoint(this, gp.point))
                     .collect(Collectors.toList());
         }
+
+        // If the intersection point is not inside the triangle, return null
         return null;
     }
-
-
-
-
 }

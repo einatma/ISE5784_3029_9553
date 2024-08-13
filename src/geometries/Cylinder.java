@@ -8,9 +8,13 @@ import java.util.List;
 import static primitives.Util.isZero;
 
 /**
- * Represents a vector in 3D space, defined by its components (x, y, z).
+ * Represents a cylinder in 3D space, defined by its height, axis, and radius.
+ * Inherits from the Tube class, which provides the cylindrical side surface.
+ * This class also provides methods to calculate the normal vector at a given point
+ * on the cylinder and to find intersection points between a ray and the cylinder.
  *
- * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
+ * @author Hadar Cohen-213953029
+ * @author Einat Mazuz -324019553
  */
 public class Cylinder extends Tube {
     /**
@@ -30,108 +34,107 @@ public class Cylinder extends Tube {
         height = h;
     }
 
-    //    @Override
-//    public Vector getNormal(Point p) {
-//        return super.getNormal(p);
-//    }
-//    * Calculates the normal vector to the surface of the cylinder at a given point.
-//            *
-//            * @param p The point on the surface of the cylinder.
-//     * @return The normal vector to the surface at point p.
-//     */
+    /**
+     * Calculates the normal vector to the surface of the cylinder at a given point.
+     * The normal is determined based on the location of the point relative to the cylinder:
+     * - If the point is on one of the bases, the normal is parallel to the axis.
+     * - If the point is on the side surface, the normal is perpendicular to the axis.
+     *
+     * @param p The point on the surface of the cylinder.
+     * @return The normal vector to the surface at point p.
+     */
     @Override
     public Vector getNormal(Point p) {
-//        // The direction vector of the cylinder's central axis
-//        Vector cylinderCenterVector = axis.getDirection();
-//        // The center point of the bottom base of the cylinder
-//        Point centerOfOneSide = axis.getHead();
-//        // The center point of the top base of the cylinder
-//        Point centerOfSecondSide = axis.getHead().add(axis.getDirection().scale(height));
-//        // Check if the point is at the center of the bottom base
-//        if (p.equals(centerOfOneSide)) {
-//            return cylinderCenterVector.scale(-1);
-//        }
-//        // Check if the point is at the center of the top base
-//        else if (p.equals(centerOfSecondSide)) {
-//            return cylinderCenterVector;
-//        }
-//        // Calculate the t of point p on the cylinder's axis
-//        double t = cylinderCenterVector.dotProduct(p.subtract(centerOfOneSide));
-//        // If the t is 0, the point is on the bottom base but not at the center
-//        if (isZero(t))
-//            return p.subtract(centerOfOneSide).normalize();
-//        // Calculate the center of the circle that intersects with point p on the cylinder's side
-//        Point center = centerOfOneSide.add(cylinderCenterVector.scale(t));
-//        // Return the normalized vector from the center of the intersection circle to point p
-//        return p.subtract(center).normalize();
+        // Get the direction vector of the cylinder's central axis
         Vector axisDirection = axis.getDirection();
+        // Get the base point of the cylinder's axis (the head of the axis ray)
         Point axisHead = axis.getHead();
+
+        // Check if the point p is at the base of the cylinder's axis
         if (p.equals(axisHead))
-            return axisDirection.normalize();
+            return axisDirection.normalize(); // The normal is in the direction of the axis
+
+        // Calculate the projection of point p onto the cylinder's axis
         double t = p.subtract(axisHead).dotProduct(axisDirection);
+
+        // If the point is on one of the bases (t is 0 or equals the height)
         if (isZero(t) || isZero(t - height)) {
-            // Point is on one of the bases
-            return axisDirection.normalize();
+            return axisDirection.normalize(); // The normal is in the direction of the axis
         }
-        // Point is on the side surface
+
+        // If the point is on the side surface of the cylinder, delegate to the superclass method
         return super.getNormal(p);
     }
 
     /**
      * Finds all the intersection points between a given ray and the cylinder.
-     * @param ray the ray to intersect with the tube.
-     * @param distance
-     * @return
+     * The method first checks for intersections with the top and bottom bases of the cylinder,
+     * then checks for intersections with the side surface.
+     *
+     * @param ray       The ray to intersect with the cylinder.
+     * @param distance  The maximum distance to consider for intersections.
+     * @return A list of GeoPoints representing the intersections, or null if there are none.
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+        // Initialize a list to store the intersection points
         List<GeoPoint> result = new LinkedList<>();
+
+        // Get the direction vector of the cylinder's central axis
         Vector va = this.axis.getDirection();
+        // Get the base point of the cylinder's axis (the head of the axis ray)
         Point p1 = this.axis.getHead();
+        // Calculate the top point of the cylinder's axis (p1 + height * direction)
         Point p2 = p1.add(this.axis.getDirection().scale(this.height));
 
-        Plane plane1 = new Plane(p1, this.axis.getDirection()); //get plane of bottom base
-        List<GeoPoint> result2 = plane1.findGeoIntersections(ray); //intersections with bottom's plane
+        // Find intersections with the bottom base of the cylinder
+        Plane plane1 = new Plane(p1, this.axis.getDirection()); // Define the plane for the bottom base
+        List<GeoPoint> result2 = plane1.findGeoIntersections(ray); // Get intersections with the bottom plane
 
         if (result2 != null) {
-            //Add all intersections of bottom's plane that are in the base's bounders
+            // Add all valid intersections that are within the bounds of the bottom base
             for (GeoPoint point : result2) {
-                if (point.point.equals(p1)) { //to avoid vector ZERO
+                // Check if the point is exactly at the base point to avoid zero vector
+                if (point.point.equals(p1)) {
                     result.add(point);
-                }
-                //checks that point is inside the base
-                else if ((point.point.subtract(p1).dotProduct(point.point.subtract(p1)) < this.radius * this.radius)) {
+                } else if (point.point.subtract(p1).dotProduct(point.point.subtract(p1)) < this.radius * this.radius) {
+                    // Check if the point is within the radius of the base
                     result.add(point);
                 }
             }
         }
 
-        List<GeoPoint> result1 = super.findGeoIntersections(ray); //get intersections for tube
+        // Find intersections with the cylindrical side surface
+        List<GeoPoint> result1 = super.findGeoIntersections(ray); // Get intersections from the Tube class
 
         if (result1 != null) {
-            //Add all intersections of tube that are in the cylinder's bounders
+            // Add all valid intersections that are within the height of the cylinder
             for (GeoPoint point : result1) {
+                // Check if the intersection point is between the top and bottom planes
                 if (va.dotProduct(point.point.subtract(p1)) > 0 && va.dotProduct(point.point.subtract(p2)) < 0) {
                     result.add(point);
                 }
             }
         }
 
-        Plane plane2 = new Plane(p2, this.axis.getDirection()); //get plane of top base
-        List<GeoPoint> result3 = plane2.findGeoIntersections(ray); //intersections with top's plane
+        // Find intersections with the top base of the cylinder
+        Plane plane2 = new Plane(p2, this.axis.getDirection()); // Define the plane for the top base
+        List<GeoPoint> result3 = plane2.findGeoIntersections(ray); // Get intersections with the top plane
 
         if (result3 != null) {
+            // Add all valid intersections that are within the bounds of the top base
             for (GeoPoint point : result3) {
-                if (point.point.equals(p2)) { //to avoid vector ZERO
+                // Check if the point is exactly at the top point to avoid zero vector
+                if (point.point.equals(p2)) {
                     result.add(point);
-                }
-                //Formula that checks that point is inside the base
-                else if ((point.point.subtract(p2).dotProduct(point.point.subtract(p2)) < this.radius * this.radius)) {
+                } else if (point.point.subtract(p2).dotProduct(point.point.subtract(p2)) < this.radius * this.radius) {
+                    // Check if the point is within the radius of the top base
                     result.add(point);
                 }
             }
         }
 
+        // If there are valid intersection points, return them; otherwise, return null
         if (result.size() > 0) {
             return result;
         }
@@ -139,4 +142,3 @@ public class Cylinder extends Tube {
         return null;
     }
 }
-

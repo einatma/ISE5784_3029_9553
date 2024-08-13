@@ -28,7 +28,7 @@ class HouseBaseTests {
     @Test
     public void renderBoxTest() {
         // Create a Box (rectangular prism)
-        HouseBase houseBase = new HouseBase(new Point(0, 0, 0), 10, 15, 20,7,5, new Vector(1, 0, 0), new Vector(0, 1, 0))
+        HouseBase houseBase = new HouseBase(new Point(0, 0, 0), 30, 20, 20,10,7, new Vector(1, 0, 0), new Vector(0, 1, 0))
                 .setWallMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(90)).setWallEmission(new Color(blue)).setWindowEmission(new Color(100, 100, 255)).setWindowMaterial(new Material().setKd(0.1).setKs(0.1).setShininess(30).setKt(0.8));
         // Add Box polygons to the scene
         int i = 2;
