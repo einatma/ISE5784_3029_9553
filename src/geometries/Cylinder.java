@@ -41,29 +41,40 @@ public class Cylinder extends Tube {
 //     */
     @Override
     public Vector getNormal(Point p) {
-        // The direction vector of the cylinder's central axis
-        Vector cylinderCenterVector = axis.getDirection();
-        // The center point of the bottom base of the cylinder
-        Point centerOfOneSide = axis.getHead();
-        // The center point of the top base of the cylinder
-        Point centerOfSecondSide = axis.getHead().add(axis.getDirection().scale(height));
-        // Check if the point is at the center of the bottom base
-        if (p.equals(centerOfOneSide)) {
-            return cylinderCenterVector.scale(-1);
+//        // The direction vector of the cylinder's central axis
+//        Vector cylinderCenterVector = axis.getDirection();
+//        // The center point of the bottom base of the cylinder
+//        Point centerOfOneSide = axis.getHead();
+//        // The center point of the top base of the cylinder
+//        Point centerOfSecondSide = axis.getHead().add(axis.getDirection().scale(height));
+//        // Check if the point is at the center of the bottom base
+//        if (p.equals(centerOfOneSide)) {
+//            return cylinderCenterVector.scale(-1);
+//        }
+//        // Check if the point is at the center of the top base
+//        else if (p.equals(centerOfSecondSide)) {
+//            return cylinderCenterVector;
+//        }
+//        // Calculate the t of point p on the cylinder's axis
+//        double t = cylinderCenterVector.dotProduct(p.subtract(centerOfOneSide));
+//        // If the t is 0, the point is on the bottom base but not at the center
+//        if (isZero(t))
+//            return p.subtract(centerOfOneSide).normalize();
+//        // Calculate the center of the circle that intersects with point p on the cylinder's side
+//        Point center = centerOfOneSide.add(cylinderCenterVector.scale(t));
+//        // Return the normalized vector from the center of the intersection circle to point p
+//        return p.subtract(center).normalize();
+        Vector axisDirection = axis.getDirection();
+        Point axisHead = axis.getHead();
+        if (p.equals(axisHead))
+            return axisDirection.normalize();
+        double t = p.subtract(axisHead).dotProduct(axisDirection);
+        if (isZero(t) || isZero(t - height)) {
+            // Point is on one of the bases
+            return axisDirection.normalize();
         }
-        // Check if the point is at the center of the top base
-        else if (p.equals(centerOfSecondSide)) {
-            return cylinderCenterVector;
-        }
-        // Calculate the t of point p on the cylinder's axis
-        double t = cylinderCenterVector.dotProduct(p.subtract(centerOfOneSide));
-        // If the t is 0, the point is on the bottom base but not at the center
-        if (isZero(t))
-            return p.subtract(centerOfOneSide).normalize();
-        // Calculate the center of the circle that intersects with point p on the cylinder's side
-        Point center = centerOfOneSide.add(cylinderCenterVector.scale(t));
-        // Return the normalized vector from the center of the intersection circle to point p
-        return p.subtract(center).normalize();
+        // Point is on the side surface
+        return super.getNormal(p);
     }
 
     /**

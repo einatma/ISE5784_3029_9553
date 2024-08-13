@@ -34,24 +34,32 @@ public class Tube extends RadialGeometry {
      */
     @Override
     public Vector getNormal(Point p) {
-        // The direction vector of the tube's central axis
-        Vector tubeCenterVector = axis.getDirection();
-        // The starting point of the tube's central axis (the base of the tube)
+//        // The direction vector of the tube's central axis
+//        Vector tubeCenterVector = axis.getDirection();
+//        // The starting point of the tube's central axis (the base of the tube)
+//        Point head = axis.getHead();
+//        // Check if the point is at the base center
+//        if (p.equals(head)) {
+//            throw new IllegalArgumentException("ERROR: the point can't be at the base center");
+//        }
+//        // Calculate the t of point p on the tube's axis
+//        // t is the distance of p from head along the direction of the axis
+//        double t = tubeCenterVector.dotProduct(p.subtract(head));
+//        if (isZero(t)) {
+//            throw new IllegalArgumentException("ERROR: can't be zero vector");
+//        }
+//
+//        // Calculate the center of the circle that intersects with point p on the tube's side
+//        Point tubeCenterPoint = axis.getPoint(t);
+//        // Return the normalized vector from the center of the intersection circle to point p
+//        return p.subtract(tubeCenterPoint).normalize();
         Point head = axis.getHead();
-        // Check if the point is at the base center
-        if (p.equals(head)) {
+        if (p.equals(head))
             throw new IllegalArgumentException("ERROR: the point can't be at the base center");
-        }
-        // Calculate the t of point p on the tube's axis
-        // t is the distance of p from head along the direction of the axis
-        double t = tubeCenterVector.dotProduct(p.subtract(head));
-        if (isZero(t)) {
+        double t = p.subtract(head).dotProduct(axis.getDirection());
+        if (isZero(t))
             throw new IllegalArgumentException("ERROR: can't be zero vector");
-        }
-
-        // Calculate the center of the circle that intersects with point p on the tube's side
-        Point tubeCenterPoint = axis.getPoint(t);
-        // Return the normalized vector from the center of the intersection circle to point p
+        Point tubeCenterPoint =  axis.getPoint(t);
         return p.subtract(tubeCenterPoint).normalize();
     }
 
@@ -86,7 +94,7 @@ public class Tube extends RadialGeometry {
             // If the ray is not parallel to the tube axis, check the distance from the axis
             double projection = deltaP.dotProduct(tubeAxisDirection);
             if (projection < 0 || projection > axis.getDirection().length()) {
-                return null; // Ray is not parallel and outside the tube 
+                return null; // Ray is not parallel and outside the tube
             }
         }
 
