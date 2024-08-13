@@ -9,6 +9,7 @@ import java.util.List;
  * @author Hadar Cohen-213953029 and Einat Mazuz -324019553
  */
 public class Point {
+
     /**
      * The coordinates of the point's location
      */
@@ -24,6 +25,9 @@ public class Point {
     }
 
     public static final Point ZERO = new Point(Double3.ZERO);
+    public static final Point NEGATIVE_INFINITY = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY ,Double.NEGATIVE_INFINITY);
+
+    public static final Point POSITIVE_INFINITY = new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY ,Double.POSITIVE_INFINITY);
 
     /**
      * Constructs a new Point object with the specified Cartesian coordinates.
@@ -134,5 +138,17 @@ public class Point {
      */
     public double distance(Point other) {
         return Math.sqrt(distanceSquared(other));
+    }
+
+    public Point min(Point min) {
+        return new Point(xyz.min(min.xyz));
+    }
+
+    public Point max(Point max) {
+        return new Point(xyz.max(max.xyz));
+    }
+
+    public int get(int i) {
+        return xyz.get(i);
     }
 }

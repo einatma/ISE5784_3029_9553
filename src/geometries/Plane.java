@@ -100,4 +100,8 @@ public class Plane extends Geometry {
         // Calculate and return the intersection point as a list
         return List.of(new GeoPoint(this, ray.getPoint(t)));
     }
+
+
+
+
 }

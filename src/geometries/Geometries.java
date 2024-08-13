@@ -26,7 +26,8 @@ public class Geometries extends Intersectable {
      * @param geometries the geometries to be added to the collection.
      */
     public Geometries(Intersectable... geometries) {
-        add(geometries);
+        if (geometries != null)
+            add(geometries);
     }
 
     /**
@@ -59,4 +60,12 @@ public class Geometries extends Intersectable {
         }
         return result;
     }
+    public void makeBVH() {
+        List<Intersectable> intersectables = BoundingBox.buildBVH(geometries);
+        geometries.clear();
+        geometries.addAll(intersectables);
+
+    }
+
+
 }

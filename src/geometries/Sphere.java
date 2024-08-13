@@ -25,6 +25,25 @@ public class Sphere extends RadialGeometry {
     public Sphere(Point c, double r) {
         super(r);
         center = c;
+        if(BVH)
+        {
+            // חישוב ה-BoundingBox
+            double radius = getRadius();
+            Point min = new Point(
+                    center.getX() - radius,
+                    center.getY() - radius,
+                    center.getZ() - radius
+            );
+            Point max = new Point(
+                    center.getX() + radius,
+                    center.getY() + radius,
+                    center.getZ() + radius
+            );
+            this.boundingBox = new BoundingBox(min, max);
+
+        }
+
+
     }
 
     /**
@@ -102,5 +121,6 @@ public class Sphere extends RadialGeometry {
     private double alignZero(double num) {
         return Math.abs(num) < 1e-10 ? 0.0 : num;
     }
+
 
 }

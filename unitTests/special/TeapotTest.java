@@ -22,12 +22,12 @@ import scene.Scene;
  */
 public class TeapotTest {
     private final ImageWriter imageWriter = new ImageWriter("teapot", 800, 800);
-
     private final Scene scene = new Scene("Test scene");
     final Camera.Builder cameraBuilder = Camera.getBuilder().setLocation(new Point(0, 0, -1000))
             .setDirection(new Vector(0, 0, 1), new Vector(0, 1, 0)).setVpSize(200, 200).setVpDistance(1000)
             .setFocalSize(20, 1600, 1).setRayTracer(new SimpleRayTracer(scene)).setImageWriter(imageWriter)
             .setMultiThreading(3).setDebugPrint(0.1);
+
 
 
 
@@ -1567,6 +1567,7 @@ public class TeapotTest {
                 new Triangle(pnts[470], pnts[469], pnts[529]).setEmission(color).setMaterial(mat), //
                 new Triangle(pnts[529], pnts[530], pnts[470]).setEmission(color).setMaterial(mat) //
         );
+        scene.geometries.makeBVH();
         scene.lights.add(new PointLight(new Color(500, 500, 500), new Point(100, 0, -100)).setKq(0.000001));
         cameraBuilder.setImageWriter(imageWriter)
                         .build().renderImage();

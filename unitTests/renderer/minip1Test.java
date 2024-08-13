@@ -44,7 +44,9 @@ public class minip1Test {
             .setDirection(new Vector(1, 1.5, 0).normalize(), new Vector(0, 0, 1))
             .setVpDistance(100)
             .setVpSize(500, 500)
-            .setMultiThreading(3)
+            .setDoFActive(true)
+            .setFocalSize(10,100,20)
+            .setMultiThreading(4)
             .setDebugPrint(0.1);
 
     /**
@@ -224,21 +226,21 @@ public class minip1Test {
             shipLocationX *= 1.3;
         }
         // Setting ambient light and adding a directional light to simulate the sun
-        scene.setAmbientLight(new AmbientLight(new Color(77, 83, 114), 0.25));
-        scene.lights.add(new DirectionalLight(new Color(103, 90, 90), new Vector(0, 1, -0.05)));
-        Point sunPosition = new Point(100000, -10000, 8000);
-        Color sunColor = new Color(126, 116, 0);
-        scene.lights.add(new PointLight(sunColor, sunPosition).setKc(0.0000000001).setKl(0.0000000001).setKq(0.0000000001));
+        scene.setAmbientLight(new AmbientLight(new Color(77, 83, 114), 0.001));
+        scene.lights.add(new DirectionalLight(new Color(103, 90, 90), new Vector(0, 1, 0)));
+        scene.lights.add(new PointLight(new Color(255, 255, 77),new Point(-20, -50, 35)).setKc(0.0002).setKl(0.002).setKq(0.0002));
+        scene.lights.add(new SpotLight(new Color(255, 255, 77),new Point(-110, -100, 40), new Vector(0,1,0.0005)).setKc(0.0002).setKl(0.000005).setKq(0.0002));
+        scene.lights.add(new PointLight(new Color(255, 0  , 0), new Point(70000, -3000, 1500)).setKc(0.000000001).setKl(0.00000000001).setKq(0.00000001));
 
         //Add spheres for Eliezer
         scene.geometries.add(new Sphere(new Point(-120, -40, 5), 10)
-                .setEmission(new Color(YELLOW)).setMaterial(new Material().setKd(1).setKs(1).setKt(0).setKr(1).setShininess(0)));
+                .setEmission(new Color(YELLOW)).setMaterial(new Material().setKd(1).setKs(0).setKt(0).setKr(0).setShininess(0)));
         scene.geometries.add(new Sphere(new Point(-120, 10, 7), 10)
-                .setEmission(new Color(GREEN)).setMaterial(new Material().setKd(0).setKs(0.9).setKt(0.95).setKr(0).setShininess(0)));
+                .setEmission(new Color(BLUE)).setMaterial(new Material().setKd(0).setKs(0.2).setKt(0.2).setKr(0).setShininess(0)));
         scene.geometries.add(new Sphere(new Point(-135, -50, 0), 9)
-                .setEmission(new Color(BLUE)).setMaterial(new Material().setKd(0).setKs(0.9).setKt(0.95).setKr(0).setShininess(100)));
+                .setEmission(new Color(GREEN)).setMaterial(new Material().setKd(0).setKs(0.4).setKt(0.2).setKr(0).setShininess(100)));
         scene.geometries.add(new Sphere(new Point(-140, 40, 10), 10)
-                .setEmission(new Color(RED)).setMaterial(new Material().setKd(0).setKs(0.9).setKt(0.95).setKr(0).setShininess(300)));
+                .setEmission(new Color(RED)).setMaterial(new Material().setKd(0).setKs(0.8).setKt(0.6).setKr(0).setShininess(300)));
 
 
         //Grass
@@ -266,8 +268,9 @@ public class minip1Test {
         for (Geometry geometry : allGeometries) {
             scene.geometries.add(geometry);
         }
+        scene.geometries.makeBVH();
         // Rendering the image
-        camera.setImageWriter(new ImageWriter("castleWithWindowsSenseEliezer'sSideView", 1000, 1000))
+        camera.setImageWriter(new ImageWriter("castleSenseEliezer'sSideView", 1000, 1000))
                 .build()
                 .renderImage();
 

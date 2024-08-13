@@ -87,6 +87,17 @@ public class Polygon extends Geometry {
             if (positive != (edge1.crossProduct(edge2).dotProduct(n) > 0))
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
         }
+        if(BVH)
+        {
+            // חישוב ה-BoundingBox
+            Point min = vertices[0];
+            Point max = vertices[0];
+            for (Point vertex : vertices) {
+                min = min.min(vertex);
+                max = max.max(vertex);
+            }
+            this.boundingBox = new BoundingBox(min, max);
+        }
     }
 
     /**
@@ -147,5 +158,7 @@ public class Polygon extends Geometry {
 
         return List.of(new GeoPoint(this, intersections.get(0).point));
     }
+
+
 }
 

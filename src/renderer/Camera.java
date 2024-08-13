@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.stream.*;
 
+import geometries.Geometries;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+
 import java.util.stream.*;
 
 /**
@@ -60,7 +62,10 @@ public class Camera implements Cloneable {
      * DoF points on the aperture plane
      */
     public List<Point> DoFPoints = null;
-    //private TargetArea DoFPoints = new TargetArea(gridDensity,apertureRadius,location,vUp,vRight);
+    private static final int MAX_RAYS = 100;  // ערך התחלתי מומלץ, אפשר לשנות לפי הצורך
+
+
+
 
     /**
      * Number of threads to use for rendering.
@@ -137,22 +142,27 @@ public class Camera implements Cloneable {
      */
     public Camera renderImage() {
         if (this.imageWriter == null)
-                throw new UnsupportedOperationException("Missing imageWriter");
-            if (this.rayTracer == null)
-                throw new UnsupportedOperationException("Missing rayTracerBase");
+            throw new UnsupportedOperationException("Missing imageWriter");
+        if (this.rayTracer == null)
+            throw new UnsupportedOperationException("Missing rayTracerBase");
         final int nX = imageWriter.getNx();
         final int nY = imageWriter.getNy();
 
         pixelManager = new PixelManager(nY, nX, printInterval);
 
-        if (this.gridDensity != 1) {
+        if (DoFActive) {
             this.DoFPoints = Camera.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
+            if (this.DoFPoints == null || this.DoFPoints.isEmpty()) {
+                // טיפול במקרה שבו הנקודות לא נוצרו
+                this.DoFPoints = List.of(location);  // או כל ערך ברירת מחדל אחר
+            }
         }
+
 
         if (threadsCount == 0) { // Single-threaded rendering
             for (int i = 0; i < nY; ++i) {
                 for (int j = 0; j < nX; ++j) {
-                    if (this.gridDensity != 1) {
+                    if (this.gridDensity != 1 && DoFActive) {
                         var focalPoint = constructRay(nX, nY, j, i).getPoint(focalLength);
                         imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
                     } else {
@@ -168,7 +178,7 @@ public class Camera implements Cloneable {
                     PixelManager.Pixel pixel; // current pixel(row,col)
                     // allocate pixel(row,col) in loop until there are no more pixels
                     while ((pixel = pixelManager.nextPixel()) != null) {
-                        if (this.gridDensity != 1) {
+                        if (this.gridDensity != 1 && DoFActive) {
                             var focalPoint = constructRay(nX, nY, pixel.col(), pixel.row()).getPoint(focalLength);
                             imageWriter.writePixel(pixel.col(), pixel.row(), rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
                         } else {
@@ -188,107 +198,9 @@ public class Camera implements Cloneable {
             }
         }
         return this;
+    }
 
 
-
-//        final int nX = imageWriter.getNx();
-//        final int nY = imageWriter.getNy();
-//
-//        pixelManager = new PixelManager(nY, nX, printInterval);
-//
-//        if (this.gridDensity != 1) {
-//            this.DoFPoints = Camera.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
-//        }
-//
-//        if (threadsCount == 0) { // Single-threaded rendering
-//            for (int i = 0; i < nY; ++i) {
-//                for (int j = 0; j < nX; ++j) {
-//                    if (this.gridDensity != 1) {
-//                        var focalPoint = constructRay(nX, nY, j, i).getPoint(focalLength);
-//                        imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
-//                    } else {
-//                        castRay(nX, nY, j, i);
-//                    }
-//                    pixelManager.pixelDone(); // Update progress after processing each pixel
-//                }
-//            }
-//        } else { // Multi-threaded rendering
-//            var threads = new LinkedList<Thread>(); // list of threads
-//            while (threadsCount-- > 0) // add appropriate number of threads
-//                threads.add(new Thread(() -> { // add a thread with its code
-//                    PixelManager.Pixel pixel; // current pixel(row,col)
-//                    // allocate pixel(row,col) in loop until there are no more pixels
-//                    while ((pixel=pixelManager.nextPixel()) != null) {
-//                        if (this.gridDensity != 1) {
-//                            var focalPoint = constructRay(nX, nY, pixel.col(), pixel.row()).getPoint(focalLength);
-//                            imageWriter.writePixel(pixel.col(), pixel.row(), rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
-//                        } else {
-//                            castRay(nX, nY, pixel.col(), pixel.row());
-//                        }
-//                        pixelManager.pixelDone(); // Update progress after processing each pixel
-//                    }
-//                }));
-//            // start all the threads
-//            for (var thread : threads)
-//                thread.start();
-//            // wait until all the threads have finished
-//            try {
-//                for (var thread : threads)
-//                    thread.join();
-//            } catch (InterruptedException ignore) {
-//            }
-//        }
-//        return this;
-
-//            if (this.imageWriter == null)
-//                throw new UnsupportedOperationException("Missing imageWriter");
-//            if (this.rayTracer == null)
-//                throw new UnsupportedOperationException("Missing rayTracerBase");
-//
-//            int nX = this.imageWriter.getNx();
-//            int nY = this.imageWriter.getNy();
-//
-//            pixelManager = new PixelManager(nY, nX, printInterval);
-//
-//            // Multithreading logic
-//            if (threadsCount > 0) {
-//                if (threadsCount == -1) {
-//                    Stream.iterate(0, i -> i + 1).limit(nY).parallel().forEach(i -> {
-//                        for (int j = 0; j < nX; j++) {
-//                            this.imageWriter.writePixel(j, i, castRay(nX));
-//                            pixelManager.pixelDone();
-//                        }
-//                    });
-//                } else {
-//                    IntStream.range(0, nY).parallel().forEach(i -> {
-//                        for (int j = 0; j < nX; j++) {
-//                            this.imageWriter.writePixel(j, i, castRay(j, i));
-//                            pixelManager.pixelDone();
-//                        }
-//                    });
-//                }
-//            } else { // Single-threaded rendering
-//                if (DoFActive) {
-//                    this.DoFPoints = generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
-//                    for (int i = 0; i < nX; i++) {
-//                        for (int j = 0; j < nY; j++) {
-//                            var focalPoint = constructRay(nX, nY, j, i)
-//                                    .getPoint(focalLength);
-//                            imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
-//                        }
-//                    }
-//                } else {
-//                    for (int i = 0; i < nX; i++) {
-//                        for (int j = 0; j < nY; j++) {
-//                            // Construct a ray through the current pixel and trace it to get the color at the intersection point
-//                            Color color = rayTracer.traceRay(constructRay(nX, nY, j, i));
-//                            // Write the color to the pixel in the image
-//                            this.imageWriter.writePixel(j, i, color);
-//                        }
-//                    }
-//                }
-//            }
-        }
 
 
     /**
@@ -370,6 +282,83 @@ public class Camera implements Cloneable {
             points.add(point);
         }
         return points;
+    }
+    /**
+     * Constructs a ray through a specific point in a pixel on the view plane.
+     *
+     * @param Ry the height of the pixel
+     * @param Rx the width of the pixel
+     * @param yi the y-offset from the center of the pixel
+     * @param xj the x-offset from the center of the pixel
+     * @param j  the pixel index on the x-axis
+     * @param i  the pixel index on the y-axis
+     * @return a Ray object that goes through the specified point in the pixel
+     */
+    private Ray constructRaysThroughPixel(double Ry, double Rx, double yi, double xj, int j, int i) {
+        Point Pc = location.add(vTo.scale(distance));
+        // מחשבים את הנקודה ההתחלתית של הפיקסל בציר ה-y
+        double y_sample_i = (i * Ry + Ry / 2.0);
+        // מחשבים את הנקודה ההתחלתית של הפיקסל בציר ה-x
+        double x_sample_j = (j * Rx + Rx / 2.0);
+        // קובעים את הנקודה דרכה נורה הקרן
+        Point Pij = Pc;
+        // אם הנקודה בציר ה-x אינה אפס, מוסיפים לה את ההיסט (xj)
+        if (!isZero(x_sample_j + xj)) {
+            Pij = Pij.add(vRight.scale(-x_sample_j - xj));
+        }
+
+        // אם הנקודה בציר ה-y אינה אפס, מוסיפים לה את ההיסט (yi)
+        if (!isZero(y_sample_i + yi)) {
+            Pij = Pij.add(vUp.scale(-y_sample_i - yi));
+        }
+
+        // יוצרים וקטור (Vij) מהמצלמה לנקודה המחושבת
+        Vector Vij = Pij.subtract(location);
+
+        // יוצרים קרן (Ray) מהמצלמה לנקודה המחושבת ומחזירים את הקרן
+        return new Ray(location, Vij);
+    }
+
+    /**
+     * Constructs a beam of rays through a specific pixel on the view plane.
+     *
+     * @param nX         the number of pixels in the x-axis on the view plane
+     * @param nY         the number of pixels in the y-axis on the view plane
+     * @param j          the pixel index on the x-axis
+     * @param i          the pixel index on the y-axis
+     * @param raysAmount the total number of rays to construct through the pixel
+     * @return a list of Ray objects that represent the beam through the specified
+     *         pixel
+     */
+    public List<Ray> constructBeamThroughPixel(int nX, int nY, int j, int i, int raysAmount) {
+        // The distance between the screen and the camera cannot be 0
+        if (isZero(distance)) {
+            throw new IllegalArgumentException("distance cannot be 0");
+        }
+
+        int numOfRays = (int) Math.floor(Math.sqrt(raysAmount)); // number of rays in each row or column
+
+        if (numOfRays == 1)
+            return List.of(constructRay(nX, nY, j, i));
+
+        double Ry = this.height / nY;
+        double Rx = this.width / nX;
+        double Yi = (i - (nY - 1) / 2d) * Ry;
+        double Xj = (j - (nX - 1) / 2d) * Rx;
+
+        double PRy = Ry / numOfRays; // height distance between each ray
+        double PRx = Rx / numOfRays; // width distance between each ray
+
+        List<Ray> sample_rays = new ArrayList<>();
+
+        for (int row = 0; row < numOfRays; ++row) {
+            for (int column = 0; column < numOfRays; ++column) {
+                sample_rays.add(constructRaysThroughPixel(PRy, PRx, Yi, Xj, row, column)); // add the ray
+
+            }
+        }
+        sample_rays.add(constructRay(nX, nY, j, i)); // add the center screen ray
+        return sample_rays;
     }
     /**
      * Builder class for constructing Camera objects.
@@ -539,6 +528,7 @@ public class Camera implements Cloneable {
             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
             return this;
         }
+
     }
 }
 

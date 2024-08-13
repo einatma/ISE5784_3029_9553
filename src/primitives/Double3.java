@@ -151,4 +151,25 @@ public class Double3 {
     public boolean lowerThan(Double3 other) {
         return d1 < other.d1 && d2 < other.d2 && d3 < other.d3;
     }
+
+    public Double3 min(Double3 xyz) {
+        return new Double3(Math.min(d1, xyz.d1), Math.min(d2, xyz.d2), Math.min(d3, xyz.d3));
+    }
+
+    public Double3 max(Double3 xyz) {
+        return new Double3(Math.max(d1, xyz.d1), Math.max(d2, xyz.d2), Math.max(d3, xyz.d3));
+    }
+
+    public int get(int i) {
+        switch (i) {
+            case 0:
+                return (int) d1;
+            case 1:
+                return (int) d2;
+            case 2:
+                return (int) d3;
+            default:
+                throw new IndexOutOfBoundsException("Invalid index " + i);
+        }
+    }
 }

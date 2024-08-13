@@ -27,13 +27,14 @@ public class DoFTests {
 		Scene scene = new Scene("DoF");
 
 
+
 		final Camera.Builder cameraBuilder = Camera.getBuilder().setLocation(new Point(0, 0, 2500))
 				.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setVpSize(200, 200).setVpDistance(850)
 				.setDoFActive(true).setFocalSize(20, 1600, 200).setRayTracer(new SimpleRayTracer(scene))
 				.setMultiThreading(3).setDebugPrint(0.1);
-		final Camera.Builder cameraBuilder1 = Camera.getBuilder().setLocation(new Point(0, 0, 2500))
-				.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setVpSize(200, 200).setVpDistance(850)
-				.setDoFActive(false).setFocalSize(20, 1600, 1).setRayTracer(new SimpleRayTracer(scene));
+//		final Camera.Builder cameraBuilder1 = Camera.getBuilder().setLocation(new Point(0, 0, 2500))
+//				.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setVpSize(200, 200).setVpDistance(850)
+//				.setDoFActive(false).setFocalSize(20, 1600, 1).setRayTracer(new SimpleRayTracer(scene));
 
 		AmbientLight ambientLight = new AmbientLight(new Color(30, 30, 30), 0.1);
 		scene.setAmbientLight(ambientLight);
@@ -61,6 +62,7 @@ public class DoFTests {
 
 				new Sphere(new Point(-100, -150, 1300), 75).setEmission(new Color(215, 0, 64)) // Closest Sphere
 						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30)));
+		//scene.geometries.makeBVH();
 
 
 		scene.lights.add(new DirectionalLight(new Color(70, 172, 21), new Vector(-1, 0, 0)));

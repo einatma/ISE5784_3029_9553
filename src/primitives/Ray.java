@@ -30,6 +30,7 @@ public class Ray {
      * @param p   The starting point (head) of the ray.
      * @param vec The direction vector of the ray.
      */
+
     public Ray(Point p, Vector vec) {
         head = p;
         direction = vec.normalize();
@@ -161,6 +162,10 @@ public class Ray {
      *         the focus point.
      */
     public static List<Ray> RayBundle(Point focusPoint, List<Point> points) {
+        if (points == null || points.isEmpty()) {
+            // החזר רשימה עם קרן אחת או רשימה ריקה
+            return List.of(new Ray(focusPoint, new Vector(0, 0, -1)));
+        }
         List<Ray> rays = new ArrayList<>();
         for (Point point : points) {
             rays.add(new Ray(point, focusPoint.subtract(point)));
