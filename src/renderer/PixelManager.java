@@ -19,32 +19,56 @@ class PixelManager {
     record Pixel(int col, int row) {
     }
 
-    /** The maximum number of rows of pixels */
+    /**
+     * The maximum number of rows of pixels
+     */
     private final int maxRows;
-    /** The maximum number of columns of pixels */
+    /**
+     * The maximum number of columns of pixels
+     */
     private final int maxCols;
-    /** The total number of pixels in the generated image */
+    /**
+     * The total number of pixels in the generated image
+     */
     private final long totalPixels;
 
-    /** The current row of pixels being processed */
+    /**
+     * The current row of pixels being processed
+     */
     private final AtomicInteger currentRow = new AtomicInteger(0);
-    /** The current column of pixels being processed */
+    /**
+     * The current column of pixels being processed
+     */
     private final AtomicInteger currentCol = new AtomicInteger(-1);
-    /** The number of pixels that have been processed */
+    /**
+     * The number of pixels that have been processed
+     */
     private final AtomicLong processedPixels = new AtomicLong(0);
-    /** The last printed progress update percentage */
+    /**
+     * The last printed progress update percentage
+     */
     private volatile int lastPrintedPercentage = 0;
 
-    /** A flag indicating whether progress should be printed */
+    /**
+     * A flag indicating whether progress should be printed
+     */
     private final boolean printProgress;
-    /** The interval in milliseconds between progress prints */
+    /**
+     * The interval in milliseconds between progress prints
+     */
     private final long printIntervalMillis;
-    /** The format string for printing progress */
+    /**
+     * The format string for printing progress
+     */
     private static final String PRINT_FORMAT = "%5.1f%%\r";
 
-    /** The mutex object for synchronizing next pixel allocation between threads */
+    /**
+     * The mutex object for synchronizing next pixel allocation between threads
+     */
     private final Object nextPixelLock = new Object();
-    /** The mutex object for synchronizing progress printing between threads */
+    /**
+     * The mutex object for synchronizing progress printing between threads
+     */
     private final Object progressPrintLock = new Object();
 
     /**

@@ -50,8 +50,6 @@ public class Ray {
     }
 
 
-
-
     /**
      * Returns the starting point (head) of the ray.
      *
@@ -87,8 +85,7 @@ public class Ray {
     public Point getPoint(double t) {
         try {
             return head.add(direction.scale(t));
-        }
-        catch (IllegalArgumentException ignore ) {
+        } catch (IllegalArgumentException ignore) {
             return head;
         }
     }
@@ -138,7 +135,7 @@ public class Ray {
      * @param focusPoint The point towards which all the rays will be directed.
      * @param points     The list of points from which the rays will originate.
      * @return A list of rays originating from the given points and directed towards
-     *         the focus point.
+     * the focus point.
      */
     public static List<Ray> RayBundle(Point focusPoint, List<Point> points) {
         if (points == null || points.isEmpty()) {

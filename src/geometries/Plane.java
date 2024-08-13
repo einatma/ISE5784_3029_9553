@@ -12,7 +12,7 @@ import static primitives.Util.isZero;
  * A plane is defined by a point on the plane and a normal vector to the plane.
  * The plane can be constructed using either three points on the plane or a point
  * and a normal vector.
- *
+ * <p>
  * The Plane class also provides methods for calculating the normal vector and finding
  * intersections between a ray and the plane.
  *
@@ -83,8 +83,8 @@ public class Plane extends Geometry {
      * If the ray intersects the plane within the specified distance, the intersection point is returned.
      * If the ray is parallel to the plane or the intersection is behind the ray's origin, no intersections are found.
      *
-     * @param ray       The ray to intersect with the plane.
-     * @param distance  The maximum distance within which to find intersections.
+     * @param ray      The ray to intersect with the plane.
+     * @param distance The maximum distance within which to find intersections.
      * @return A list containing the intersection points, or null if no intersections are found.
      */
     @Override

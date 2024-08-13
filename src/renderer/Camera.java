@@ -14,6 +14,7 @@ import java.util.MissingResourceException;
 import java.util.stream.*;
 
 import geometries.Geometries;
+
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
@@ -43,29 +44,29 @@ public class Camera implements Cloneable {
     private double distance = 0;
     private double width = 0;
     private double height = 0;
-    /** Aperture radius */
+    /**
+     * Aperture radius
+     */
     double apertureRadius = 0;
 
-    /** Focal length */
+    /**
+     * Focal length
+     */
     double focalLength = 0;
 
-    /** DoF active */
+    /**
+     * DoF active
+     */
     boolean DoFActive = false;
-
     /**
      * Aperture area grid density
      */
     int gridDensity = 1;
 
-
     /**
      * DoF points on the aperture plane
      */
     public List<Point> DoFPoints = null;
-    private static final int MAX_RAYS = 100;  // ערך התחלתי מומלץ, אפשר לשנות לפי הצורך
-
-
-
 
     /**
      * Number of threads to use for rendering.
@@ -163,44 +164,53 @@ public class Camera implements Cloneable {
             for (int i = 0; i < nY; ++i) {
                 for (int j = 0; j < nX; ++j) {
                     if (this.gridDensity != 1 && DoFActive) {
+                        // Calculate the focal point for depth of field
                         var focalPoint = constructRay(nX, nY, j, i).getPoint(focalLength);
+                        // Write the pixel color using a bundle of rays for depth of field
                         imageWriter.writePixel(j, i, rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
                     } else {
+                        // Perform standard ray casting for the pixel
                         castRay(nX, nY, j, i);
                     }
-                    pixelManager.pixelDone(); // Update progress after processing each pixel
+                    // Update progress after processing each pixel
+                    pixelManager.pixelDone();
                 }
             }
         } else { // Multi-threaded rendering
-            var threads = new LinkedList<Thread>(); // list of threads
-            while (threadsCount-- > 0) // add appropriate number of threads
-                threads.add(new Thread(() -> { // add a thread with its code
-                    PixelManager.Pixel pixel; // current pixel(row,col)
-                    // allocate pixel(row,col) in loop until there are no more pixels
+            var threads = new LinkedList<Thread>(); // List to hold the threads
+            while (threadsCount-- > 0) { // Create the required number of threads
+                threads.add(new Thread(() -> {
+                    PixelManager.Pixel pixel; // Variable to hold the current pixel (row, col)
+                    // Loop until there are no more pixels to process
                     while ((pixel = pixelManager.nextPixel()) != null) {
                         if (this.gridDensity != 1 && DoFActive) {
+                            // Calculate the focal point for depth of field
                             var focalPoint = constructRay(nX, nY, pixel.col(), pixel.row()).getPoint(focalLength);
+                            // Write the pixel color using a bundle of rays for depth of field
                             imageWriter.writePixel(pixel.col(), pixel.row(), rayTracer.computeFinalColor(Ray.RayBundle(focalPoint, DoFPoints)));
                         } else {
+                            // Perform standard ray casting for the pixel
                             castRay(nX, nY, pixel.col(), pixel.row());
                         }
-                        pixelManager.pixelDone(); // Update progress after processing each pixel
+                        // Update progress after processing each pixel
+                        pixelManager.pixelDone();
                     }
                 }));
-            // start all the threads
-            for (var thread : threads)
+            }
+            // Start all the threads
+            for (var thread : threads) {
                 thread.start();
-            // wait until all the threads have finished
+            }
+            // Wait for all threads to finish
             try {
-                for (var thread : threads)
+                for (var thread : threads) {
                     thread.join();
+                }
             } catch (InterruptedException ignore) {
             }
         }
         return this;
     }
-
-
 
 
     /**
@@ -250,11 +260,6 @@ public class Camera implements Cloneable {
         imageWriter.writePixel(col, row, rayTracer.traceRay(constructRay(nX, nY, col, row)));
         pixelManager.pixelDone();
     }
-        // Uses rayTracer to calculate the color of the intersection point and returns
-        // it.
-        //this.imageWriter.writePixel(j, i, rayTracer.traceRay(ray));
-        //return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
-
 
 
     /**
@@ -283,83 +288,8 @@ public class Camera implements Cloneable {
         }
         return points;
     }
-    /**
-     * Constructs a ray through a specific point in a pixel on the view plane.
-     *
-     * @param Ry the height of the pixel
-     * @param Rx the width of the pixel
-     * @param yi the y-offset from the center of the pixel
-     * @param xj the x-offset from the center of the pixel
-     * @param j  the pixel index on the x-axis
-     * @param i  the pixel index on the y-axis
-     * @return a Ray object that goes through the specified point in the pixel
-     */
-    private Ray constructRaysThroughPixel(double Ry, double Rx, double yi, double xj, int j, int i) {
-        Point Pc = location.add(vTo.scale(distance));
-        // מחשבים את הנקודה ההתחלתית של הפיקסל בציר ה-y
-        double y_sample_i = (i * Ry + Ry / 2.0);
-        // מחשבים את הנקודה ההתחלתית של הפיקסל בציר ה-x
-        double x_sample_j = (j * Rx + Rx / 2.0);
-        // קובעים את הנקודה דרכה נורה הקרן
-        Point Pij = Pc;
-        // אם הנקודה בציר ה-x אינה אפס, מוסיפים לה את ההיסט (xj)
-        if (!isZero(x_sample_j + xj)) {
-            Pij = Pij.add(vRight.scale(-x_sample_j - xj));
-        }
 
-        // אם הנקודה בציר ה-y אינה אפס, מוסיפים לה את ההיסט (yi)
-        if (!isZero(y_sample_i + yi)) {
-            Pij = Pij.add(vUp.scale(-y_sample_i - yi));
-        }
 
-        // יוצרים וקטור (Vij) מהמצלמה לנקודה המחושבת
-        Vector Vij = Pij.subtract(location);
-
-        // יוצרים קרן (Ray) מהמצלמה לנקודה המחושבת ומחזירים את הקרן
-        return new Ray(location, Vij);
-    }
-
-    /**
-     * Constructs a beam of rays through a specific pixel on the view plane.
-     *
-     * @param nX         the number of pixels in the x-axis on the view plane
-     * @param nY         the number of pixels in the y-axis on the view plane
-     * @param j          the pixel index on the x-axis
-     * @param i          the pixel index on the y-axis
-     * @param raysAmount the total number of rays to construct through the pixel
-     * @return a list of Ray objects that represent the beam through the specified
-     *         pixel
-     */
-    public List<Ray> constructBeamThroughPixel(int nX, int nY, int j, int i, int raysAmount) {
-        // The distance between the screen and the camera cannot be 0
-        if (isZero(distance)) {
-            throw new IllegalArgumentException("distance cannot be 0");
-        }
-
-        int numOfRays = (int) Math.floor(Math.sqrt(raysAmount)); // number of rays in each row or column
-
-        if (numOfRays == 1)
-            return List.of(constructRay(nX, nY, j, i));
-
-        double Ry = this.height / nY;
-        double Rx = this.width / nX;
-        double Yi = (i - (nY - 1) / 2d) * Ry;
-        double Xj = (j - (nX - 1) / 2d) * Rx;
-
-        double PRy = Ry / numOfRays; // height distance between each ray
-        double PRx = Rx / numOfRays; // width distance between each ray
-
-        List<Ray> sample_rays = new ArrayList<>();
-
-        for (int row = 0; row < numOfRays; ++row) {
-            for (int column = 0; column < numOfRays; ++column) {
-                sample_rays.add(constructRaysThroughPixel(PRy, PRx, Yi, Xj, row, column)); // add the ray
-
-            }
-        }
-        sample_rays.add(constructRay(nX, nY, j, i)); // add the center screen ray
-        return sample_rays;
-    }
     /**
      * Builder class for constructing Camera objects.
      */
@@ -386,6 +316,7 @@ public class Camera implements Cloneable {
             this.camera.DoFActive = doFActive;
             return this;
         }
+
         /**
          * amount of threads setter for multi-threading
          *
@@ -414,7 +345,6 @@ public class Camera implements Cloneable {
             this.camera.printInterval = interval;
             return this;
         }
-
 
 
         /**
@@ -531,4 +461,3 @@ public class Camera implements Cloneable {
 
     }
 }
-

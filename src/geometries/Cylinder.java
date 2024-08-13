@@ -71,8 +71,8 @@ public class Cylinder extends Tube {
      * The method first checks for intersections with the top and bottom bases of the cylinder,
      * then checks for intersections with the side surface.
      *
-     * @param ray       The ray to intersect with the cylinder.
-     * @param distance  The maximum distance to consider for intersections.
+     * @param ray      The ray to intersect with the cylinder.
+     * @param distance The maximum distance to consider for intersections.
      * @return A list of GeoPoints representing the intersections, or null if there are none.
      */
     @Override

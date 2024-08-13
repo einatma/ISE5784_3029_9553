@@ -19,6 +19,7 @@ public abstract class RayTracerBase {
     protected Scene scene;
     private static final int MAX_RECURSION_DEPTH = 5;
     private static final double VARIANCE_THRESHOLD = 0.01;
+
     /**
      * Constructor for RayTracerBase.
      *
@@ -38,6 +39,7 @@ public abstract class RayTracerBase {
 
     /**
      * Traces a list of rays and returns the color at the intersection point.
+     *
      * @param rays the ray to be traced.
      * @return the color at the intersection point.
      */

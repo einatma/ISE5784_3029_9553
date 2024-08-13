@@ -66,10 +66,10 @@ public class Tube extends RadialGeometry {
      * This method determines if and where a given ray intersects with the tube. It handles cases where the ray is parallel
      * to the tube's axis, and checks if the intersection points are within the valid distance range.
      *
-     * @param ray The ray to intersect with the tube.
+     * @param ray      The ray to intersect with the tube.
      * @param distance The maximum distance within which to find intersections.
      * @return A list of {@link GeoPoint} objects representing the intersection points where the ray intersects the tube,
-     *         or null if there are no intersections within the specified distance.
+     * or null if there are no intersections within the specified distance.
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {

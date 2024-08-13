@@ -25,9 +25,8 @@ public class Sphere extends RadialGeometry {
     public Sphere(Point c, double r) {
         super(r);
         center = c;
-        if(BVH)
-        {
-            // חישוב ה-BoundingBox
+        if (BVH) {
+            // calculate the bounding box
             double radius = getRadius();
             Point min = new Point(
                     center.getX() - radius,
@@ -100,7 +99,7 @@ public class Sphere extends RadialGeometry {
         List<GeoPoint> intersections = null;
 
         // Check if t1 and t2 are valid
-        if (t1 > 0 && t2 > 0 && t1 < distance && t2 < distance ) {
+        if (t1 > 0 && t2 > 0 && t1 < distance && t2 < distance) {
             intersections = List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
         } else {
             // Check if t1 is valid

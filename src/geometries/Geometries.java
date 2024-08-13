@@ -1,6 +1,7 @@
 package geometries;
 
 import primitives.*;
+
 import java.util.*;
 
 /**
@@ -52,8 +53,8 @@ public class Geometries extends Intersectable {
      * The method iterates over all geometries in the collection and checks for intersections
      * with the provided ray. If intersections are found, they are aggregated into a single list.
      *
-     * @param ray       the ray for which intersections are to be found.
-     * @param distance  the maximum distance to consider for intersections.
+     * @param ray      the ray for which intersections are to be found.
+     * @param distance the maximum distance to consider for intersections.
      * @return a list of all intersection points. If no intersections are found, returns null.
      */
     @Override

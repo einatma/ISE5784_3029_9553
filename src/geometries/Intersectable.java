@@ -10,7 +10,7 @@ import java.util.*;
  */
 public abstract class Intersectable {
 
-    protected BoundingBox boundingBox= new BoundingBox(Point.NEGATIVE_INFINITY, Point.POSITIVE_INFINITY);
+    protected BoundingBox boundingBox = new BoundingBox(Point.NEGATIVE_INFINITY, Point.POSITIVE_INFINITY);
     boolean BVH = true;
 
     public BoundingBox getBoundingBox() {
@@ -105,6 +105,7 @@ public abstract class Intersectable {
         var geoList = findGeoIntersections(ray);
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
+
     /**
      * Checks if a ray intersects with this bounding box, used for BVH optimization.*
      * This method calculates the intersection of the ray with the bounding box using
@@ -323,7 +324,7 @@ public abstract class Intersectable {
             BoundingBox boundingBox = intersectableList.get(0).getBoundingBox();
 
             // Union the bounding box with each subsequent geometry's bounding box
-            for (var g: intersectableList) {
+            for (var g : intersectableList) {
                 boundingBox = boundingBox.union(g.getBoundingBox());
             }
 

@@ -74,7 +74,7 @@ public class XML {
                     // Parse the center and radius of the sphere and add it to the geometries
                     Point center = parsePoint(geometryElement.getAttribute("center"));
                     double radius = Double.parseDouble(geometryElement.getAttribute("radius"));
-                    geometries.add(new Sphere( center , radius));
+                    geometries.add(new Sphere(center, radius));
                     break;
                 case "plane":
                     // Parse the point and vector of the plane and add it to the geometries

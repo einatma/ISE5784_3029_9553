@@ -87,8 +87,7 @@ public class Polygon extends Geometry {
             if (positive != (edge1.crossProduct(edge2).dotProduct(n) > 0))
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
         }
-        if(BVH)
-        {
+        if (BVH) {
             // חישוב ה-BoundingBox
             Point min = vertices[0];
             Point max = vertices[0];
@@ -147,7 +146,7 @@ public class Polygon extends Geometry {
             v2 = vertices.get(i).subtract(p0);
             sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
 
-            if (isZero(sign)){
+            if (isZero(sign)) {
                 return null;
             }
 

@@ -84,7 +84,7 @@ public class Material {
      * @param kT The new transparency coefficient.
      * @return This Material object with the updated transparency coefficient.
      */
-    public Material setKt (Double3 kT) {
+    public Material setKt(Double3 kT) {
         this.kT = kT;
         return this;
     }
@@ -100,6 +100,7 @@ public class Material {
         this.kT = new Double3(kt);
         return this;
     }
+
     /*
      * Sets the Reflection coefficient (kT) of the material using a scalar value,
      * which sets all components of kT to the same value.
@@ -123,6 +124,7 @@ public class Material {
         this.kR = new Double3(kR);
         return this;
     }
+
     /**
      * Sets the shininess coefficient (nShininess) of the material.
      *
@@ -133,7 +135,6 @@ public class Material {
         this.nShininess = nShininess;
         return this;
     }
-
 
 
 }

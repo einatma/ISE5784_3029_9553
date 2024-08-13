@@ -25,9 +25,9 @@ public class Point {
     }
 
     public static final Point ZERO = new Point(Double3.ZERO);
-    public static final Point NEGATIVE_INFINITY = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY ,Double.NEGATIVE_INFINITY);
+    public static final Point NEGATIVE_INFINITY = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
 
-    public static final Point POSITIVE_INFINITY = new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY ,Double.POSITIVE_INFINITY);
+    public static final Point POSITIVE_INFINITY = new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
     /**
      * Constructs a new Point object with the specified Cartesian coordinates.
@@ -44,13 +44,13 @@ public class Point {
      * Generates points within the target area based on the given parameters.
      *
      * @param gridDensity The number of points to generate.
-     * @param radius 	The radius within which to generate points.
-     * @param center 	The center point of the target area.
-     * @param up The 	up vector defining the orientation of the target area.
-     * @param right 	The right vector defining the orientation of the target area.
+     * @param radius      The radius within which to generate points.
+     * @param center      The center point of the target area.
+     * @param up          The 	up vector defining the orientation of the target area.
+     * @param right       The right vector defining the orientation of the target area.
      */
     public static List<Point> generatePoints(int gridDensity, double radius, Point center, Vector up, Vector right) {
-        List<Point> points  = new ArrayList<>();
+        List<Point> points = new ArrayList<>();
 
         for (int i = 0; i < gridDensity; i++) {
             double angle = 2 * Math.PI * Math.random();

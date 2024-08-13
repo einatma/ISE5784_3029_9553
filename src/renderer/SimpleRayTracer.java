@@ -4,6 +4,7 @@ import java.util.List;
 
 import static geometries.Intersectable.GeoPoint;
 import static primitives.Util.*;
+
 import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
@@ -46,7 +47,7 @@ public class SimpleRayTracer extends RayTracerBase {
      *
      * @param ray the ray to trace through the scene
      * @return the color at the point where the ray intersects with an object, or
-     *         the background color if no intersection is found
+     * the background color if no intersection is found
      */
     @Override
     public Color traceRay(Ray ray) {
@@ -239,10 +240,10 @@ public class SimpleRayTracer extends RayTracerBase {
     /**
      * the function checks if this place is not shaded
      *
-     * @param light the light source
+     * @param light    the light source
      * @param geopoint the point we are checking
-     * @param l  the vector to the point (from the camera)
-     * @param n  the normal
+     * @param l        the vector to the point (from the camera)
+     * @param n        the normal
      * @return if this place is not shaded
      */
     @SuppressWarnings("unused")
@@ -279,7 +280,7 @@ public class SimpleRayTracer extends RayTracerBase {
      *
      * @param ray the ray that intersect with the geometries of the scene
      * @return the geoPoint that is point is the closest point to the starting point
-     *         of the ray
+     * of the ray
      */
     private GeoPoint findClosestIntersection(Ray ray) {
         List<GeoPoint> intersections = this.scene.geometries.findGeoIntersections(ray);
@@ -288,10 +289,10 @@ public class SimpleRayTracer extends RayTracerBase {
 
     @Override
     public Color traceRay(List<Ray> rays) {
-        if(rays==null)
+        if (rays == null)
             return scene.background;
         Color color = scene.background;
-        for(Ray ray: rays) {
+        for (Ray ray : rays) {
             color = color.add(traceRay(ray));
         }
         color = color.add(scene.ambientLight.getIntensity());

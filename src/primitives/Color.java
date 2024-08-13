@@ -128,11 +128,12 @@ public class Color {
         if (k < 1) throw new IllegalArgumentException("Can't scale a color by a by a number lower than 1");
         return new Color(rgb.reduce(k));
     }
-   /**
-    * Returns a string representation of the Color object.
-    *
-    * @return A string representation of the form "gdb".
-    */
+
+    /**
+     * Returns a string representation of the Color object.
+     *
+     * @return A string representation of the form "gdb".
+     */
     @Override
     public String toString() {
         return "rgb:" + rgb;
