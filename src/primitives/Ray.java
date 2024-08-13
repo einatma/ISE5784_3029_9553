@@ -138,10 +138,10 @@ public class Ray {
      * the focus point.
      */
     public static List<Ray> RayBundle(Point focusPoint, List<Point> points) {
-        if (points == null || points.isEmpty()) {
-            // החזר רשימה עם קרן אחת או רשימה ריקה
-            return List.of(new Ray(focusPoint, new Vector(0, 0, -1)));
-        }
+//        if (points == null || points.isEmpty()) {
+//            // החזר רשימה עם קרן אחת או רשימה ריקה
+//            return List.of(new Ray(focusPoint, new Vector(0, 0, -1)));
+//        }
         List<Ray> rays = new ArrayList<>();
         for (Point point : points) {
             rays.add(new Ray(point, focusPoint.subtract(point)));
