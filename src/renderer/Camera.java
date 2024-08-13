@@ -154,8 +154,8 @@ public class Camera implements Cloneable {
         if (DoFActive) {
             this.DoFPoints = Camera.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
             if (this.DoFPoints == null || this.DoFPoints.isEmpty()) {
-                // טיפול במקרה שבו הנקודות לא נוצרו
-                this.DoFPoints = List.of(location);  // או כל ערך ברירת מחדל אחר
+                // If no points were generated, use the camera location as the focal point
+                this.DoFPoints = List.of(location);
             }
         }
 

@@ -270,7 +270,7 @@ public class minip1Test {
         }
         scene.geometries.makeBVH();
         // Rendering the image
-        camera.setImageWriter(new ImageWriter("castleSenseBetterResolution", 2000, 2000))
+        camera.setImageWriter(new ImageWriter("castleSenseEliezer'sSideView", 1000, 1000))
                 .build()
                 .renderImage();
 
