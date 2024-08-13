@@ -235,13 +235,13 @@ public class minip1Test {
 
         //Add spheres for Eliezer
         scene.geometries.add(new Sphere(new Point(-120, -30, 5), 10)
-                .setEmission(new Color(YELLOW)).setMaterial(new Material().setKd(0.4).setKs(0).setKt(0.6).setKr(0.3).setShininess(0)));
+                .setEmission(new Color(188,190,82)).setMaterial(new Material().setShininess(50).setKt(0.1).setKs(0.1).setKd(0.2).setKr(0.1)));
         scene.geometries.add(new Sphere(new Point(-120, 10, 7), 10)
-                .setEmission(new Color(GREEN)).setMaterial(new Material().setKd(0.5).setKs(0.6).setKt(0.6).setKr(0.2).setShininess(0)));
+                .setEmission(new Color(64,190,84)).setMaterial(new Material().setKd(0.5).setKs(0.06).setKt(0.1).setKr(0.02).setShininess(0)));
         scene.geometries.add(new Sphere(new Point(-130, -50, 0), 9)
-                .setEmission(new Color(BLUE)).setMaterial(new Material().setKd(0.4).setKs(0).setKt(0.2).setKr(0.2).setShininess(0)));
+                .setEmission(new Color(59,116,190)).setMaterial(new Material().setKd(0.05).setKs(0).setKt(0.2).setKr(0.002).setShininess(0)));
         scene.geometries.add(new Sphere(new Point(-140, 40, 10), 10)
-                .setEmission(new Color(RED)).setMaterial(new Material().setKd(0.8).setKs(0).setKt(0.3).setKr(0.1).setShininess(0)));
+                .setEmission(new Color(190,87,97)).setMaterial(new Material().setKd(0).setKs(0).setKt(0.5).setKr(0.002).setShininess(0)));
 
         //Grass
         Material grassMaterial = new Material().setKd(0.5).setKs(0.3).setShininess(50).setKr(0.1);
