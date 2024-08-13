@@ -218,7 +218,7 @@ public class minip1Test {
         }
         double shipLocationX = 400;
         for (int i = 0; i < 9; i++) {
-            Sailboat sailboat = new Sailboat(new Point(shipLocationX, Math.random() * 2800 - 1000, 0), 20, 30, 40, 1, 70, 40, 50, new Vector(-1, -1, 0), new Vector(1, 1, 0).crossProduct(new Vector(0, 0, 1)))
+            Sailboat sailboat = new Sailboat(new Point(shipLocationX, Math.random() * 2900 - 1100, 0), 20, 30, 40, 1, 70, 40, 50, new Vector(-1, -1, 0), new Vector(1, 1, 0).crossProduct(new Vector(0, 0, 1)))
                     .setBoatEmission(boatColor).setSailEmission(sailColor).setBoatMaterial(boatMaterial).setSailMaterial(sailMaterial);
             for (Geometry face : sailboat.getSailWigs()) {
                 scene.geometries.add(face);
