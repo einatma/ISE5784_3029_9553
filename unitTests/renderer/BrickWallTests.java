@@ -23,7 +23,7 @@ class BrickWallTests {
         // Create a house with a base and a roof
         BrickWall brickWall = new BrickWall(
                 new Point(0, 0, 0),
-                10, 60, 60, 1, 10, 5,
+                60, 60, 10, 1, 10, 5,
                 new Vector(1, 0, 0),  // Width direction
                 new Vector(0, 1, 0)   // Depth direction
         ).setBricksEmission(new Color(java.awt.Color.BLUE)).setSlotsEmission(new Color(java.awt.Color.RED));

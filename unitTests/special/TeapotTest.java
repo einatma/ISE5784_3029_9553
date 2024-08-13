@@ -26,7 +26,7 @@ public class TeapotTest {
     final Camera.Builder cameraBuilder = Camera.getBuilder().setLocation(new Point(0, 0, -1000))
             .setDirection(new Vector(0, 0, 1), new Vector(0, 1, 0)).setVpSize(200, 200).setVpDistance(1000)
             .setFocalSize(20, 1600, 1).setRayTracer(new SimpleRayTracer(scene)).setImageWriter(imageWriter)
-            .setMultiThreading(3).setDebugPrint(0.1);
+            .setMultiThreading(1).setDebugPrint(0.1);
 
 
 
