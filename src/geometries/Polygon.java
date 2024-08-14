@@ -88,7 +88,7 @@ public class Polygon extends Geometry {
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
         }
         if (BVH) {
-            // חישוב ה-BoundingBox
+            // calculate the bounding box
             Point min = vertices[0];
             Point max = vertices[0];
             for (Point vertex : vertices) {

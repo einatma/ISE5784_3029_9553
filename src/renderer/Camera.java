@@ -7,10 +7,7 @@ import primitives.Ray;
 import primitives.Vector;
 import geometries.Intersectable.GeoPoint;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.MissingResourceException;
+import java.util.*;
 import java.util.stream.*;
 
 import geometries.Geometries;
@@ -154,7 +151,7 @@ public class Camera implements Cloneable {
         if (DoFActive) {
             this.DoFPoints = Camera.generatePoints(gridDensity, apertureRadius, location, vUp, vRight);
             if (this.DoFPoints == null || this.DoFPoints.isEmpty()) {
-                // If no points were generated, use the camera location as the focal point
+
                 this.DoFPoints = List.of(location);
             }
         }
@@ -263,31 +260,43 @@ public class Camera implements Cloneable {
 
 
     /**
-     * Generates a list of points randomly distributed within a circular area.
+     * Generates a list of unique points within a circular area.
      *
-     * @param gridDensity The number of points to generate.
-     * @param radius      The radius of the circular area.
-     * @param center      The center point of the circular area.
-     * @param up          A vector representing the up direction for the circular
-     *                    area.
-     * @param right       A vector representing the right direction for the circular
-     *                    area.
-     * @return A list of points randomly distributed within the circular area.
+     * @param gridDensity the number of points to generate
+     * @param radius the radius of the circle within which points will be generated
+     * @param center the central point of the circle
+     * @param up the vector representing the "up" direction for the grid
+     * @param right the vector representing the "right" direction for the grid
+     * @return a list of unique points generated within the specified circle
      */
     public static List<Point> generatePoints(int gridDensity, double radius, Point center, Vector up, Vector right) {
         List<Point> points = new ArrayList<>();
+        Random random = new Random();
 
         for (int i = 0; i < gridDensity; i++) {
-            double angle = 2 * Math.PI * Math.random();
-            double r = radius * Math.sqrt(Math.random());
-            double offsetX = r * Math.cos(angle);
-            double offsetY = r * Math.sin(angle);
+            Point point;
+            do {
+                // Generate a random angle between 0 and 2π
+                double angle = 2 * Math.PI * random.nextDouble();
 
-            Point point = center.add(right.scale(offsetX)).add(up.scale(offsetY));
-            points.add(point);
+                // Generate a random radius using the square root to ensure uniform distribution
+                double r = radius * Math.sqrt(random.nextDouble());
+
+                // Calculate the offsets for the point based on the angle and radius
+                double offsetX = r * Math.cos(angle);
+                double offsetY = r * Math.sin(angle);
+
+                // Create a new point by scaling and adding the offsets to the center point
+                point = center.add(right.scale(offsetX)).add(up.scale(offsetY));
+
+            } while (points.contains(point)); // Check if the point is already in the list
+
+            points.add(point); // Add the unique point to the list
         }
+
         return points;
     }
+
 
 
     /**
@@ -451,15 +460,7 @@ public class Camera implements Cloneable {
                 return null;
             }
         }
-        /**
-         * Sets the camera's direction using a point in front of the camera and an up vector.
-         * This method calculates the direction vectors (`vTo`, `vUp`, and `vRight`) based on
-         * the given `inFront` point and `up` vector.
-         *
-         * @param inFront the point that the camera is directed towards.
-         * @param up the up vector to determine the camera's orientation.
-         * @return the Builder instance for method chaining.
-         */
+
         public Builder setDirection(Point inFront, Vector up) {
             camera.vTo = inFront.subtract(camera.location).normalize();
             camera.vUp = up.normalize();
