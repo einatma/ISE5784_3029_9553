@@ -451,7 +451,15 @@ public class Camera implements Cloneable {
                 return null;
             }
         }
-
+        /**
+         * Sets the camera's direction using a point in front of the camera and an up vector.
+         * This method calculates the direction vectors (`vTo`, `vUp`, and `vRight`) based on
+         * the given `inFront` point and `up` vector.
+         *
+         * @param inFront the point that the camera is directed towards.
+         * @param up the up vector to determine the camera's orientation.
+         * @return the Builder instance for method chaining.
+         */
         public Builder setDirection(Point inFront, Vector up) {
             camera.vTo = inFront.subtract(camera.location).normalize();
             camera.vUp = up.normalize();

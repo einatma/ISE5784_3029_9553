@@ -287,6 +287,16 @@ public class SimpleRayTracer extends RayTracerBase {
         return intersections == null ? null : ray.findClosestGeoPoint(intersections);
     }
 
+    /**
+     * Traces a list of rays through the scene and computes the resulting color.
+     * If the list of rays is null, the background color of the scene is returned.
+     * Otherwise, the method calculates the color by summing up the contributions
+     * from each ray and adding the ambient light intensity. The final color is
+     * averaged by dividing by the number of rays.
+     *
+     * @param rays the list of rays to trace through the scene.
+     * @return the computed color after tracing all rays and adding ambient light.
+     */
     @Override
     public Color traceRay(List<Ray> rays) {
         if (rays == null)
@@ -300,7 +310,14 @@ public class SimpleRayTracer extends RayTracerBase {
         return color.reduce(size);
     }
 
-
+    /**
+     * Computes the final color by tracing each ray in the list and averaging
+     * the results. This method sums up the colors resulting from each ray
+     * and then averages the color by dividing by the number of rays.
+     *
+     * @param rays the list of rays to trace through the scene.
+     * @return the final averaged color after tracing all rays.
+     */
     @Override
     public Color computeFinalColor(List<Ray> rays) {
         Color finalColor = Color.BLACK;
